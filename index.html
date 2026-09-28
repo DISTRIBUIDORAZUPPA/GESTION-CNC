@@ -161,6 +161,13 @@ details.sop li{margin:3px 0}
 .cal .ev.canc{background:var(--bad-soft);color:var(--bad);text-decoration:line-through}
 @media (max-width:640px){ .cal .d{min-height:56px} .cal .ev{font-size:0;height:6px;padding:0} }
 
+.pda-sec{display:grid;grid-template-columns:132px minmax(0,1fr);gap:12px;align-items:start}
+.evid{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.evid button{border:1px solid var(--rule-2);border-radius:8px;padding:3px;background:var(--panel-2);cursor:zoom-in;display:block;width:132px}
+.evid button:hover{border-color:var(--ink-3)}
+.evid img{display:block;width:100%;height:150px;object-fit:cover;object-position:top;border-radius:5px}
+.evid.vacia{border:1px dashed var(--rule-2);border-radius:8px;padding:10px;min-height:80px;width:132px;font-size:11.5px}
+@media (max-width:640px){.pda-sec{grid-template-columns:1fr}.evid{flex-direction:row;flex-wrap:wrap}}
 .prog{height:10px;background:var(--panel-2);border-radius:5px;overflow:hidden}
 .prog i{display:block;height:100%;background:var(--good)}
 
@@ -231,6 +238,7 @@ body.embed .brand{padding-top:10px}
 
 <dialog id="dlgVisita"></dialog>
 <dialog id="dlgCliente"></dialog>
+<dialog id="dlgImg"></dialog>
 <dialog id="dlgLogin">
   <form id="loginForm">
     <h3>Ingresar como supervisor</h3>
@@ -802,9 +810,9 @@ function rPda(){
     const recs=p.recuperados.filter(x=>(!S.pv||x.pv===S.pv)&&(!S.spv||x.pv===S.spv||spvDe(x.pv)===S.spv||x.pv==='ZUPPA'&&!S.pv&&!S.spv));
     return `<div class="panel"><div class="ph"><h3>PDA ${mesLL(p.mes)}</h3><span class="hint">sobre el relevamiento de ${mesLL(prev)}${rb?' · '+regs.length+' clientes relevados':''}</span></div>
     ${['cerveza','nabs'].map(sec=>p[sec].length?`<p class="hint" style="margin:6px 0 4px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">PDA ${sec==='cerveza'?'Cerveza':'NABs'}</p>
-      <div class="tw"><table><thead><tr><th>Motivo</th><th class="n">Clientes</th><th>Acción</th><th>Estado</th><th>Fecha límite</th><th>Responsable</th></tr></thead><tbody>
+      <div class="pda-sec">${evid(p.mes,sec)}<div class="tw"><table><thead><tr><th>Motivo</th><th class="n">Clientes</th><th>Acción</th><th>Estado</th><th>Fecha límite</th><th>Responsable</th></tr></thead><tbody>
       ${p[sec].map(x=>`<tr><td><span class="mk"><i class="dot" style="background:var(${MOT_COL[x.motivo]||'--s0'})"></i>${esc(x.motivo.toLowerCase())}</span></td><td class="n">${x.clientes??'–'}</td><td class="txt">${x.accion?esc(x.accion):'<span class="chip warn">sin acción cargada</span>'}</td><td>${stChip(x.status)}</td><td>${fDate(x.deadline)}</td><td>${esc(x.resp)}</td></tr>`).join('')}
-      </tbody></table></div>`:'').join('')}
+      </tbody></table></div></div>`:'').join('')}
     ${recs.length?`<p class="hint" style="margin:10px 0 4px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">Clientes recuperados (informado en la hoja)</p>
       <div class="tw"><table><thead><tr><th>Promotor</th><th class="n">Relevados</th><th class="n">Real CVZA</th><th class="n">Real NABs</th><th class="n">Avance CVZA</th><th class="n">Avance NABs</th></tr></thead><tbody>
       ${recs.map(x=>{const base=x.cant!=null?x.cant:((x.nN||0)+(x.nC||0)); const bc=x.cant!=null?x.cant:x.nC, bn=x.cant!=null?x.cant:x.nN; return `<tr class="${x.total?(x.pv==='ZUPPA'?'tot':'sub'):''}"><td>${esc(x.pv)}</td><td class="n">${base||'–'}</td><td class="n">${x.realC??'–'}</td><td class="n">${x.realN??'–'}</td><td class="n">${bc&&x.realC!=null?pc(x.realC/bc):'–'}</td><td class="n">${bn&&x.realN!=null?pc(x.realN/bn):'–'}</td></tr>`;}).join('')}
@@ -812,6 +820,19 @@ function rPda(){
     ${rb&&M.indexOf(p.mes)>=0?`<p class="hint" style="margin:8px 0 0">Calculado con la facturación: de los ${regs.length} relevados en ${mesLab(prev)}, ${recC} compraron cerveza y ${recN} NABs en ${mesLab(p.mes)}${p.mes===M[MI]?' (mes en curso)':''}.</p>`:''}
     </div>`;}).join('')}`;
   v.querySelectorAll('#pdBase button').forEach(b=>b.onclick=()=>{PD.base=b.dataset.v; rPda();});
+  v.querySelectorAll('.evid button').forEach(b=>b.onclick=()=>verImagen(b.dataset.src, b.dataset.cap));
+}
+
+function evid(mes,sec){
+  const ims=((D.data.evidencias||{})[mes]||{})[sec]||[];
+  const cap=`Acción ${sec==='cerveza'?'Cerveza':'NABs'} · ${mesLL(mes)}`;
+  if(!ims.length) return `<div class="evid vacia"><span class="hint">Sin imagen cargada. Subila a Drive como ${mes}_${sec==='cerveza'?'CERVEZA':'NABS'}.jpg</span></div>`;
+  return `<div class="evid">${ims.map((src,i)=>`<button type="button" data-src="${esc(src)}" data-cap="${esc(cap)}" aria-label="Ver imagen de la ${esc(cap)}"><img src="${esc(src)}" alt="${esc(cap)}${ims.length>1?' ('+(i+1)+')':''}" loading="lazy"></button>`).join('')}<span class="hint">Evidencia</span></div>`;
+}
+function verImagen(src,cap){
+  const d=$('#dlgImg');
+  d.innerHTML=`<form method="dialog" style="align-items:center"><div class="row" style="width:100%"><h3 style="flex:1">${esc(cap)}</h3><button class="btn sm">Cerrar</button></div><img src="${esc(src)}" alt="${esc(cap)}" style="max-height:calc(100vh - 140px);max-width:100%;border-radius:8px"><a href="${esc(src)}" target="_blank" rel="noopener" class="hint">Abrir en tamaño original ↗</a></form>`;
+  d.showModal();
 }
 
 /* ====================== VISITAS SPV ====================== */
