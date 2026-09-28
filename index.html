@@ -5,83 +5,101 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <style>
 .leaflet-pane, .leaflet-tile, .leaflet-marker-icon, .leaflet-marker-shadow, .leaflet-tile-container, .leaflet-pane > svg, .leaflet-pane > canvas, .leaflet-zoom-box, .leaflet-image-layer, .leaflet-layer { position: absolute; left: 0; top: 0; } .leaflet-container { overflow: hidden; } .leaflet-tile, .leaflet-marker-icon, .leaflet-marker-shadow { -webkit-user-select: none; -moz-user-select: none; user-select: none; -webkit-user-drag: none; } .leaflet-tile::selection { background: transparent; } .leaflet-safari .leaflet-tile { image-rendering: -webkit-optimize-contrast; } .leaflet-safari .leaflet-tile-container { width: 1600px; height: 1600px; -webkit-transform-origin: 0 0; } .leaflet-marker-icon, .leaflet-marker-shadow { display: block; } .leaflet-container .leaflet-overlay-pane svg { max-width: none !important; max-height: none !important; } .leaflet-container .leaflet-marker-pane img, .leaflet-container .leaflet-shadow-pane img, .leaflet-container .leaflet-tile-pane img, .leaflet-container img.leaflet-image-layer, .leaflet-container .leaflet-tile { max-width: none !important; max-height: none !important; width: auto; padding: 0; } .leaflet-container img.leaflet-tile { mix-blend-mode: plus-lighter; } .leaflet-container.leaflet-touch-zoom { -ms-touch-action: pan-x pan-y; touch-action: pan-x pan-y; } .leaflet-container.leaflet-touch-drag { -ms-touch-action: pinch-zoom; touch-action: none; touch-action: pinch-zoom; } .leaflet-container.leaflet-touch-drag.leaflet-touch-zoom { -ms-touch-action: none; touch-action: none; } .leaflet-container { -webkit-tap-highlight-color: transparent; } .leaflet-container a { -webkit-tap-highlight-color: rgba(51, 181, 229, 0.4); } .leaflet-tile { filter: inherit; visibility: hidden; } .leaflet-tile-loaded { visibility: inherit; } .leaflet-zoom-box { width: 0; height: 0; -moz-box-sizing: border-box; box-sizing: border-box; z-index: 800; } .leaflet-overlay-pane svg { -moz-user-select: none; } .leaflet-pane { z-index: 400; } .leaflet-tile-pane { z-index: 200; } .leaflet-overlay-pane { z-index: 400; } .leaflet-shadow-pane { z-index: 500; } .leaflet-marker-pane { z-index: 600; } .leaflet-tooltip-pane { z-index: 650; } .leaflet-popup-pane { z-index: 700; } .leaflet-map-pane canvas { z-index: 100; } .leaflet-map-pane svg { z-index: 200; } .leaflet-vml-shape { width: 1px; height: 1px; } .lvml { behavior: none; display: inline-block; position: absolute; } .leaflet-control { position: relative; z-index: 800; pointer-events: visiblePainted; pointer-events: auto; } .leaflet-top, .leaflet-bottom { position: absolute; z-index: 1000; pointer-events: none; } .leaflet-top { top: 0; } .leaflet-right { right: 0; } .leaflet-bottom { bottom: 0; } .leaflet-left { left: 0; } .leaflet-control { float: left; clear: both; } .leaflet-right .leaflet-control { float: right; } .leaflet-top .leaflet-control { margin-top: 10px; } .leaflet-bottom .leaflet-control { margin-bottom: 10px; } .leaflet-left .leaflet-control { margin-left: 10px; } .leaflet-right .leaflet-control { margin-right: 10px; } .leaflet-fade-anim .leaflet-popup { opacity: 0; -webkit-transition: opacity 0.2s linear; -moz-transition: opacity 0.2s linear; transition: opacity 0.2s linear; } .leaflet-fade-anim .leaflet-map-pane .leaflet-popup { opacity: 1; } .leaflet-zoom-animated { -webkit-transform-origin: 0 0; -ms-transform-origin: 0 0; transform-origin: 0 0; } svg.leaflet-zoom-animated { will-change: transform; } .leaflet-zoom-anim .leaflet-zoom-animated { -webkit-transition: -webkit-transform 0.25s cubic-bezier(0,0,0.25,1); -moz-transition: -moz-transform 0.25s cubic-bezier(0,0,0.25,1); transition: transform 0.25s cubic-bezier(0,0,0.25,1); } .leaflet-zoom-anim .leaflet-tile, .leaflet-pan-anim .leaflet-tile { -webkit-transition: none; -moz-transition: none; transition: none; } .leaflet-zoom-anim .leaflet-zoom-hide { visibility: hidden; } .leaflet-interactive { cursor: pointer; } .leaflet-grab { cursor: -webkit-grab; cursor: -moz-grab; cursor: grab; } .leaflet-crosshair, .leaflet-crosshair .leaflet-interactive { cursor: crosshair; } .leaflet-popup-pane, .leaflet-control { cursor: auto; } .leaflet-dragging .leaflet-grab, .leaflet-dragging .leaflet-grab .leaflet-interactive, .leaflet-dragging .leaflet-marker-draggable { cursor: move; cursor: -webkit-grabbing; cursor: -moz-grabbing; cursor: grabbing; } .leaflet-marker-icon, .leaflet-marker-shadow, .leaflet-image-layer, .leaflet-pane > svg path, .leaflet-tile-container { pointer-events: none; } .leaflet-marker-icon.leaflet-interactive, .leaflet-image-layer.leaflet-interactive, .leaflet-pane > svg path.leaflet-interactive, svg.leaflet-image-layer.leaflet-interactive path { pointer-events: visiblePainted; pointer-events: auto; } .leaflet-container { background: #ddd; outline-offset: 1px; } .leaflet-container a { color: #0078A8; } .leaflet-zoom-box { border: 2px dotted #38f; background: rgba(255,255,255,0.5); } .leaflet-container { font-family: "Helvetica Neue", Arial, Helvetica, sans-serif; font-size: 12px; font-size: 0.75rem; line-height: 1.5; } .leaflet-bar { box-shadow: 0 1px 5px rgba(0,0,0,0.65); border-radius: 4px; } .leaflet-bar a { background-color: #fff; border-bottom: 1px solid #ccc; width: 26px; height: 26px; line-height: 26px; display: block; text-align: center; text-decoration: none; color: black; } .leaflet-bar a, .leaflet-control-layers-toggle { background-position: 50% 50%; background-repeat: no-repeat; display: block; } .leaflet-bar a:hover, .leaflet-bar a:focus { background-color: #f4f4f4; } .leaflet-bar a:first-child { border-top-left-radius: 4px; border-top-right-radius: 4px; } .leaflet-bar a:last-child { border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; border-bottom: none; } .leaflet-bar a.leaflet-disabled { cursor: default; background-color: #f4f4f4; color: #bbb; } .leaflet-touch .leaflet-bar a { width: 30px; height: 30px; line-height: 30px; } .leaflet-touch .leaflet-bar a:first-child { border-top-left-radius: 2px; border-top-right-radius: 2px; } .leaflet-touch .leaflet-bar a:last-child { border-bottom-left-radius: 2px; border-bottom-right-radius: 2px; } .leaflet-control-zoom-in, .leaflet-control-zoom-out { font: bold 18px 'Lucida Console', Monaco, monospace; text-indent: 1px; } .leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out { font-size: 22px; } .leaflet-control-layers { box-shadow: 0 1px 5px rgba(0,0,0,0.4); background: #fff; border-radius: 5px; } .leaflet-control-layers-toggle { background-image: none; width: 36px; height: 36px; } .leaflet-retina .leaflet-control-layers-toggle { background-image: none; background-size: 26px 26px; } .leaflet-touch .leaflet-control-layers-toggle { width: 44px; height: 44px; } .leaflet-control-layers .leaflet-control-layers-list, .leaflet-control-layers-expanded .leaflet-control-layers-toggle { display: none; } .leaflet-control-layers-expanded .leaflet-control-layers-list { display: block; position: relative; } .leaflet-control-layers-expanded { padding: 6px 10px 6px 6px; color: #333; background: #fff; } .leaflet-control-layers-scrollbar { overflow-y: scroll; overflow-x: hidden; padding-right: 5px; } .leaflet-control-layers-selector { margin-top: 2px; position: relative; top: 1px; } .leaflet-control-layers label { display: block; font-size: 13px; font-size: 1.08333em; } .leaflet-control-layers-separator { height: 0; border-top: 1px solid #ddd; margin: 5px -10px 5px -6px; } .leaflet-default-icon-path { background-image: none; } .leaflet-container .leaflet-control-attribution { background: #fff; background: rgba(255, 255, 255, 0.8); margin: 0; } .leaflet-control-attribution, .leaflet-control-scale-line { padding: 0 5px; color: #333; line-height: 1.4; } .leaflet-control-attribution a { text-decoration: none; } .leaflet-control-attribution a:hover, .leaflet-control-attribution a:focus { text-decoration: underline; } .leaflet-attribution-flag { display: inline !important; vertical-align: baseline !important; width: 1em; height: 0.6669em; } .leaflet-left .leaflet-control-scale { margin-left: 5px; } .leaflet-bottom .leaflet-control-scale { margin-bottom: 5px; } .leaflet-control-scale-line { border: 2px solid #777; border-top: none; line-height: 1.1; padding: 2px 5px 1px; white-space: nowrap; -moz-box-sizing: border-box; box-sizing: border-box; background: rgba(255, 255, 255, 0.8); text-shadow: 1px 1px #fff; } .leaflet-control-scale-line:not(:first-child) { border-top: 2px solid #777; border-bottom: none; margin-top: -2px; } .leaflet-control-scale-line:not(:first-child):not(:last-child) { border-bottom: 2px solid #777; } .leaflet-touch .leaflet-control-attribution, .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar { box-shadow: none; } .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar { border: 2px solid rgba(0,0,0,0.2); background-clip: padding-box; } .leaflet-popup { position: absolute; text-align: center; margin-bottom: 20px; } .leaflet-popup-content-wrapper { padding: 1px; text-align: left; border-radius: 12px; } .leaflet-popup-content { margin: 13px 24px 13px 20px; line-height: 1.3; font-size: 13px; font-size: 1.08333em; min-height: 1px; } .leaflet-popup-content p { margin: 17px 0; margin: 1.3em 0; } .leaflet-popup-tip-container { width: 40px; height: 20px; position: absolute; left: 50%; margin-top: -1px; margin-left: -20px; overflow: hidden; pointer-events: none; } .leaflet-popup-tip { width: 17px; height: 17px; padding: 1px; margin: -10px auto 0; pointer-events: auto; -webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); transform: rotate(45deg); } .leaflet-popup-content-wrapper, .leaflet-popup-tip { background: white; color: #333; box-shadow: 0 3px 14px rgba(0,0,0,0.4); } .leaflet-container a.leaflet-popup-close-button { position: absolute; top: 0; right: 0; border: none; text-align: center; width: 24px; height: 24px; font: 16px/24px Tahoma, Verdana, sans-serif; color: #757575; text-decoration: none; background: transparent; } .leaflet-container a.leaflet-popup-close-button:hover, .leaflet-container a.leaflet-popup-close-button:focus { color: #585858; } .leaflet-popup-scrolled { overflow: auto; } .leaflet-oldie .leaflet-popup-content-wrapper { -ms-zoom: 1; } .leaflet-oldie .leaflet-popup-tip { width: 24px; margin: 0 auto; -ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678)"; filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678); } .leaflet-oldie .leaflet-control-zoom, .leaflet-oldie .leaflet-control-layers, .leaflet-oldie .leaflet-popup-content-wrapper, .leaflet-oldie .leaflet-popup-tip { border: 1px solid #999; } .leaflet-div-icon { background: #fff; border: 1px solid #666; } .leaflet-tooltip { position: absolute; padding: 6px; background-color: #fff; border: 1px solid #fff; border-radius: 3px; color: #222; white-space: nowrap; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; pointer-events: none; box-shadow: 0 1px 3px rgba(0,0,0,0.4); } .leaflet-tooltip.leaflet-interactive { cursor: pointer; pointer-events: auto; } .leaflet-tooltip-top:before, .leaflet-tooltip-bottom:before, .leaflet-tooltip-left:before, .leaflet-tooltip-right:before { position: absolute; pointer-events: none; border: 6px solid transparent; background: transparent; content: ""; } .leaflet-tooltip-bottom { margin-top: 6px; } .leaflet-tooltip-top { margin-top: -6px; } .leaflet-tooltip-bottom:before, .leaflet-tooltip-top:before { left: 50%; margin-left: -6px; } .leaflet-tooltip-top:before { bottom: 0; margin-bottom: -12px; border-top-color: #fff; } .leaflet-tooltip-bottom:before { top: 0; margin-top: -12px; margin-left: -6px; border-bottom-color: #fff; } .leaflet-tooltip-left { margin-left: -6px; } .leaflet-tooltip-right { margin-left: 6px; } .leaflet-tooltip-left:before, .leaflet-tooltip-right:before { top: 50%; margin-top: -6px; } .leaflet-tooltip-left:before { right: 0; margin-right: -12px; border-left-color: #fff; } .leaflet-tooltip-right:before { left: 0; margin-left: -12px; border-right-color: #fff; } @media print { .leaflet-control { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
 :root{
   color-scheme: light;
-  --paper:#F5F1E8; --panel:#FCFAF5; --panel-2:#EFE9DC; --rule:#E2D9C7; --rule-2:#CFC4AE;
-  --ink:#1D1A15; --ink-2:#554E43; --ink-3:#877F71;
-  --accent:#1F4E79; --accent-soft:#DCE6F0; --amber:#A8660C; --amber-soft:#F6E7CC;
-  --good:#2E7D32; --good-soft:#DDEEDB; --bad:#B8322A; --bad-soft:#F6DCD8; --warn:#B7791F; --warn-soft:#F7EBD3;
-  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --s6:#008300; --s7:#4a3aa7; --s8:#e34948; --s0:#9C9486;
-  --h1:#F0C987; --h2:#D98A2B; --h3:#8F4A0E;
-  --grid:rgba(29,26,21,.08);
-  --f-display:"Fraunces", Georgia, "Times New Roman", serif;
-  --f-body:"Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --paper:#F4F3FA; --panel:#FFFFFF; --panel-2:#F1EFF9; --rule:#E5E2F1; --rule-2:#CFCAE3;
+  --ink:#141B34; --ink-2:#4A5070; --ink-3:#7C8199;
+  --accent:#6C4BD8; --accent-soft:#ECE7FC; --amber:#F08A24; --amber-soft:#FDEEDD;
+  --good:#1E8E5A; --good-soft:#DDF3E8; --bad:#D23B4B; --bad-soft:#FBE1E4; --warn:#B86E06; --warn-soft:#FCEFD9;
+  --s1:#0E9FB5; --s4:#F08A24; --s7:#6C4BD8; --s0:#9A9DB0; --s2:#E8505B; --s3:#1E8E5A;
+  --m1:#E8505B; --m2:#7C4DC4; --m3:#E0A100;
+  --h1:#FFC7BF; --h2:#F26B5B; --h3:#A51E3A;
+  --side:#0F1B3D; --side-2:#1C2B57; --side-ink:#EDF0FB; --side-ink-2:#99A4C8; --side-accent:#FF8A5B;
+  --grid:rgba(20,27,52,.07); --shadow:0 1px 2px rgba(20,27,52,.05),0 6px 18px rgba(20,27,52,.05);
+  --f-display:"Sora", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --f-mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     color-scheme: dark;
-    --paper:#15130F; --panel:#1D1A15; --panel-2:#26221B; --rule:#322D24; --rule-2:#473F32;
-    --ink:#F1ECE2; --ink-2:#C2B9A8; --ink-3:#8E8676;
-    --accent:#86B4E3; --accent-soft:#1E2E3F; --amber:#E0A84A; --amber-soft:#3A2C14;
-    --good:#6CC070; --good-soft:#1B3020; --bad:#EE7B72; --bad-soft:#3D1D1A; --warn:#E0A84A; --warn-soft:#3A2C14;
-    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300; --s7:#9085e9; --s8:#e66767; --s0:#7D766A;
-    --h1:#6B4515; --h2:#B8701F; --h3:#F0B45E;
-    --grid:rgba(241,236,226,.08);
+    --paper:#0B1226; --panel:#141C36; --panel-2:#1B2544; --rule:#26304F; --rule-2:#36415F;
+    --ink:#EEF0FA; --ink-2:#B3B9D3; --ink-3:#7F87A6;
+    --accent:#8B72EE; --accent-soft:#252B55; --amber:#F29B45; --amber-soft:#3A2A1A;
+    --good:#4CC38A; --good-soft:#15352A; --bad:#F07480; --bad-soft:#3E1C24; --warn:#E6A33E; --warn-soft:#3A2C14;
+    --s1:#1C9AAD; --s4:#C8741F; --s7:#8B72EE; --s0:#6F7591; --s2:#E0606B; --s3:#4CC38A;
+    --m1:#E0606B; --m2:#9E7BE4; --m3:#AE820A;
+    --h1:#5A2330; --h2:#C04A45; --h3:#FF9C8A;
+    --side:#070D1F; --side-2:#16214A;
+    --grid:rgba(238,240,250,.08); --shadow:none;
   }
 }
 :root[data-theme="dark"]{
   color-scheme: dark;
-  --paper:#15130F; --panel:#1D1A15; --panel-2:#26221B; --rule:#322D24; --rule-2:#473F32;
-  --ink:#F1ECE2; --ink-2:#C2B9A8; --ink-3:#8E8676;
-  --accent:#86B4E3; --accent-soft:#1E2E3F; --amber:#E0A84A; --amber-soft:#3A2C14;
-  --good:#6CC070; --good-soft:#1B3020; --bad:#EE7B72; --bad-soft:#3D1D1A; --warn:#E0A84A; --warn-soft:#3A2C14;
-  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300; --s7:#9085e9; --s8:#e66767; --s0:#7D766A;
-  --h1:#6B4515; --h2:#B8701F; --h3:#F0B45E;
-  --grid:rgba(241,236,226,.08);
+  --paper:#0B1226; --panel:#141C36; --panel-2:#1B2544; --rule:#26304F; --rule-2:#36415F;
+  --ink:#EEF0FA; --ink-2:#B3B9D3; --ink-3:#7F87A6;
+  --accent:#8B72EE; --accent-soft:#252B55; --amber:#F29B45; --amber-soft:#3A2A1A;
+  --good:#4CC38A; --good-soft:#15352A; --bad:#F07480; --bad-soft:#3E1C24; --warn:#E6A33E; --warn-soft:#3A2C14;
+  --s1:#1C9AAD; --s4:#C8741F; --s7:#8B72EE; --s0:#6F7591; --s2:#E0606B; --s3:#4CC38A;
+  --m1:#E0606B; --m2:#9E7BE4; --m3:#AE820A;
+  --h1:#5A2330; --h2:#C04A45; --h3:#FF9C8A;
+  --side:#070D1F; --side-2:#16214A;
+  --grid:rgba(238,240,250,.08); --shadow:none;
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html,body{background:var(--paper)}
-body{margin:0;color:var(--ink);font:14px/1.5 var(--f-body);-webkit-font-smoothing:antialiased}
-.wrap{max-width:1320px;margin:0 auto;padding-inline:clamp(16px,3vw,32px);padding-block:0 64px}
-h1,h2,h3{font-family:var(--f-display);font-weight:650;text-wrap:balance;margin:0;letter-spacing:-.01em}
+body{margin:0;color:var(--ink);font:14px/1.5 var(--f-body);-webkit-font-smoothing:antialiased;display:grid;grid-template-columns:272px minmax(0,1fr);min-height:100vh}
+h1,h2,h3{font-family:var(--f-display);font-weight:600;text-wrap:balance;margin:0;letter-spacing:-.015em}
 .mono,.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
 button,select,input,textarea{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 a{color:var(--accent)}
 
-.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:1000;background:var(--paper);border-bottom:1px solid var(--rule)}
-.brand{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:8px 24px;padding-top:18px}
-.brand h1{font-size:clamp(22px,2.6vw,30px);line-height:1.1}
-.brand .code{font-family:var(--f-mono);font-size:12px;font-weight:600;color:var(--amber);background:var(--amber-soft);padding:2px 8px;border-radius:999px;margin-right:8px;vertical-align:middle;letter-spacing:.04em}
-.brand .sub{color:var(--ink-3);font-size:12px;font-family:var(--f-mono)}
-.filters{display:flex;flex-wrap:wrap;gap:8px 12px;padding:12px 0 10px;align-items:end}
-.f{display:flex;flex-direction:column;gap:2px;min-width:0}
-.f label{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);font-weight:600}
-.f select,.f input,.f textarea{background:var(--panel);border:1px solid var(--rule-2);border-radius:6px;padding:6px 9px;height:34px;max-width:100%}
-.f select{appearance:none;padding-right:28px;background-image:linear-gradient(45deg,transparent 50%,var(--ink-3) 50%),linear-gradient(135deg,var(--ink-3) 50%,transparent 50%);background-position:calc(100% - 14px) 15px,calc(100% - 9px) 15px;background-size:5px 5px;background-repeat:no-repeat}
-.f textarea{height:auto;min-height:64px;resize:vertical}
-.seg{display:inline-flex;border:1px solid var(--rule-2);border-radius:7px;overflow:hidden;height:34px;background:var(--panel)}
-.seg button{border:0;background:transparent;padding:0 12px;cursor:pointer;font-weight:600;font-size:13px;color:var(--ink-2)}
-.seg button+button{border-left:1px solid var(--rule)}
-.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
-.btn{border:1px solid var(--rule-2);background:var(--panel);border-radius:6px;height:34px;padding:0 12px;cursor:pointer;font-weight:500}
-.btn:hover{border-color:var(--ink-3)}
-.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--paper);font-weight:600}
-.btn.danger{color:var(--bad);border-color:var(--bad)}
-.btn.sm{height:28px;padding:0 9px;font-size:12.5px}
-.tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;margin-bottom:-1px}
-.tabs::-webkit-scrollbar{display:none}
-.tab{border:0;background:transparent;padding:10px 14px;cursor:pointer;color:var(--ink-2);font-weight:600;font-size:13.5px;border-bottom:2px solid transparent;white-space:nowrap}
-.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--amber)}
+/* barra lateral */
+.side{position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--side);color:var(--side-ink);padding:22px 16px calc(22px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:22px;scrollbar-width:thin}
+.brand .code{display:inline-block;font-family:var(--f-mono);font-size:10.5px;font-weight:600;color:var(--side);background:var(--side-accent);padding:2px 8px;border-radius:999px;letter-spacing:.06em;margin-bottom:10px}
+.brand h1{font-size:22px;line-height:1.15;color:var(--side-ink)}
+.brand .sub{color:var(--side-ink-2);font-size:11.5px;margin-top:6px;line-height:1.45}
+.side-l{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--side-ink-2);font-weight:700;margin:0 0 6px 6px}
+.tabs{display:flex;flex-direction:column;gap:2px}
+.tab{display:flex;align-items:center;gap:10px;border:0;background:transparent;padding:9px 10px;border-radius:9px;cursor:pointer;color:var(--side-ink-2);font-weight:600;font-size:13.5px;text-align:left}
+.tab svg{width:17px;height:17px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tab:hover{color:var(--side-ink);background:rgba(255,255,255,.05)}
+.tab[aria-selected="true"]{background:var(--side-2);color:#fff}
+.tab[aria-selected="true"] svg{stroke:var(--side-accent)}
+.side .filters{display:flex;flex-direction:column;gap:12px;align-items:stretch}
+.filters{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:end}
+.side .f label{color:var(--side-ink-2)}
+.side .f select{background-color:var(--side-2);border-color:transparent;color:var(--side-ink);width:100%}
+.side .seg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;border:0;background:transparent;height:auto;overflow:visible}
+.side .seg button{height:32px;border-radius:7px;background:var(--side-2);color:var(--side-ink-2);border:0!important;font-size:12.5px;padding:0 4px}
+.side .seg button[aria-pressed="true"]{background:var(--side-accent);color:var(--side)}
+.side .user{font-size:12px;color:var(--side-ink-2);margin-top:auto;border-top:1px solid var(--side-2);padding-top:12px}
+.side .user a{color:var(--side-ink)}
 
-main{padding-top:22px}
+.f{display:flex;flex-direction:column;gap:3px;min-width:0}
+.f label{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);font-weight:700}
+.f select,.f input,.f textarea{background:var(--panel);border:1px solid var(--rule-2);border-radius:8px;padding:6px 10px;height:36px;max-width:100%}
+.f select{appearance:none;padding-right:28px;background-image:linear-gradient(45deg,transparent 50%,currentColor 50%),linear-gradient(135deg,currentColor 50%,transparent 50%);background-position:calc(100% - 14px) 16px,calc(100% - 9px) 16px;background-size:5px 5px;background-repeat:no-repeat}
+.f textarea{height:auto;min-height:64px;resize:vertical}
+.seg{display:inline-flex;border:1px solid var(--rule-2);border-radius:8px;overflow:hidden;height:36px;background:var(--panel)}
+.seg button{border:0;background:transparent;padding:0 13px;cursor:pointer;font-weight:600;font-size:13px;color:var(--ink-2)}
+.seg button+button{border-left:1px solid var(--rule)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#fff}
+.btn{border:1px solid var(--rule-2);background:var(--panel);border-radius:8px;height:36px;padding:0 14px;cursor:pointer;font-weight:600}
+.btn:hover{border-color:var(--ink-3)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.danger{color:var(--bad);border-color:var(--bad)}
+.btn.sm{height:30px;padding:0 10px;font-size:12.5px}
+.filters-main{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:end}
+
+.wrap{min-width:0;padding-inline:clamp(16px,2.4vw,40px);padding-block:26px 64px}
 .view{display:flex;flex-direction:column;gap:22px}
 .sec-h{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 16px}
 .sec-h h2{font-size:21px}
@@ -125,6 +143,7 @@ tr.sub td{background:var(--panel-2);font-weight:700}
 tr.tot td{background:var(--amber-soft);font-weight:700}
 tr.click{cursor:pointer}
 tr.click:hover td{background:var(--accent-soft)}
+td.w{white-space:normal;min-width:150px;max-width:300px;line-height:1.3}
 td.txt{white-space:normal;min-width:220px;max-width:420px}
 .heat{border-radius:4px;padding:1px 6px;display:inline-block;min-width:38px;text-align:right}
 .spark{display:inline-flex;align-items:flex-end;gap:1px;height:18px;vertical-align:middle}
@@ -168,6 +187,10 @@ details.sop li{margin:3px 0}
 .evid img{display:block;width:100%;height:150px;object-fit:cover;object-position:top;border-radius:5px}
 .evid.vacia{border:1px dashed var(--rule-2);border-radius:8px;padding:10px;min-height:80px;width:132px;font-size:11.5px}
 @media (max-width:640px){.pda-sec{grid-template-columns:1fr}.evid{flex-direction:row;flex-wrap:wrap}}
+.mapbtns{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.mapbtns a.btn{display:inline-flex;align-items:center;text-decoration:none;color:var(--ink)}
+.mapbtns a.btn.primary{color:#fff}
+.leaflet-popup-content{font-family:var(--f-body);font-size:13px;line-height:1.4}
 .prog{height:10px;background:var(--panel-2);border-radius:5px;overflow:hidden}
 .prog i{display:block;height:100%;background:var(--good)}
 
@@ -182,48 +205,76 @@ dialog form{display:flex;flex-direction:column;gap:12px;padding:18px 20px;overfl
 #map{height:560px;border-radius:10px;border:1px solid var(--rule);z-index:0}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 16px;border-radius:8px;font-weight:600;z-index:3000}
 body.embed .brand{padding-top:10px}
-@media print{.top{position:static}}
+
+.panel{border:0;border-radius:14px;box-shadow:var(--shadow);padding:18px 20px}
+.kpi{border:0;border-radius:14px;box-shadow:var(--shadow);padding:16px 18px;flex-direction:row;align-items:center;gap:14px}
+.kpi .ico{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;flex:none}
+.kpi .ico svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.kpi .tx{display:flex;flex-direction:column;gap:1px;min-width:0}
+.kpi .v{font-family:var(--f-display);font-size:28px;font-weight:600}
+.kpis{grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:16px}
+.tw{border:0;border-radius:10px;box-shadow:inset 0 0 0 1px var(--rule)}
+th{background:var(--panel-2)}
+td,th{padding:7px 11px}
+.spark{height:22px}
+.spark i{width:6px;background:var(--s7)}
+.rings{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;text-align:center}
+.ring svg{width:100%;max-width:130px;height:auto;display:block;margin:0 auto}
+.ring b{display:block;font-family:var(--f-display);font-weight:600;font-size:14px;margin-top:4px}
+.ring span{font-size:12px;color:var(--ink-3)}
+.pagehead{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 16px;margin-bottom:4px}
+.pagehead .crumb{font-size:12px;color:var(--ink-3);font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.sec-h h2{font-size:24px}
+.check .ic{width:28px;height:28px}
+@media (max-width:900px){
+  body{display:block}
+  .side .filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
+  .side{position:static;height:auto;padding:16px}
+  .tabs{flex-direction:row;overflow-x:auto;scrollbar-width:none}
+  .tab{white-space:nowrap}
+  .rings{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+body.embed .brand h1{font-size:18px}
+
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 
-<div class="top">
-  <div class="wrap" style="padding-block:0">
-    <div class="brand">
-      <div>
-        <h1><span class="code">GALAXIA · 100 PTS</span>Gestión de clientes no compradores</h1>
-        <div class="sub" id="subTitle">Cargando datos…</div>
-      </div>
-      <div class="sub" id="userTag"></div>
-    </div>
-    <div class="filters">
-      <div class="f"><label>Negocio</label>
-        <div class="seg" id="fUn" role="group" aria-label="Negocio">
-          <button type="button" data-v="TOTAL" aria-pressed="true">Total</button>
-          <button type="button" data-v="CVZA" aria-pressed="false">Cerveza</button>
-          <button type="button" data-v="NABS" aria-pressed="false">NABs</button>
-        </div>
-      </div>
-      <div class="f"><label for="fSpv">Supervisor</label><select id="fSpv"></select></div>
-      <div class="f"><label for="fPv">Promotor</label><select id="fPv"></select></div>
-      <div class="f"><label for="fCrit">Criterio de conteo</label>
-        <select id="fCrit">
-          <option value="aud">Auditoría (recomendado)</option>
-          <option value="excel">Igual al Excel</option>
-        </select>
-      </div>
-    </div>
-    <nav class="tabs" role="tablist" id="tabs">
-      <button class="tab" role="tab" data-t="resumen" aria-selected="true">Resumen auditoría</button>
-      <button class="tab" role="tab" data-t="horizonte" aria-selected="false">Horizonte CNC</button>
-      <button class="tab" role="tab" data-t="clientes" aria-selected="false">Clientes</button>
-      <button class="tab" role="tab" data-t="compradores" aria-selected="false">Compradores y evolutivo</button>
-      <button class="tab" role="tab" data-t="motivos" aria-selected="false">Motivos BEES Force</button>
-      <button class="tab" role="tab" data-t="pda" aria-selected="false">Planes de acción</button>
-      <button class="tab" role="tab" data-t="visitas" aria-selected="false">Visitas SPV</button>
-      <button class="tab" role="tab" data-t="mapa" aria-selected="false">Mapa</button>
-    </nav>
+<aside class="side">
+  <div class="brand">
+    <span class="code">GALAXIA · 100 PTS</span>
+    <h1>Gestión de clientes no compradores</h1>
+    <div class="sub" id="subTitle">Cargando datos…</div>
   </div>
-</div>
+  <nav aria-label="Secciones"><p class="side-l">Secciones</p><div class="tabs" role="tablist" id="tabs">
+    <button class="tab" role="tab" data-t="resumen" aria-selected="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13h4v7H4zM10 8h4v12h-4zM16 4h4v16h-4z"/></svg>Resumen</button>
+    <button class="tab" role="tab" data-t="horizonte" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>Horizonte CNC</button>
+    <button class="tab" role="tab" data-t="clientes" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Clientes</button>
+    <button class="tab" role="tab" data-t="compradores" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17l5-5 4 3 7-8"/><path d="M15 7h5v5"/></svg>Compradores y evolutivo</button>
+    <button class="tab" role="tab" data-t="motivos" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14v10H9l-4 4z"/></svg>Motivos BEES Force</button>
+    <button class="tab" role="tab" data-t="pda" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5h10M9 12h10M9 19h10M4 5l1 1 2-2M4 12l1 1 2-2M4 19l1 1 2-2"/></svg>Planes de acción</button>
+    <button class="tab" role="tab" data-t="visitas" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>Visitas SPV</button>
+    <button class="tab" role="tab" data-t="mapa" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6-5.5-6-11a6 6 0 1 1 12 0c0 5.5-6 11-6 11z"/><circle cx="12" cy="10" r="2.2"/></svg>Mapa</button>
+    <button class="tab" role="tab" data-t="auditoria" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg>Control auditoría</button>
+  </div></nav>
+  <div class="filters"><p class="side-l" style="margin-bottom:-4px">Filtros</p>
+    <div class="f"><label>Negocio</label>
+      <div class="seg" id="fUn" role="group" aria-label="Negocio">
+        <button type="button" data-v="TOTAL" aria-pressed="true">Total</button>
+        <button type="button" data-v="CVZA" aria-pressed="false">Cerveza</button>
+        <button type="button" data-v="NABS" aria-pressed="false">NABs</button>
+      </div>
+    </div>
+    <div class="f"><label for="fSpv">Supervisor</label><select id="fSpv"></select></div>
+    <div class="f"><label for="fPv">Promotor</label><select id="fPv"></select></div>
+    <div class="f"><label for="fCrit">Criterio de conteo</label>
+      <select id="fCrit">
+        <option value="aud">Auditoría (recomendado)</option>
+        <option value="excel">Igual al Excel</option>
+      </select>
+    </div>
+  </div>
+  <div class="user" id="userTag"></div>
+</aside>
 
 <main class="wrap">
   <section class="view" id="v-resumen"></section>
@@ -234,6 +285,7 @@ body.embed .brand{padding-top:10px}
   <section class="view" id="v-pda" hidden></section>
   <section class="view" id="v-visitas" hidden></section>
   <section class="view" id="v-mapa" hidden></section>
+  <section class="view" id="v-auditoria" hidden></section>
 </main>
 
 <dialog id="dlgVisita"></dialog>
@@ -257,7 +309,7 @@ const S = { un:'TOTAL', spv:'', pv:'', crit:'aud', tab:'resumen', user:null };
 const MES_L = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
 const MES_LL = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 const UNS = { TOTAL:{k:'t',tx:'t',lab:'Total',col:'--s7'}, CVZA:{k:'c',tx:'c',lab:'Cerveza',col:'--s4'}, NABS:{k:'n',tx:'n',lab:'NABs',col:'--s1'} };
-const MOT_COL = { 'PRECIO NO COMPETITIVOS':'--s1', 'DIFERENCIA DE PRECIOS':'--s2', 'COMPRA EN MAYORISTA':'--s3' };
+const MOT_COL = { 'PRECIO NO COMPETITIVOS':'--m1', 'DIFERENCIA DE PRECIOS':'--m2', 'COMPRA EN MAYORISTA':'--m3' };
 const PER_LAB = {0:'Sin visita',1:'Semanal (1)',2:'Quincenal (0,50)',3:'Cada 3 semanas (0,33)',4:'Mensual (0,25)'};
 const USERS = { 'guillen2026':{name:'GUILLEN IGNACIO',spv:'GUILLEN',scope:'own'}, 'sans2026':{name:'SANS LUCAS',spv:'SANS',scope:'own'}, 'jefe2026':{name:'JEFE DE VENTAS',spv:'',scope:'all'} };
 const $ = s => document.querySelector(s);
@@ -393,7 +445,7 @@ function spark(s){
 /* ====================== render ====================== */
 function render(){
   if(!D.data) return;
-  const f={resumen:rResumen, horizonte:rHorizonte, clientes:rClientes, compradores:rCompradores, motivos:rMotivos, pda:rPda, visitas:rVisitas, mapa:rMapa}[S.tab];
+  const f={auditoria:rAuditoria, resumen:rResumen, horizonte:rHorizonte, clientes:rClientes, compradores:rCompradores, motivos:rMotivos, pda:rPda, visitas:rVisitas, mapa:rMapa}[S.tab];
   f && f();
   enviarAlto();
 }
@@ -415,49 +467,39 @@ function sumRows(rs,label){ const o={pv:label,cart:0,ma:0,u1:0,u2:0,u3:0,u6:0,u9
 function totalesUn(un){ const rs=tablaHorizonte(un); return sumRows(rs,'ZUPPA'); }
 
 /* ====================== RESUMEN ====================== */
-function rResumen(){
-  const v=$('#v-resumen');
+function datosAud(){
   const T={}; ['TOTAL','CVZA','NABS'].forEach(u=>T[u]=totalesUn(u));
-  const t=T[S.un];
-  // frecuencia U12M (sobre total: clientes que no compran nada hace 12 meses)
   const u12=clientesFiltrados().filter(c=>{const f=flags(c,'TOTAL'); return f&&f.u12;});
-  const frecOk=u12.filter(c=>c.per===4).length, frecQ=u12.filter(c=>c.per===2).length;
-  const frecMal=u12.length-frecOk-frecQ;
-  // BEES Force
   const mt=D.data.motivos.total.filter(b=>!b.pendiente), mu=D.data.motivos.un;
   const mesesRel=[...new Set([...mt,...mu].filter(b=>b.regs.length).map(b=>b.mes))].sort();
-  const pend=D.data.motivos.total.filter(b=>b.pendiente);
-  const relUnU = mu.reduce((a,b)=>a+b.regs.filter(enFiltro).length,0);
-  const relTot = mt.reduce((a,b)=>a+b.regs.filter(enFiltro).length,0);
-  // PDA
-  const pdaMeses=D.data.pda.total.map(p=>p.label.toLowerCase());
-  const pdaSinAccion=[...D.data.pda.un].reduce((a,p)=>a+[...p.cerveza,...p.nabs].filter(x=>!x.accion).length,0);
-  const pdaNoReal=D.data.pda.total.reduce((a,p)=>a+[...p.cerveza,...p.nabs].filter(x=>/NO REALIZADO/.test(x.status)).length,0);
-  // visitas SPV mes
-  const mesAct=D.data.meta.mesActual; const obj=D.data.meta.objetivoVisitasSpv;
-  const vis=D.visitas.filter(x=>x.fecha.slice(0,7)===mesAct && x.estado==='Realizada' && (!S.spv||x.spv===S.spv));
-  const spvsVis=S.spv?[S.spv]:['GUILLEN','SANS'];
-  const visOk=spvsVis.every(s=>vis.filter(x=>x.spv===s).length>=obj);
-  const compr = t.cart? t.compra/t.cart : null;
-  const objUn = D.data.meta.objetivos[S.un];
+  return { T, u12, frecOk:u12.filter(c=>c.per===4), frecQ:u12.filter(c=>c.per===2), frecMal:u12.filter(c=>c.per!==4&&c.per!==2),
+    mesesRel, pend:D.data.motivos.total.filter(b=>b.pendiente).concat(D.data.motivos.un.filter(b=>b.pendiente)),
+    relUnU: mu.reduce((a,b)=>a+b.regs.filter(enFiltro).length,0), relTot: mt.reduce((a,b)=>a+b.regs.filter(enFiltro).length,0) };
+}
+function rResumen(){
+  const v=$('#v-resumen');
+  const A=datosAud(), T=A.T, t=T[S.un];
+  const mesAct=D.data.meta.mesActual;
+  const evoMeses=[]; for(let m=3;m<=MI;m++) evoMeses.push(m);
+  const evo={}; ['TOTAL','CVZA','NABS'].forEach(u=>evo[u]=evoMeses.map(m=>clientesFiltrados().filter(c=>{ const s=serie(c,u); if(!s||excluidoTexto(c,u)) return false; if(!sinCompra(s,3,m)) return false; if(S.crit==='aud' && c.alta && c.alta.slice(0,7)>M[m-3]) return false; return true; }).length));
   v.innerHTML = `
-  <div class="sec-h"><h2>Estado del punto de auditoría</h2><p>Nivel 1 (100 %) exige: seguimiento de CNC abierto por horizonte y unidad de negocio, relevamiento del motivo en BEES Force para los U3M de CZA y NABs con un plan de acción asociado, y la frecuencia de contacto de los U12M. Cada punto enlaza a su evidencia.</p></div>
+  <div class="sec-h"><h2>Gestión de clientes no compradores</h2><p>Seguimiento de toda la cartera por negocio, clientes no compradores por horizonte (U3M, U6M, U12M), motivos relevados en BEES Force, planes de acción y visitas de supervisores.</p></div>
   <div class="kpis">
-    <div class="kpi"><span class="l">Cartera ${S.spv||S.pv?'filtrada':'total'}</span><span class="v">${n0(t.cart)}</span><span class="d">clientes activos en la base</span></div>
-    <div class="kpi"><span class="l">CNC U3M · ${UNS[S.un].lab}</span><span class="v">${n0(t.u3)}</span><span class="d">${pc(t.u3/t.cart,1)} de la cartera</span></div>
-    <div class="kpi"><span class="l">CNC U6M · ${UNS[S.un].lab}</span><span class="v">${n0(t.u6)}</span><span class="d">${pc(t.u6/t.cart,1)} de la cartera</span></div>
-    <div class="kpi"><span class="l">CNC U12M · ${UNS[S.un].lab}</span><span class="v">${n0(t.u12)}</span><span class="d">${pc(t.u12/t.cart,1)} de la cartera</span></div>
-    <div class="kpi"><span class="l">Compradores ${mesLab(mesAct)} · ${UNS[S.un].lab}</span><span class="v">${pc(compr)}</span><span class="d">objetivo ${pc(objUn)} · mes en curso</span></div>
+    ${kpi('Cartera '+(S.spv||S.pv?'filtrada':'total'), n0(t.cart), 'clientes activos en la base', 'users', '--s7')}
+    ${kpi('CNC U3M · '+UNS[S.un].lab, n0(t.u3), pc(t.u3/t.cart,1)+' de la cartera', 'clock', '--h2')}
+    ${kpi('CNC U6M · '+UNS[S.un].lab, n0(t.u6), pc(t.u6/t.cart,1)+' de la cartera', 'clock', '--h2')}
+    ${kpi('CNC U12M · '+UNS[S.un].lab, n0(t.u12), pc(t.u12/t.cart,1)+' de la cartera', 'alert', '--bad')}
+    ${kpi('Relevados BEES Force', n0(A.relUnU), 'tareas por negocio · '+A.mesesRel.length+' meses', 'chat', '--s1')}
   </div>
   <div class="grid2">
+    <div style="display:flex;flex-direction:column;gap:18px;min-width:0">
     <div class="panel">
-      <div class="ph"><h3>Checklist Nivel 1</h3><span class="hint">se actualiza con cada carga</span></div>
-      ${chk('ok','Seguimiento anual de toda la cartera por negocio', `${n0(T.TOTAL.cart)} clientes con compra mes a mes de ${mesLab(M[0])} a ${mesLab(M[MI])}. Compradores por CVZA, NABs, MATCH, AGUAS y MKTP en el evolutivo.`, 'compradores')}
-      ${chk('ok','CNC abiertos por horizonte (U3M / U6M / U12M), promotor y supervisor', `Total ${n0(T.TOTAL.u3)} / ${n0(T.TOTAL.u6)} / ${n0(T.TOTAL.u12)} · Cerveza ${n0(T.CVZA.u3)} / ${n0(T.CVZA.u6)} / ${n0(T.CVZA.u12)} · NABs ${n0(T.NABS.u3)} / ${n0(T.NABS.u6)} / ${n0(T.NABS.u12)}.`, 'horizonte')}
-      ${chk(pend.length?'warn':'ok','Relevamiento mensual del motivo en BEES Force (U3M CZA y NABs)', `${mesesRel.length} meses con relevamiento (${mesesRel.map(mesLab).join(', ')}): ${n0(relUnU)} tareas por negocio y ${n0(relTot)} en el total.${pend.length?' Falta el dato de '+pend.map(b=>b.label.toLowerCase()).join(', ')+' en MOTIVOS BEES FORCE TOTAL.':''}`, 'motivos')}
-      ${chk(pdaSinAccion||pdaNoReal?'warn':'ok','Plan de acción (PDA) asociado a cada motivo, por mes', `PDA cargados para ${pdaMeses.join(', ')}.${pdaNoReal?' '+pdaNoReal+' acciones del total figuran como "NO REALIZADO".':''}${pdaSinAccion?' '+pdaSinAccion+' filas de PDA por negocio sin acción escrita.':''}`, 'pda')}
-      ${chk(frecMal? 'bad' : (frecQ?'warn':'ok'),'Frecuencia de contacto de los CNC U12M (0,25 o 0,50 con oportunidad de censo)', `${u12.length} clientes sin compra en ningún negocio hace 12 meses: ${frecOk} con frecuencia mensual, ${frecQ} quincenal${frecMal?', <strong>'+frecMal+' con otra frecuencia</strong>':''}.`, 'horizonte')}
-      ${chk(visOk?'ok':'warn','Visitas de supervisores a CNC con motivo', `${vis.length} visitas realizadas en ${mesLL(mesAct)}; objetivo ${obj} por supervisor por mes.`, 'visitas')}
+      <div class="ph"><h3>Compradores de ${mesLL(mesAct)}</h3><span class="hint">mes en curso · contra objetivo</span></div>
+      <div class="rings">${['TOTAL','CVZA','NABS'].map(u=>ring(T[u].compra/T[u].cart, D.data.meta.objetivos[u], UNS[u].col, UNS[u].lab)).join('')}</div>
+    </div>
+    <div class="panel"><div class="ph"><h3>Evolución de CNC U3M</h3><span class="hint">cada mes, sobre la cartera actual</span></div>
+      ${legend([['Total','--s7'],['Cerveza','--s4'],['NABs','--s1']])}
+      <div class="chart"><canvas id="cResEvo"></canvas></div></div>
     </div>
     <div class="panel">
       <div class="ph"><h3>CNC por horizonte y negocio</h3><span class="hint">clientes, acumulado</span></div>
@@ -468,20 +510,95 @@ function rResumen(){
       </tbody></table></div>
     </div>
   </div>
-  ${reconciliacion()}
-  ${D.data.meta.avisos.length?`<div class="note warn"><b>Avisos de la última carga</b><ul style="margin:4px 0 0;padding-left:18px">${D.data.meta.avisos.map(a=>`<li>${esc(a)}</li>`).join('')}</ul></div>`:''}
   <details class="sop"><summary>Cómo usar este tablero</summary><ol>
-    <li><b>Negocio</b> arriba cambia todos los números entre Total (cualquier negocio), Cerveza y NABs. Supervisor y promotor filtran todas las pestañas.</li>
+    <li><b>Negocio</b> cambia todos los números entre Total (cualquier negocio), Cerveza y NABs. Supervisor y promotor filtran todas las secciones.</li>
     <li><b>Horizonte CNC</b>: U3M, U6M y U12M son acumulados, igual que en el Excel: un cliente U12M también es U6M y U3M. El mes en curso no cuenta porque todavía está abierto.</li>
     <li><b>Clientes</b>: listado para trabajar en calle y para mostrar al auditor. Se descarga en CSV.</li>
     <li><b>Motivos BEES Force</b>: lo que relevaron los promotores cada mes y si el cliente volvió a comprar después.</li>
     <li><b>Planes de acción</b>: el PDA de cada mes responde a los motivos relevados el mes anterior.</li>
-    <li><b>Visitas SPV</b>: cada supervisor agenda y carga sus visitas a CNC con motivo (qué notó, plan de acción, compromiso). Se guardan en la planilla.</li>
+    <li><b>Visitas SPV</b>: cada supervisor agenda y carga sus visitas a CNC con motivo. Se guardan en la planilla.</li>
+    <li><b>Control auditoría</b>: estado de cada requisito del Nivel 1 y lo que falta corregir.</li>
     <li>Para actualizar: pegar las hojas nuevas en el Google Sheet y correr <b>🚫 Gestión CNC → Actualizar tablero en GitHub</b>.</li>
   </ol></details>`;
-  v.querySelectorAll('[data-go]').forEach(a=>a.onclick=e=>{e.preventDefault(); irTab(a.dataset.go);});
   chart('cResHz',{type:'bar',data:{labels:['U3M','U6M','U12M'],datasets:['TOTAL','CVZA','NABS'].map(u=>({label:UNS[u].lab,data:[T[u].u3,T[u].u6,T[u].u12],backgroundColor:cssv(UNS[u].col),borderRadius:4,borderSkipped:'start',borderColor:cssv('--panel'),borderWidth:1}))},
     options:{scales:{y:{beginAtZero:true,grid:{color:cssv('--grid')}},x:{grid:{display:false}}}}});
+  chart('cResEvo',{type:'line',data:{labels:evoMeses.map(m=>mesLab(M[m])),datasets:['TOTAL','CVZA','NABS'].map(u=>({label:UNS[u].lab,data:evo[u],borderColor:cssv(UNS[u].col),backgroundColor:cssv(UNS[u].col),borderWidth:2,pointRadius:3,tension:.25}))},
+    options:{scales:{y:{beginAtZero:true,grid:{color:cssv('--grid')}},x:{grid:{display:false}}}}});
+}
+
+/* ====================== CONTROL AUDITORÍA ====================== */
+function rAuditoria(){
+  const v=$('#v-auditoria');
+  const A=datosAud(), T=A.T;
+  const mesAct=D.data.meta.mesActual, obj=D.data.meta.objetivoVisitasSpv;
+  // PDA
+  const noReal=[], deadMal=[], sinAcc=[];
+  D.data.pda.total.forEach(p=>['cerveza','nabs'].forEach(sec=>p[sec].forEach(x=>{
+    if(/NO REALIZADO/.test(x.status)) noReal.push({mes:p.mes,sec,...x});
+    if(x.deadline && x.deadline.slice(0,7)<p.mes) deadMal.push({mes:p.mes,sec,base:'Total',...x});
+  })));
+  D.data.pda.un.forEach(p=>['cerveza','nabs'].forEach(sec=>p[sec].forEach(x=>{
+    if(!x.accion) sinAcc.push({mes:p.mes,sec,...x});
+    if(x.deadline && x.deadline.slice(0,7)<p.mes) deadMal.push({mes:p.mes,sec,base:'Por negocio',...x});
+  })));
+  const vis=D.visitas.filter(x=>x.fecha.slice(0,7)===mesAct && x.estado==='Realizada');
+  const spvs=S.spv?[S.spv]:['GUILLEN','SANS'];
+  const visSpv=spvs.map(s=>({s,n:vis.filter(x=>x.spv===s).length}));
+  const visOk=visSpv.every(x=>x.n>=obj);
+  const secL=s=>s==='cerveza'?'Cerveza':'NABs';
+  const nPend = (A.frecMal.length?1:0)+(A.pend.length?1:0)+(noReal.length?1:0)+(sinAcc.length||deadMal.length?1:0)+(visOk?0:1);
+  v.innerHTML=`
+  <div class="sec-h"><h2>Control de auditoría</h2><p>Estado de cada requisito del Nivel 1 (100 %) y el detalle de lo que falta corregir. Se recalcula con cada actualización del tablero: al corregir en el Sheet y actualizar, cada punto pasa a verde.</p></div>
+  <div class="grid2">
+    <div class="panel">
+      <div class="ph"><h3>Checklist Nivel 1</h3><span class="chip ${nPend?'warn':'ok'}">${nPend?nPend+' puntos para revisar':'todo en orden'}</span></div>
+      ${chk('ok','Seguimiento anual de toda la cartera por negocio', `${n0(T.TOTAL.cart)} clientes con compra mes a mes de ${mesLab(M[0])} a ${mesLab(M[MI])}. Compradores por CVZA, NABs, MATCH, AGUAS y MKTP en el evolutivo.`, 'compradores')}
+      ${chk('ok','CNC abiertos por horizonte (U3M / U6M / U12M), promotor y supervisor', `Total ${n0(T.TOTAL.u3)} / ${n0(T.TOTAL.u6)} / ${n0(T.TOTAL.u12)} · Cerveza ${n0(T.CVZA.u3)} / ${n0(T.CVZA.u6)} / ${n0(T.CVZA.u12)} · NABs ${n0(T.NABS.u3)} / ${n0(T.NABS.u6)} / ${n0(T.NABS.u12)}.`, 'horizonte')}
+      ${chk(A.pend.length?'warn':'ok','Relevamiento mensual del motivo en BEES Force (U3M CZA y NABs)', `${A.mesesRel.length} meses con relevamiento (${A.mesesRel.map(mesLab).join(', ')}): ${n0(A.relUnU)} tareas por negocio y ${n0(A.relTot)} en el total.${A.pend.length?' Falta el dato de '+A.pend.map(b=>b.label.toLowerCase()).join(', ')+'.':''}`, 'motivos')}
+      ${chk(noReal.length||sinAcc.length||deadMal.length?'warn':'ok','Plan de acción (PDA) asociado a cada motivo, por mes', `PDA cargados para ${D.data.pda.total.map(p=>p.label.toLowerCase()).join(', ')}.${noReal.length?' '+noReal.length+' acciones figuran como "NO REALIZADO".':''}${sinAcc.length?' '+sinAcc.length+' filas por negocio sin acción.':''}${deadMal.length?' '+deadMal.length+' con fecha límite anterior al mes del PDA.':''}`, 'pda')}
+      ${chk(A.frecMal.length?'bad':(A.frecQ.length?'warn':'ok'),'Frecuencia de contacto de los CNC U12M (0,25 o 0,50 con oportunidad de censo)', `${A.u12.length} clientes sin compra en ningún negocio hace 12 meses: ${A.frecOk.length} mensual, ${A.frecQ.length} quincenal${A.frecMal.length?', <strong>'+A.frecMal.length+' con otra frecuencia</strong>':''}.`, 'horizonte')}
+      ${chk(visOk?'ok':'warn','Visitas de supervisores a CNC con motivo', `${visSpv.map(x=>x.s+' '+x.n+'/'+obj).join(' · ')} visitas realizadas en ${mesLL(mesAct)}.`, 'visitas')}
+    </div>
+    <div class="panel">
+      <div class="ph"><h3>1 · Frecuencia de los U12M a corregir</h3><span class="hint">pasar a mensual (0,25); quincenal solo con oportunidad por censo</span></div>
+      ${A.frecMal.length+A.frecQ.length?`<div class="tw" style="max-height:440px"><table><thead><tr><th class="n">Código</th><th>Cliente</th><th>Promotor</th><th>Visita</th><th>Frecuencia hoy</th><th>Qué hacer</th></tr></thead><tbody>
+      ${A.frecMal.concat(A.frecQ).map(c=>`<tr class="click" data-cod="${c.cod}"><td class="n">${c.cod}</td><td>${esc(c.rs)}</td><td>${esc(c.pv)}</td><td>${esc(c.vis)}</td><td>${PER_LAB[c.per]||c.per}</td><td>${c.per===2?'<span class="chip warn">confirmar censo</span>':'<span class="chip bad">pasar a 0,25</span>'}</td></tr>`).join('')}
+      </tbody></table></div>`:'<p class="hint">Todos los U12M tienen la frecuencia correcta.</p>'}
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="panel"><div class="ph"><h3>2 · Relevamientos BEES Force pendientes</h3></div>
+      ${A.pend.length?A.pend.map(b=>`<div class="note warn" style="margin-bottom:8px">${esc(b.aviso)}</div>`).join(''):'<p class="hint">Todos los meses tienen su relevamiento.</p>'}
+    </div>
+    <div class="panel"><div class="ph"><h3>3 · Visitas SPV de ${mesLL(mesAct)}</h3><span class="hint">objetivo ${obj} por supervisor</span></div>
+      <div style="display:flex;flex-direction:column;gap:10px">${visSpv.map(x=>`<div><div class="row"><b>${esc(x.s)}</b><span class="sp"></span><span class="num">${x.n} / ${obj}</span></div><div class="prog"><i style="width:${Math.min(100,x.n/obj*100)}%"></i></div></div>`).join('')}</div>
+    </div>
+  </div>
+  <div class="panel"><div class="ph"><h3>4 · Planes de acción a revisar</h3><span class="hint">el auditor lee el estado tal cual está cargado</span></div>
+    ${noReal.length+sinAcc.length+deadMal.length?`<div class="tw" style="max-height:460px"><table><thead><tr><th>PDA</th><th>Base</th><th>Sección</th><th>Motivo</th><th>Problema</th><th>Acción cargada</th></tr></thead><tbody>
+    ${noReal.map(x=>`<tr><td>${mesLL(x.mes)}</td><td>Total</td><td>${secL(x.sec)}</td><td>${esc(x.motivo.toLowerCase())}</td><td><span class="chip bad">dice "NO REALIZADO"</span></td><td class="txt">${esc(x.accion)}</td></tr>`).join('')}
+    ${deadMal.map(x=>`<tr><td>${mesLL(x.mes)}</td><td>${x.base}</td><td>${secL(x.sec)}</td><td>${esc(x.motivo.toLowerCase())}</td><td><span class="chip warn">fecha límite ${fDate(x.deadline)}</span></td><td class="txt">${esc(x.accion)}</td></tr>`).join('')}
+    ${sinAcc.map(x=>`<tr><td>${mesLL(x.mes)}</td><td>Por negocio</td><td>${secL(x.sec)}</td><td>${esc(x.motivo.toLowerCase())}</td><td><span class="chip warn">sin acción escrita</span></td><td class="hint">–</td></tr>`).join('')}
+    </tbody></table></div>`:'<p class="hint">Todos los PDA tienen acción, estado y fecha correctos.</p>'}
+  </div>
+  ${reconciliacion()}
+  ${D.data.meta.avisos.length?`<div class="note warn"><b>Avisos de la última carga</b><ul style="margin:4px 0 0;padding-left:18px">${D.data.meta.avisos.map(a=>`<li>${esc(a)}</li>`).join('')}</ul></div>`:''}`;
+  v.querySelectorAll('[data-go]').forEach(a=>a.onclick=e=>{e.preventDefault(); irTab(a.dataset.go);});
+  v.querySelectorAll('tr[data-cod]').forEach(tr=>tr.onclick=()=>fichaCliente(+tr.dataset.cod));
+}
+
+const ICONS={users:'<circle cx="9" cy="8" r="3.2"/><path d="M3 19c.8-3.3 3.2-5 6-5s5.2 1.7 6 5"/><path d="M16 5.5a3 3 0 0 1 0 5.6M18 14c1.6.6 2.6 2.2 3 5"/>',clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',alert:'<path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17h.01"/>',chat:'<path d="M5 5h14v10H9l-4 4z"/><path d="M9 9h6M9 12h4"/>'};
+function kpi(l,v,d,ic,col){ return `<div class="kpi"><span class="ico" style="background:color-mix(in srgb, var(${col}) 16%, transparent);color:var(${col})"><svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[ic]||''}</svg></span><span class="tx"><span class="l">${esc(l)}</span><span class="v">${v}</span><span class="d">${d}</span></span></div>`; }
+function ring(p,obj,col,lab){
+  const r=44, c=2*Math.PI*r, v=Math.max(0,Math.min(1,p||0)); const ok=v>=obj;
+  const oa=obj*360-90, ox=60+r*Math.cos(oa*Math.PI/180), oy=60+r*Math.sin(oa*Math.PI/180);
+  return `<div class="ring"><svg viewBox="0 0 120 120" role="img" aria-label="${esc(lab)}: ${pc(v,1)} de compradores, objetivo ${pc(obj)}">
+    <circle cx="60" cy="60" r="${r}" fill="none" stroke="var(--panel-2)" stroke-width="11"/>
+    <circle cx="60" cy="60" r="${r}" fill="none" stroke="var(${col})" stroke-width="11" stroke-linecap="round" stroke-dasharray="${(v*c).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 60 60)"/>
+    <circle cx="${ox.toFixed(1)}" cy="${oy.toFixed(1)}" r="4" fill="var(--ink)" stroke="var(--panel)" stroke-width="2"/>
+    <text x="60" y="58" text-anchor="middle" font-family="Sora, sans-serif" font-size="19" font-weight="600" fill="var(--ink)">${pc(v,1)}</text>
+    <text x="60" y="76" text-anchor="middle" font-size="10.5" fill="var(--ink-3)">obj. ${pc(obj)}</text></svg>
+    <b>${esc(lab)}</b><span class="chip ${ok?'ok':v>=obj-.1?'warn':'bad'}">${ok?'en objetivo':'faltan '+pc(obj-v,1).replace(' %',' pts')}</span></div>`;
 }
 function chk(st,t,p,go){ const ic={ok:'✓',warn:'!',bad:'✕'}[st]; return `<div class="check"><span class="ic ${st}" aria-label="${st==='ok'?'cumple':st==='warn'?'revisar':'no cumple'}">${ic}</span><div><b>${t}</b><p>${p}</p></div><a href="#" class="go" data-go="${go}">Ver →</a></div>`; }
 function enFiltro(r){ if(!S.spv && !S.pv) return true; const pv=r.pv || (CLI[r.cod]||{}).pv; const spv=(CLI[r.cod]||{}).spv || spvDe(pv); return (!S.pv||pv===S.pv) && (!S.spv||spv===S.spv); }
@@ -593,7 +710,7 @@ function rClientes(){
   const ord={meses:(a,b)=>b.f.meses-a.f.meses, vol:(a,b)=>volPrevio(serie(b.c,un))-volPrevio(serie(a.c,un)), pv:(a,b)=>a.c.pv.localeCompare(b.c.pv)||b.f.meses-a.f.meses}[CL.orden];
   rows.sort(ord);
   CL.rows=rows;
-  const PAG=150, pages=Math.max(1,Math.ceil(rows.length/PAG)); if(CL.pag>=pages) CL.pag=0;
+  const PAG=100, pages=Math.max(1,Math.ceil(rows.length/PAG)); if(CL.pag>=pages) CL.pag=0;
   const vis=rows.slice(CL.pag*PAG,(CL.pag+1)*PAG);
   v.innerHTML=`
   <div class="sec-h"><h2>Listado de clientes · ${UNS[un].lab}</h2><p>Cada fila muestra la compra de los últimos ${M.length} meses (${mesLab(M[0])} a ${mesLab(M[MI])}), cuántos meses cerrados lleva sin comprar y el último motivo relevado en BEES Force.</p></div>
@@ -606,8 +723,8 @@ function rClientes(){
     <button class="btn" id="clCsv">Descargar CSV</button>
   </div>
   <div class="row"><span class="chip info">${n0(rows.length)} clientes</span><span class="hint">Tocá un cliente para ver su ficha. HL por mes; la barra marcada es el mes en curso.</span></div>
-  <div class="tw"><table><thead><tr><th class="n">Código</th><th>Cliente</th><th>Promotor</th><th>Visita</th><th>Subcanal</th><th>Localidad</th><th>Compra por mes</th><th class="n">Meses sin compra</th><th>Horizonte</th><th class="n">HL/mes prom.</th><th>Frecuencia</th><th>Último motivo</th></tr></thead><tbody>
-  ${vis.map(({c,f,m})=>`<tr class="click" data-cod="${c.cod}"><td class="n">${c.cod}</td><td>${esc(c.rs)}${c.edfRob?' <span class="chip bad">EDF robado</span>':''}</td><td>${esc(c.pv)}</td><td>${esc(c.vis)}</td><td>${esc(c.sub)}</td><td>${esc(c.loc)}</td><td>${spark(serie(c,un))}</td><td class="n">${f.nunca?'sin compras':f.meses}</td><td>${chipHz(f)}</td><td class="n">${n2(volPrevio(serie(c,un)))}</td><td>${PER_LAB[c.per]||'–'}</td><td>${m?`<span class="chip"><i class="dot" style="background:var(${MOT_COL[m.motivo]||'--s0'})"></i>${esc(m.motivo.toLowerCase())}</span> <span class="hint">${mesLab(m.mes)}</span>`:'<span class="hint">–</span>'}</td></tr>`).join('')}
+  <div class="tw"><table><thead><tr><th class="n">Código</th><th>Cliente</th><th>Promotor · visita</th><th>Localidad</th><th>Compra por mes</th><th class="n">Meses s/compra</th><th>Horizonte</th><th class="n">HL prom.</th><th>Frecuencia</th><th>Último motivo BEES</th></tr></thead><tbody>
+  ${vis.map(({c,f,m})=>`<tr class="click" data-cod="${c.cod}"><td class="n">${c.cod}</td><td class="w"><b style="font-weight:600">${esc(c.rs)}</b>${c.edfRob?' <span class="chip bad">EDF robado</span>':''}<br><span class="hint">${esc(c.sub)}</span></td><td>${esc(c.pv)} <span class="hint">· ${esc(c.vis)}</span></td><td class="w">${esc(c.loc)}</td><td>${spark(serie(c,un))}</td><td class="n">${f.nunca?'sin compras':f.meses}</td><td>${chipHz(f)}</td><td class="n">${n2(volPrevio(serie(c,un)))}</td><td>${(PER_LAB[c.per]||'–').replace(/ \(.*\)/,'')}</td><td class="w">${m?`<span class="chip"><i class="dot" style="background:var(${MOT_COL[m.motivo]||'--s0'})"></i>${esc(m.motivo.toLowerCase())}</span> <span class="hint">${mesLab(m.mes)}</span>`:'<span class="hint">–</span>'}</td></tr>`).join('')}
   </tbody></table></div>
   ${pages>1?`<div class="row"><button class="btn sm" id="clPrev" ${CL.pag?'':'disabled'}>← Anterior</button><span class="hint">Página ${CL.pag+1} de ${pages}</span><button class="btn sm" id="clNext" ${CL.pag<pages-1?'':'disabled'}>Siguiente →</button></div>`:''}`;
   const on=(id,k,ev='change')=>{ const el=$(id); el.addEventListener(ev,()=>{ CL[k]=el.value; CL.pag=0; if(k==='q'){ clearTimeout(CL.t); CL.t=setTimeout(()=>{rClientes(); const i=$('#clQ'); i.focus(); i.setSelectionRange(i.value.length,i.value.length);},250);} else rClientes(); }); };
@@ -633,6 +750,7 @@ function fichaCliente(cod){
   const fl=u=>flags(c,u);
   d.innerHTML=`<form method="dialog"><div class="row"><h3 style="flex:1">${esc(c.rs)} <span class="hint mono">#${c.cod}</span></h3><button class="btn sm">Cerrar</button></div>
   <p class="hint" style="margin:0">${esc(c.dom)} · ${esc(c.loc)} · ${esc(c.canal)} / ${esc(c.sub)} · Promotor ${esc(c.pv)} (${esc(c.spv)}) · visita ${esc(c.vis)} · ${PER_LAB[c.per]||''}${c.alta?' · alta '+fDate(c.alta):''}${c.ult?' · última compra '+fDate(c.ult):''}</p>
+  ${botonesMaps(c)}
   <div class="tw"><table><thead><tr><th>Negocio</th>${M.map(m=>`<th class="n">${mesLab(m)}</th>`).join('')}<th>Horizonte</th></tr></thead><tbody>
   ${['TOTAL','CVZA','NABS'].map(u=>{const s=serie(c,u); return s?`<tr><td>${UNS[u].lab}</td>${s.map((x,i)=>`<td class="n" style="${x>0?'':'color:var(--ink-3)'}">${x>0?n2(x):'0'}</td>`).join('')}<td>${chipHz(fl(u))}</td></tr>`:'';}).join('')}
   </tbody></table></div>
@@ -879,8 +997,8 @@ function rVisitas(){
     </tbody></table></div>`:'<p class="hint" style="margin:0">Sin visitas en este mes.</p>'}
   </div>
   <div class="panel"><div class="ph"><h3>Clientes sugeridos para visitar</h3><span class="hint">CNC U3M con motivo relevado, sin visita este mes, ordenados por volumen que compraban</span></div>
-    <div class="tw" style="max-height:420px"><table><thead><tr><th class="n">Código</th><th>Cliente</th><th>Promotor</th><th>Visita</th><th>Negocio sin compra</th><th class="n">Meses</th><th>Motivo</th><th>Respuesta</th><th class="n">HL/mes prom.</th>${puedeCargar()?'<th></th>':''}</tr></thead><tbody>
-    ${sug.map(x=>`<tr><td class="n">${x.c.cod}</td><td>${esc(x.c.rs)}</td><td>${esc(x.c.pv)}</td><td>${esc(x.c.vis)}</td><td>${x.un}</td><td class="n">${x.f.nunca?'nunca compró':x.f.meses}</td><td>${esc(x.m.motivo.toLowerCase())}</td><td class="txt">${esc(x.m.resp)}</td><td class="n">${n2(x.vol)}</td>${puedeCargar()?`<td><button class="btn sm" data-ag="${x.c.cod}">Agendar</button></td>`:''}</tr>`).join('')||'<tr><td colspan="9" class="hint">No hay sugeridos con este filtro.</td></tr>'}
+    <div class="tw" style="max-height:420px"><table><thead><tr><th class="n">Código</th><th>Cliente</th><th>Promotor</th><th>Visita</th><th>Negocio sin compra</th><th class="n">Meses</th><th>Motivo</th><th>Respuesta</th><th class="n">HL/mes prom.</th><th>Maps</th>${puedeCargar()?'<th></th>':''}</tr></thead><tbody>
+    ${sug.map(x=>`<tr><td class="n">${x.c.cod}</td><td>${esc(x.c.rs)}</td><td>${esc(x.c.pv)}</td><td>${esc(x.c.vis)}</td><td>${x.un}</td><td class="n">${x.f.nunca?'nunca compró':x.f.meses}</td><td>${esc(x.m.motivo.toLowerCase())}</td><td class="txt">${esc(x.m.resp)}</td><td class="n">${n2(x.vol)}</td><td><a class="btn sm" style="display:inline-flex;align-items:center;text-decoration:none;color:var(--ink)" href="${urlIr(x.c)}" target="_blank" rel="noopener">🧭 Ir</a></td>${puedeCargar()?`<td><button class="btn sm" data-ag="${x.c.cod}">Agendar</button></td>`:''}</tr>`).join('')||'<tr><td colspan="9" class="hint">No hay sugeridos con este filtro.</td></tr>'}
     </tbody></table></div></div>`;
   $('#vPrev').onclick=()=>{VS.mes=sumaMes(VS.mes,-1); rVisitas();}; $('#vNext').onclick=()=>{VS.mes=sumaMes(VS.mes,1); rVisitas();};
   const vl=$('#vLogin'); if(vl) vl.onclick=e=>{e.preventDefault(); abrirLogin();};
@@ -967,11 +1085,15 @@ function rMapa(){
   if(LAYER) LAYER.remove(); LAYER=L.layerGroup().addTo(MAP);
   const pts=[]; clientesFiltrados().forEach(c=>{ if(!c.geo) return; const f=flags(c,un); if(!f||!f[MP.hz]) return; pts.push([c,f]); });
   const col=f=>cssv(f.bucket===3?'--h3':f.bucket===2?'--h2':f.bucket===1?'--h1':'--s0');
-  pts.forEach(([c,f])=>{ L.circleMarker(c.geo,{radius:6,color:cssv('--panel'),weight:1.5,fillColor:col(f),fillOpacity:.95}).bindPopup(`<b>${esc(c.rs)}</b> #${c.cod}<br>${esc(c.dom)}<br>${esc(c.pv)} · visita ${esc(c.vis)}<br>${horizonteLab(f)} · ${f.nunca?'sin compras':f.meses+' meses sin compra'}`).addTo(LAYER); });
+  pts.forEach(([c,f])=>{ L.circleMarker(c.geo,{radius:6,color:cssv('--panel'),weight:1.5,fillColor:col(f),fillOpacity:.95}).bindPopup(`<b>${esc(c.rs)}</b> #${c.cod}<br>${esc(c.dom)}<br>${esc(c.pv)} · visita ${esc(c.vis)}<br>${horizonteLab(f)} · ${f.nunca?'sin compras':f.meses+' meses sin compra'}${botonesMaps(c)}`).addTo(LAYER); });
   $('#mpCount').textContent=pts.length+' clientes en el mapa';
   if(pts.length){ MAP.fitBounds(L.latLngBounds(pts.map(p=>p[0].geo)).pad(.08)); }
   setTimeout(()=>MAP.invalidateSize(),60);
 }
+
+function urlIr(c){ return c.geo ? `https://www.google.com/maps/dir/?api=1&destination=${c.geo[0]},${c.geo[1]}&travelmode=driving` : `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent((c.dom||'')+', '+(c.loc||'')+', Mendoza')}`; }
+function urlVer(c){ return c.geo ? `https://www.google.com/maps/search/?api=1&query=${c.geo[0]},${c.geo[1]}` : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((c.dom||'')+', '+(c.loc||'')+', Mendoza')}`; }
+function botonesMaps(c){ return `<div class="mapbtns"><a class="btn sm primary" href="${urlIr(c)}" target="_blank" rel="noopener">🧭 Ir</a><a class="btn sm" href="${urlVer(c)}" target="_blank" rel="noopener">Ver en Maps</a><button type="button" class="btn sm" onclick="fichaCliente(${c.cod})">Ficha</button></div>`; }
 
 /* ====================== arranque ====================== */
 cargar().then(()=>{ D.data.clientes.forEach(c=>CLI[c.cod]=c); const h=location.hash.slice(1); if(h && document.querySelector(`#tabs [data-t="${h}"]`)) irTab(h); else render(); })
