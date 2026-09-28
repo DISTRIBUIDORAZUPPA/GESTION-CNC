@@ -1,0 +1,961 @@
+<!doctype html>
+<html lang="es">
+<meta charset="utf-8">
+<title>Gestión de CNC Zuppa</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+.leaflet-pane, .leaflet-tile, .leaflet-marker-icon, .leaflet-marker-shadow, .leaflet-tile-container, .leaflet-pane > svg, .leaflet-pane > canvas, .leaflet-zoom-box, .leaflet-image-layer, .leaflet-layer { position: absolute; left: 0; top: 0; } .leaflet-container { overflow: hidden; } .leaflet-tile, .leaflet-marker-icon, .leaflet-marker-shadow { -webkit-user-select: none; -moz-user-select: none; user-select: none; -webkit-user-drag: none; } .leaflet-tile::selection { background: transparent; } .leaflet-safari .leaflet-tile { image-rendering: -webkit-optimize-contrast; } .leaflet-safari .leaflet-tile-container { width: 1600px; height: 1600px; -webkit-transform-origin: 0 0; } .leaflet-marker-icon, .leaflet-marker-shadow { display: block; } .leaflet-container .leaflet-overlay-pane svg { max-width: none !important; max-height: none !important; } .leaflet-container .leaflet-marker-pane img, .leaflet-container .leaflet-shadow-pane img, .leaflet-container .leaflet-tile-pane img, .leaflet-container img.leaflet-image-layer, .leaflet-container .leaflet-tile { max-width: none !important; max-height: none !important; width: auto; padding: 0; } .leaflet-container img.leaflet-tile { mix-blend-mode: plus-lighter; } .leaflet-container.leaflet-touch-zoom { -ms-touch-action: pan-x pan-y; touch-action: pan-x pan-y; } .leaflet-container.leaflet-touch-drag { -ms-touch-action: pinch-zoom; touch-action: none; touch-action: pinch-zoom; } .leaflet-container.leaflet-touch-drag.leaflet-touch-zoom { -ms-touch-action: none; touch-action: none; } .leaflet-container { -webkit-tap-highlight-color: transparent; } .leaflet-container a { -webkit-tap-highlight-color: rgba(51, 181, 229, 0.4); } .leaflet-tile { filter: inherit; visibility: hidden; } .leaflet-tile-loaded { visibility: inherit; } .leaflet-zoom-box { width: 0; height: 0; -moz-box-sizing: border-box; box-sizing: border-box; z-index: 800; } .leaflet-overlay-pane svg { -moz-user-select: none; } .leaflet-pane { z-index: 400; } .leaflet-tile-pane { z-index: 200; } .leaflet-overlay-pane { z-index: 400; } .leaflet-shadow-pane { z-index: 500; } .leaflet-marker-pane { z-index: 600; } .leaflet-tooltip-pane { z-index: 650; } .leaflet-popup-pane { z-index: 700; } .leaflet-map-pane canvas { z-index: 100; } .leaflet-map-pane svg { z-index: 200; } .leaflet-vml-shape { width: 1px; height: 1px; } .lvml { behavior: none; display: inline-block; position: absolute; } .leaflet-control { position: relative; z-index: 800; pointer-events: visiblePainted; pointer-events: auto; } .leaflet-top, .leaflet-bottom { position: absolute; z-index: 1000; pointer-events: none; } .leaflet-top { top: 0; } .leaflet-right { right: 0; } .leaflet-bottom { bottom: 0; } .leaflet-left { left: 0; } .leaflet-control { float: left; clear: both; } .leaflet-right .leaflet-control { float: right; } .leaflet-top .leaflet-control { margin-top: 10px; } .leaflet-bottom .leaflet-control { margin-bottom: 10px; } .leaflet-left .leaflet-control { margin-left: 10px; } .leaflet-right .leaflet-control { margin-right: 10px; } .leaflet-fade-anim .leaflet-popup { opacity: 0; -webkit-transition: opacity 0.2s linear; -moz-transition: opacity 0.2s linear; transition: opacity 0.2s linear; } .leaflet-fade-anim .leaflet-map-pane .leaflet-popup { opacity: 1; } .leaflet-zoom-animated { -webkit-transform-origin: 0 0; -ms-transform-origin: 0 0; transform-origin: 0 0; } svg.leaflet-zoom-animated { will-change: transform; } .leaflet-zoom-anim .leaflet-zoom-animated { -webkit-transition: -webkit-transform 0.25s cubic-bezier(0,0,0.25,1); -moz-transition: -moz-transform 0.25s cubic-bezier(0,0,0.25,1); transition: transform 0.25s cubic-bezier(0,0,0.25,1); } .leaflet-zoom-anim .leaflet-tile, .leaflet-pan-anim .leaflet-tile { -webkit-transition: none; -moz-transition: none; transition: none; } .leaflet-zoom-anim .leaflet-zoom-hide { visibility: hidden; } .leaflet-interactive { cursor: pointer; } .leaflet-grab { cursor: -webkit-grab; cursor: -moz-grab; cursor: grab; } .leaflet-crosshair, .leaflet-crosshair .leaflet-interactive { cursor: crosshair; } .leaflet-popup-pane, .leaflet-control { cursor: auto; } .leaflet-dragging .leaflet-grab, .leaflet-dragging .leaflet-grab .leaflet-interactive, .leaflet-dragging .leaflet-marker-draggable { cursor: move; cursor: -webkit-grabbing; cursor: -moz-grabbing; cursor: grabbing; } .leaflet-marker-icon, .leaflet-marker-shadow, .leaflet-image-layer, .leaflet-pane > svg path, .leaflet-tile-container { pointer-events: none; } .leaflet-marker-icon.leaflet-interactive, .leaflet-image-layer.leaflet-interactive, .leaflet-pane > svg path.leaflet-interactive, svg.leaflet-image-layer.leaflet-interactive path { pointer-events: visiblePainted; pointer-events: auto; } .leaflet-container { background: #ddd; outline-offset: 1px; } .leaflet-container a { color: #0078A8; } .leaflet-zoom-box { border: 2px dotted #38f; background: rgba(255,255,255,0.5); } .leaflet-container { font-family: "Helvetica Neue", Arial, Helvetica, sans-serif; font-size: 12px; font-size: 0.75rem; line-height: 1.5; } .leaflet-bar { box-shadow: 0 1px 5px rgba(0,0,0,0.65); border-radius: 4px; } .leaflet-bar a { background-color: #fff; border-bottom: 1px solid #ccc; width: 26px; height: 26px; line-height: 26px; display: block; text-align: center; text-decoration: none; color: black; } .leaflet-bar a, .leaflet-control-layers-toggle { background-position: 50% 50%; background-repeat: no-repeat; display: block; } .leaflet-bar a:hover, .leaflet-bar a:focus { background-color: #f4f4f4; } .leaflet-bar a:first-child { border-top-left-radius: 4px; border-top-right-radius: 4px; } .leaflet-bar a:last-child { border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; border-bottom: none; } .leaflet-bar a.leaflet-disabled { cursor: default; background-color: #f4f4f4; color: #bbb; } .leaflet-touch .leaflet-bar a { width: 30px; height: 30px; line-height: 30px; } .leaflet-touch .leaflet-bar a:first-child { border-top-left-radius: 2px; border-top-right-radius: 2px; } .leaflet-touch .leaflet-bar a:last-child { border-bottom-left-radius: 2px; border-bottom-right-radius: 2px; } .leaflet-control-zoom-in, .leaflet-control-zoom-out { font: bold 18px 'Lucida Console', Monaco, monospace; text-indent: 1px; } .leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out { font-size: 22px; } .leaflet-control-layers { box-shadow: 0 1px 5px rgba(0,0,0,0.4); background: #fff; border-radius: 5px; } .leaflet-control-layers-toggle { background-image: none; width: 36px; height: 36px; } .leaflet-retina .leaflet-control-layers-toggle { background-image: none; background-size: 26px 26px; } .leaflet-touch .leaflet-control-layers-toggle { width: 44px; height: 44px; } .leaflet-control-layers .leaflet-control-layers-list, .leaflet-control-layers-expanded .leaflet-control-layers-toggle { display: none; } .leaflet-control-layers-expanded .leaflet-control-layers-list { display: block; position: relative; } .leaflet-control-layers-expanded { padding: 6px 10px 6px 6px; color: #333; background: #fff; } .leaflet-control-layers-scrollbar { overflow-y: scroll; overflow-x: hidden; padding-right: 5px; } .leaflet-control-layers-selector { margin-top: 2px; position: relative; top: 1px; } .leaflet-control-layers label { display: block; font-size: 13px; font-size: 1.08333em; } .leaflet-control-layers-separator { height: 0; border-top: 1px solid #ddd; margin: 5px -10px 5px -6px; } .leaflet-default-icon-path { background-image: none; } .leaflet-container .leaflet-control-attribution { background: #fff; background: rgba(255, 255, 255, 0.8); margin: 0; } .leaflet-control-attribution, .leaflet-control-scale-line { padding: 0 5px; color: #333; line-height: 1.4; } .leaflet-control-attribution a { text-decoration: none; } .leaflet-control-attribution a:hover, .leaflet-control-attribution a:focus { text-decoration: underline; } .leaflet-attribution-flag { display: inline !important; vertical-align: baseline !important; width: 1em; height: 0.6669em; } .leaflet-left .leaflet-control-scale { margin-left: 5px; } .leaflet-bottom .leaflet-control-scale { margin-bottom: 5px; } .leaflet-control-scale-line { border: 2px solid #777; border-top: none; line-height: 1.1; padding: 2px 5px 1px; white-space: nowrap; -moz-box-sizing: border-box; box-sizing: border-box; background: rgba(255, 255, 255, 0.8); text-shadow: 1px 1px #fff; } .leaflet-control-scale-line:not(:first-child) { border-top: 2px solid #777; border-bottom: none; margin-top: -2px; } .leaflet-control-scale-line:not(:first-child):not(:last-child) { border-bottom: 2px solid #777; } .leaflet-touch .leaflet-control-attribution, .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar { box-shadow: none; } .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar { border: 2px solid rgba(0,0,0,0.2); background-clip: padding-box; } .leaflet-popup { position: absolute; text-align: center; margin-bottom: 20px; } .leaflet-popup-content-wrapper { padding: 1px; text-align: left; border-radius: 12px; } .leaflet-popup-content { margin: 13px 24px 13px 20px; line-height: 1.3; font-size: 13px; font-size: 1.08333em; min-height: 1px; } .leaflet-popup-content p { margin: 17px 0; margin: 1.3em 0; } .leaflet-popup-tip-container { width: 40px; height: 20px; position: absolute; left: 50%; margin-top: -1px; margin-left: -20px; overflow: hidden; pointer-events: none; } .leaflet-popup-tip { width: 17px; height: 17px; padding: 1px; margin: -10px auto 0; pointer-events: auto; -webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); transform: rotate(45deg); } .leaflet-popup-content-wrapper, .leaflet-popup-tip { background: white; color: #333; box-shadow: 0 3px 14px rgba(0,0,0,0.4); } .leaflet-container a.leaflet-popup-close-button { position: absolute; top: 0; right: 0; border: none; text-align: center; width: 24px; height: 24px; font: 16px/24px Tahoma, Verdana, sans-serif; color: #757575; text-decoration: none; background: transparent; } .leaflet-container a.leaflet-popup-close-button:hover, .leaflet-container a.leaflet-popup-close-button:focus { color: #585858; } .leaflet-popup-scrolled { overflow: auto; } .leaflet-oldie .leaflet-popup-content-wrapper { -ms-zoom: 1; } .leaflet-oldie .leaflet-popup-tip { width: 24px; margin: 0 auto; -ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678)"; filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678); } .leaflet-oldie .leaflet-control-zoom, .leaflet-oldie .leaflet-control-layers, .leaflet-oldie .leaflet-popup-content-wrapper, .leaflet-oldie .leaflet-popup-tip { border: 1px solid #999; } .leaflet-div-icon { background: #fff; border: 1px solid #666; } .leaflet-tooltip { position: absolute; padding: 6px; background-color: #fff; border: 1px solid #fff; border-radius: 3px; color: #222; white-space: nowrap; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; pointer-events: none; box-shadow: 0 1px 3px rgba(0,0,0,0.4); } .leaflet-tooltip.leaflet-interactive { cursor: pointer; pointer-events: auto; } .leaflet-tooltip-top:before, .leaflet-tooltip-bottom:before, .leaflet-tooltip-left:before, .leaflet-tooltip-right:before { position: absolute; pointer-events: none; border: 6px solid transparent; background: transparent; content: ""; } .leaflet-tooltip-bottom { margin-top: 6px; } .leaflet-tooltip-top { margin-top: -6px; } .leaflet-tooltip-bottom:before, .leaflet-tooltip-top:before { left: 50%; margin-left: -6px; } .leaflet-tooltip-top:before { bottom: 0; margin-bottom: -12px; border-top-color: #fff; } .leaflet-tooltip-bottom:before { top: 0; margin-top: -12px; margin-left: -6px; border-bottom-color: #fff; } .leaflet-tooltip-left { margin-left: -6px; } .leaflet-tooltip-right { margin-left: 6px; } .leaflet-tooltip-left:before, .leaflet-tooltip-right:before { top: 50%; margin-top: -6px; } .leaflet-tooltip-left:before { right: 0; margin-right: -12px; border-left-color: #fff; } .leaflet-tooltip-right:before { left: 0; margin-left: -12px; border-right-color: #fff; } @media print { .leaflet-control { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+:root{
+  color-scheme: light;
+  --paper:#F5F1E8; --panel:#FCFAF5; --panel-2:#EFE9DC; --rule:#E2D9C7; --rule-2:#CFC4AE;
+  --ink:#1D1A15; --ink-2:#554E43; --ink-3:#877F71;
+  --accent:#1F4E79; --accent-soft:#DCE6F0; --amber:#A8660C; --amber-soft:#F6E7CC;
+  --good:#2E7D32; --good-soft:#DDEEDB; --bad:#B8322A; --bad-soft:#F6DCD8; --warn:#B7791F; --warn-soft:#F7EBD3;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --s6:#008300; --s7:#4a3aa7; --s8:#e34948; --s0:#9C9486;
+  --h1:#F0C987; --h2:#D98A2B; --h3:#8F4A0E;
+  --grid:rgba(29,26,21,.08);
+  --f-display:"Fraunces", Georgia, "Times New Roman", serif;
+  --f-body:"Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --paper:#15130F; --panel:#1D1A15; --panel-2:#26221B; --rule:#322D24; --rule-2:#473F32;
+    --ink:#F1ECE2; --ink-2:#C2B9A8; --ink-3:#8E8676;
+    --accent:#86B4E3; --accent-soft:#1E2E3F; --amber:#E0A84A; --amber-soft:#3A2C14;
+    --good:#6CC070; --good-soft:#1B3020; --bad:#EE7B72; --bad-soft:#3D1D1A; --warn:#E0A84A; --warn-soft:#3A2C14;
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300; --s7:#9085e9; --s8:#e66767; --s0:#7D766A;
+    --h1:#6B4515; --h2:#B8701F; --h3:#F0B45E;
+    --grid:rgba(241,236,226,.08);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --paper:#15130F; --panel:#1D1A15; --panel-2:#26221B; --rule:#322D24; --rule-2:#473F32;
+  --ink:#F1ECE2; --ink-2:#C2B9A8; --ink-3:#8E8676;
+  --accent:#86B4E3; --accent-soft:#1E2E3F; --amber:#E0A84A; --amber-soft:#3A2C14;
+  --good:#6CC070; --good-soft:#1B3020; --bad:#EE7B72; --bad-soft:#3D1D1A; --warn:#E0A84A; --warn-soft:#3A2C14;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300; --s7:#9085e9; --s8:#e66767; --s0:#7D766A;
+  --h1:#6B4515; --h2:#B8701F; --h3:#F0B45E;
+  --grid:rgba(241,236,226,.08);
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background:var(--paper)}
+body{margin:0;color:var(--ink);font:14px/1.5 var(--f-body);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1320px;margin:0 auto;padding-inline:clamp(16px,3vw,32px);padding-block:0 64px}
+h1,h2,h3{font-family:var(--f-display);font-weight:650;text-wrap:balance;margin:0;letter-spacing:-.01em}
+.mono,.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+button,select,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+a{color:var(--accent)}
+
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:1000;background:var(--paper);border-bottom:1px solid var(--rule)}
+.brand{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:8px 24px;padding-top:18px}
+.brand h1{font-size:clamp(22px,2.6vw,30px);line-height:1.1}
+.brand .code{font-family:var(--f-mono);font-size:12px;font-weight:600;color:var(--amber);background:var(--amber-soft);padding:2px 8px;border-radius:999px;margin-right:8px;vertical-align:middle;letter-spacing:.04em}
+.brand .sub{color:var(--ink-3);font-size:12px;font-family:var(--f-mono)}
+.filters{display:flex;flex-wrap:wrap;gap:8px 12px;padding:12px 0 10px;align-items:end}
+.f{display:flex;flex-direction:column;gap:2px;min-width:0}
+.f label{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);font-weight:600}
+.f select,.f input,.f textarea{background:var(--panel);border:1px solid var(--rule-2);border-radius:6px;padding:6px 9px;height:34px;max-width:100%}
+.f select{appearance:none;padding-right:28px;background-image:linear-gradient(45deg,transparent 50%,var(--ink-3) 50%),linear-gradient(135deg,var(--ink-3) 50%,transparent 50%);background-position:calc(100% - 14px) 15px,calc(100% - 9px) 15px;background-size:5px 5px;background-repeat:no-repeat}
+.f textarea{height:auto;min-height:64px;resize:vertical}
+.seg{display:inline-flex;border:1px solid var(--rule-2);border-radius:7px;overflow:hidden;height:34px;background:var(--panel)}
+.seg button{border:0;background:transparent;padding:0 12px;cursor:pointer;font-weight:600;font-size:13px;color:var(--ink-2)}
+.seg button+button{border-left:1px solid var(--rule)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.btn{border:1px solid var(--rule-2);background:var(--panel);border-radius:6px;height:34px;padding:0 12px;cursor:pointer;font-weight:500}
+.btn:hover{border-color:var(--ink-3)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--paper);font-weight:600}
+.btn.danger{color:var(--bad);border-color:var(--bad)}
+.btn.sm{height:28px;padding:0 9px;font-size:12.5px}
+.tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;margin-bottom:-1px}
+.tabs::-webkit-scrollbar{display:none}
+.tab{border:0;background:transparent;padding:10px 14px;cursor:pointer;color:var(--ink-2);font-weight:600;font-size:13.5px;border-bottom:2px solid transparent;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--amber)}
+
+main{padding-top:22px}
+.view{display:flex;flex-direction:column;gap:22px}
+.sec-h{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 16px}
+.sec-h h2{font-size:21px}
+.sec-h p{margin:0;color:var(--ink-2);max-width:78ch}
+.hint{color:var(--ink-3);font-size:12.5px}
+.panel{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:16px 18px;min-width:0}
+.panel h3{font-size:16px;margin-bottom:2px}
+.panel .ph{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:4px 12px;margin-bottom:10px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:18px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:18px}
+
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));gap:12px}
+.kpi{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:2px}
+.kpi .l{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);font-weight:600}
+.kpi .v{font-family:var(--f-display);font-size:28px;font-weight:650;line-height:1.1;font-variant-numeric:tabular-nums}
+.kpi .d{font-size:12px;color:var(--ink-2)}
+
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;padding:1px 8px;border-radius:999px;white-space:nowrap;background:var(--panel-2);color:var(--ink-2)}
+.chip.ok{background:var(--good-soft);color:var(--good)}
+.chip.bad{background:var(--bad-soft);color:var(--bad)}
+.chip.warn{background:var(--warn-soft);color:var(--warn)}
+.chip.info{background:var(--accent-soft);color:var(--accent)}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex:none}
+
+.check{display:grid;grid-template-columns:auto 1fr auto;gap:10px 14px;align-items:start;padding:12px 0;border-top:1px solid var(--rule)}
+.check:first-of-type{border-top:0}
+.check .ic{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:13px}
+.check .ic.ok{background:var(--good-soft);color:var(--good)}
+.check .ic.warn{background:var(--warn-soft);color:var(--warn)}
+.check .ic.bad{background:var(--bad-soft);color:var(--bad)}
+.check b{display:block}
+.check p{margin:2px 0 0;color:var(--ink-2);font-size:13px}
+.check .go{font-size:12.5px;white-space:nowrap}
+
+.tw{overflow-x:auto;border:1px solid var(--rule);border-radius:8px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{padding:6px 9px;text-align:left;border-bottom:1px solid var(--rule);white-space:nowrap}
+th{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);font-weight:600;background:var(--panel-2);position:sticky;top:0;z-index:1}
+td.n,th.n{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+tr.sub td{background:var(--panel-2);font-weight:700}
+tr.tot td{background:var(--amber-soft);font-weight:700}
+tr.click{cursor:pointer}
+tr.click:hover td{background:var(--accent-soft)}
+td.txt{white-space:normal;min-width:220px;max-width:420px}
+.heat{border-radius:4px;padding:1px 6px;display:inline-block;min-width:38px;text-align:right}
+.spark{display:inline-flex;align-items:flex-end;gap:1px;height:18px;vertical-align:middle}
+.spark i{display:block;width:4px;background:var(--s1);border-radius:1px 1px 0 0;min-height:1px}
+.spark i.z{background:var(--rule-2);height:2px!important}
+.spark i.cur{outline:1px solid var(--ink-3)}
+
+.chart{position:relative;height:280px}
+.chart.tall{height:420px}
+.legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12.5px;color:var(--ink-2);margin-bottom:6px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+
+.bar-h{display:grid;grid-template-columns:minmax(90px,130px) 1fr auto;gap:6px 10px;align-items:center;font-size:12.5px}
+.bar-h .track{height:14px;background:var(--panel-2);border-radius:3px;overflow:hidden;display:flex;gap:2px}
+.bar-h .track i{display:block;height:100%}
+
+.note{background:var(--accent-soft);color:var(--ink);border-radius:8px;padding:10px 14px;font-size:13px}
+.note.warn{background:var(--warn-soft)}
+.note b{font-weight:700}
+details.sop{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:10px 16px}
+details.sop summary{cursor:pointer;font-weight:600}
+details.sop ol{margin:8px 0 4px;padding-left:20px;color:var(--ink-2)}
+details.sop li{margin:3px 0}
+
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.cal .dh{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);font-weight:600;text-align:center;padding:2px 0}
+.cal .d{min-height:86px;background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:4px;display:flex;flex-direction:column;gap:3px;cursor:pointer;min-width:0}
+.cal .d.out{opacity:.45}
+.cal .d.hoy{border-color:var(--amber);box-shadow:inset 0 0 0 1px var(--amber)}
+.cal .d .dn{font-family:var(--f-mono);font-size:11px;color:var(--ink-3)}
+.cal .ev{font-size:11px;line-height:1.25;padding:2px 4px;border-radius:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:var(--panel-2)}
+.cal .ev.real{background:var(--good-soft);color:var(--good)}
+.cal .ev.prog{background:var(--accent-soft);color:var(--accent)}
+.cal .ev.canc{background:var(--bad-soft);color:var(--bad);text-decoration:line-through}
+@media (max-width:640px){ .cal .d{min-height:56px} .cal .ev{font-size:0;height:6px;padding:0} }
+
+.prog{height:10px;background:var(--panel-2);border-radius:5px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--good)}
+
+dialog{border:1px solid var(--rule-2);border-radius:12px;background:var(--panel);color:var(--ink);padding:0;width:min(720px,calc(100vw - 32px));max-height:calc(100vh - 40px)}
+dialog::backdrop{background:rgba(0,0,0,.35)}
+dialog form{display:flex;flex-direction:column;gap:12px;padding:18px 20px;overflow:auto;max-height:calc(100vh - 40px)}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:10px 12px}
+.fgrid .full{grid-column:1/-1}
+.mk{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.sp{flex:1}
+#map{height:560px;border-radius:10px;border:1px solid var(--rule);z-index:0}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 16px;border-radius:8px;font-weight:600;z-index:3000}
+body.embed .brand{padding-top:10px}
+@media print{.top{position:static}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="top">
+  <div class="wrap" style="padding-block:0">
+    <div class="brand">
+      <div>
+        <h1><span class="code">GALAXIA · 100 PTS</span>Gestión de clientes no compradores</h1>
+        <div class="sub" id="subTitle">Cargando datos…</div>
+      </div>
+      <div class="sub" id="userTag"></div>
+    </div>
+    <div class="filters">
+      <div class="f"><label>Negocio</label>
+        <div class="seg" id="fUn" role="group" aria-label="Negocio">
+          <button type="button" data-v="TOTAL" aria-pressed="true">Total</button>
+          <button type="button" data-v="CVZA" aria-pressed="false">Cerveza</button>
+          <button type="button" data-v="NABS" aria-pressed="false">NABs</button>
+        </div>
+      </div>
+      <div class="f"><label for="fSpv">Supervisor</label><select id="fSpv"></select></div>
+      <div class="f"><label for="fPv">Promotor</label><select id="fPv"></select></div>
+      <div class="f"><label for="fCrit">Criterio de conteo</label>
+        <select id="fCrit">
+          <option value="aud">Auditoría (recomendado)</option>
+          <option value="excel">Igual al Excel</option>
+        </select>
+      </div>
+    </div>
+    <nav class="tabs" role="tablist" id="tabs">
+      <button class="tab" role="tab" data-t="resumen" aria-selected="true">Resumen auditoría</button>
+      <button class="tab" role="tab" data-t="horizonte" aria-selected="false">Horizonte CNC</button>
+      <button class="tab" role="tab" data-t="clientes" aria-selected="false">Clientes</button>
+      <button class="tab" role="tab" data-t="compradores" aria-selected="false">Compradores y evolutivo</button>
+      <button class="tab" role="tab" data-t="motivos" aria-selected="false">Motivos BEES Force</button>
+      <button class="tab" role="tab" data-t="pda" aria-selected="false">Planes de acción</button>
+      <button class="tab" role="tab" data-t="visitas" aria-selected="false">Visitas SPV</button>
+      <button class="tab" role="tab" data-t="mapa" aria-selected="false">Mapa</button>
+    </nav>
+  </div>
+</div>
+
+<main class="wrap">
+  <section class="view" id="v-resumen"></section>
+  <section class="view" id="v-horizonte" hidden></section>
+  <section class="view" id="v-clientes" hidden></section>
+  <section class="view" id="v-compradores" hidden></section>
+  <section class="view" id="v-motivos" hidden></section>
+  <section class="view" id="v-pda" hidden></section>
+  <section class="view" id="v-visitas" hidden></section>
+  <section class="view" id="v-mapa" hidden></section>
+</main>
+
+<dialog id="dlgVisita"></dialog>
+<dialog id="dlgCliente"></dialog>
+<dialog id="dlgLogin">
+  <form id="loginForm">
+    <h3>Ingresar como supervisor</h3>
+    <p class="hint" style="margin:0">Usá la misma contraseña de la pestaña Supervisores de Ruta CCC.</p>
+    <div class="f"><label for="loginPw">Contraseña</label><input id="loginPw" type="password" autocomplete="off"></div>
+    <div class="hint" id="loginErr"></div>
+    <div class="row"><span class="sp"></span><button type="button" class="btn" id="loginCancel">Cancelar</button><button class="btn primary">Ingresar</button></div>
+  </form>
+</dialog>
+
+<script>
+'use strict';
+/* ====================== estado y utilidades ====================== */
+const D = { data:null, visitas:[], api:'' };
+const S = { un:'TOTAL', spv:'', pv:'', crit:'aud', tab:'resumen', user:null };
+const MES_L = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+const MES_LL = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const UNS = { TOTAL:{k:'t',tx:'t',lab:'Total',col:'--s7'}, CVZA:{k:'c',tx:'c',lab:'Cerveza',col:'--s4'}, NABS:{k:'n',tx:'n',lab:'NABs',col:'--s1'} };
+const MOT_COL = { 'PRECIO NO COMPETITIVOS':'--s1', 'DIFERENCIA DE PRECIOS':'--s2', 'COMPRA EN MAYORISTA':'--s3' };
+const PER_LAB = {0:'Sin visita',1:'Semanal (1)',2:'Quincenal (0,50)',3:'Cada 3 semanas (0,33)',4:'Mensual (0,25)'};
+const USERS = { 'guillen2026':{name:'GUILLEN IGNACIO',spv:'GUILLEN',scope:'own'}, 'sans2026':{name:'SANS LUCAS',spv:'SANS',scope:'own'}, 'jefe2026':{name:'JEFE DE VENTAS',spv:'',scope:'all'} };
+const $ = s => document.querySelector(s);
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const nf = new Intl.NumberFormat('es-AR');
+const n0 = x => x==null||isNaN(x) ? '–' : nf.format(Math.round(x));
+const n1 = x => x==null||isNaN(x) ? '–' : x.toLocaleString('es-AR',{minimumFractionDigits:1,maximumFractionDigits:1});
+const n2 = x => x==null||isNaN(x) ? '–' : x.toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const pc = (x,d=0) => x==null||!isFinite(x) ? '–' : (x*100).toLocaleString('es-AR',{minimumFractionDigits:d,maximumFractionDigits:d})+' %';
+const cssv = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const mesLab = ym => { if(!ym) return ''; const [y,m]=ym.split('-'); return MES_L[+m-1]+' '+y.slice(2); };
+const mesLL = ym => { if(!ym) return ''; const [y,m]=ym.split('-'); return MES_LL[+m-1]+' '+y; };
+const fDate = iso => { if(!iso) return '–'; const [y,m,d]=iso.slice(0,10).split('-'); return d+'/'+m+'/'+y.slice(2); };
+function hoyISO(){ const d=new Date(Date.now()-3*3600e3); return d.toISOString().slice(0,10); }
+function toast(t){ const el=document.createElement('div'); el.className='toast'; el.textContent=t; document.body.appendChild(el); setTimeout(()=>el.remove(),2600); }
+function sumaMes(ym,k){ let [y,m]=ym.split('-').map(Number); m=m-1+k; y+=Math.floor(m/12); m=((m%12)+12)%12; return y+'-'+String(m+1).padStart(2,'0'); }
+function lsGet(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){return d;} }
+function lsSet(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+
+/* ====================== lógica de horizontes ====================== */
+let M=[], MI=0;
+function serie(c,un){ return c[UNS[un||S.un].k] || null; }
+function elegible(c,k){ if(S.crit==='excel') return true; if(!c.alta) return true; const ini=M[MI-k]; return !ini || c.alta.slice(0,7)<=ini; }
+function excluidoTexto(c,un){ return S.crit==='excel' && (c.tx||'').includes(UNS[un||S.un].tx); }
+function sinCompra(s,k,hasta){ const h = hasta==null?MI:hasta; for(let j=1;j<=k;j++){ const i=h-j; if(i<0) return false; if(s[i]>0) return false; } return true; }
+function flags(c,un){
+  const s=serie(c,un); if(!s) return null;
+  const tx=excluidoTexto(c,un);
+  const f={ ma: !tx && s[MI]<=0 };
+  [['u1',1],['u2',2],['u3',3],['u6',6],['u9',9],['u12',12]].forEach(([n,k])=>{ f[n]= !tx && sinCompra(s,k) && elegible(c,k); });
+  let m=0; for(let i=MI-1;i>=0 && s[i]<=0;i--) m++; f.meses = m>=MI ? MI : m; f.nunca = m>=MI;
+  f.bucket = f.u12 ? 3 : f.u6 ? 2 : f.u3 ? 1 : 0;
+  return f;
+}
+function horizonteLab(f){ return !f ? '–' : f.u12 ? 'U12M' : f.u6 ? 'U6M' : f.u3 ? 'U3M' : (f.u1 ? 'Últ. mes' : 'Compra'); }
+function volPrevio(s){ let t=0,n=0; for(let i=0;i<MI;i++){ if(s[i]>0){ t+=s[i]; n++; } } return n? t/n : 0; }
+function clientesFiltrados(){
+  return D.data.clientes.filter(c => (!S.spv || c.spv===S.spv) && (!S.pv || c.pv===S.pv));
+}
+function ultimoMotivo(cod){ return MOT_IDX[cod] || null; }
+let MOT_IDX = {};
+
+/* ====================== carga ====================== */
+async function cargar(){
+  const r = await fetch('data.json',{cache:'no-store'});
+  D.data = await r.json();
+  M = D.data.meta.meses; MI = M.length-1;
+  D.api = D.data.meta.api || '';
+  // índice de último motivo por cliente (UN > TOTAL)
+  const push=(b,src)=>b.regs.forEach(r=>{ const prev=MOT_IDX[r.cod]; if(!prev || prev.fecha<=r.fecha) MOT_IDX[r.cod]={...r, mes:b.mes, src}; });
+  D.data.motivos.total.forEach(b=>push(b,'TOTAL'));
+  D.data.motivos.un.forEach(b=>push(b,'UN'));
+  D.data.clientes.forEach(c=>CLI[c.cod]=c);
+  initUser(); initFiltros();
+  $('#subTitle').textContent = `Datos al ${D.data.meta.generado} · mes en curso ${mesLL(D.data.meta.mesActual)} (parcial) · U3M = sin compra en ${mesLab(M[MI-3])}, ${mesLab(M[MI-2])} y ${mesLab(M[MI-1])}`;
+  await cargarVisitas();
+}
+async function cargarVisitas(){
+  if(!D.api){ D.visitas = lsGet('gcnc_visitas_local',[]); D.visitasLocal=true; return; }
+  try{
+    const r = await fetch(D.api+'?action=visitas',{cache:'no-store'});
+    const j = await r.json(); D.visitas = j.visitas||[]; D.visitasLocal=false;
+  }catch(e){ D.visitas = lsGet('gcnc_visitas_local',[]); D.visitasLocal=true; D.visitasError=true; }
+}
+
+function initUser(){
+  const p = new URLSearchParams(location.search);
+  if(p.get('embed')) document.body.classList.add('embed');
+  const spv = (p.get('spv')||'').toUpperCase();
+  const scope = p.get('scope')||''; const rol = p.get('rol')||'';
+  if(spv && scope==='own'){ S.user={name:spv, spv:spv.split(' ')[0], scope:'own'}; }
+  else if(scope==='all' && rol && rol!=='liderbb'){ S.user={name: rol==='gerencia'?'GERENCIA':'JEFE DE VENTAS', spv:'', scope:'all', lectura: rol==='gerencia'}; }
+  else { const u=(()=>{try{return JSON.parse(sessionStorage.getItem('gcncUser')||'null');}catch(e){return null;}})(); if(u) S.user=u; }
+  if(S.user && S.user.scope==='own') S.spv = S.user.spv;
+  pintarUser();
+}
+function pintarUser(){
+  $('#userTag').innerHTML = S.user ? `👤 ${esc(S.user.name)}${!new URLSearchParams(location.search).get('embed')?' · <a href="#" id="logout">salir</a>':''}` : `<a href="#" id="loginLink">Ingresar como supervisor</a>`;
+  const ll=$('#loginLink'); if(ll) ll.onclick=e=>{e.preventDefault(); abrirLogin();};
+  const lo=$('#logout'); if(lo) lo.onclick=e=>{e.preventDefault(); S.user=null; try{sessionStorage.removeItem('gcncUser');}catch(_){} S.spv=''; initFiltros(); pintarUser(); render();};
+}
+function abrirLogin(){
+  const d=$('#dlgLogin'); $('#loginErr').textContent=''; $('#loginPw').value=''; d.showModal();
+  $('#loginCancel').onclick=()=>d.close();
+  $('#loginForm').onsubmit=e=>{ e.preventDefault(); const u=USERS[$('#loginPw').value.trim().toLowerCase()]; if(!u){ $('#loginErr').textContent='Contraseña incorrecta.'; return; }
+    S.user=u; try{sessionStorage.setItem('gcncUser',JSON.stringify(u));}catch(_){} if(u.scope==='own') S.spv=u.spv; d.close(); initFiltros(); pintarUser(); render(); };
+}
+
+function initFiltros(){
+  const spvs=[...new Set(D.data.clientes.map(c=>c.spv))].sort();
+  const fs=$('#fSpv');
+  const locked = S.user && S.user.scope==='own';
+  fs.innerHTML = (locked?'':'<option value="">Todos</option>') + spvs.filter(s=>!locked||s===S.spv).map(s=>`<option ${s===S.spv?'selected':''}>${esc(s)}</option>`).join('');
+  fs.disabled = locked;
+  fillPv();
+  fs.onchange=()=>{ S.spv=fs.value; S.pv=''; fillPv(); render(); };
+  $('#fPv').onchange=()=>{ S.pv=$('#fPv').value; render(); };
+  $('#fCrit').value=S.crit; $('#fCrit').onchange=()=>{ S.crit=$('#fCrit').value; render(); };
+  document.querySelectorAll('#fUn button').forEach(b=>b.onclick=()=>{ S.un=b.dataset.v; document.querySelectorAll('#fUn button').forEach(x=>x.setAttribute('aria-pressed', x===b)); render(); });
+  document.querySelectorAll('#tabs .tab').forEach(t=>t.onclick=()=>irTab(t.dataset.t));
+}
+function fillPv(){
+  const pvs=[...new Set(D.data.clientes.filter(c=>!S.spv||c.spv===S.spv).map(c=>c.pv))].sort();
+  $('#fPv').innerHTML='<option value="">Todos</option>'+pvs.map(p=>`<option ${p===S.pv?'selected':''}>${esc(p)}</option>`).join('');
+}
+function irTab(t){
+  S.tab=t; document.querySelectorAll('#tabs .tab').forEach(x=>x.setAttribute('aria-selected', x.dataset.t===t));
+  document.querySelectorAll('main > .view').forEach(v=>v.hidden = v.id!=='v-'+t);
+  if(location.hash.slice(1)!==t) history.replaceState(null,'','#'+t);
+  render(); window.scrollTo({top:0});
+}
+
+/* ====================== charts ====================== */
+const CH = {};
+function chart(id,cfg){
+  if(CH[id]) CH[id].destroy();
+  const el=document.getElementById(id); if(!el) return;
+  Chart.defaults.font.family = cssv('--f-body') || 'system-ui';
+  Chart.defaults.color = cssv('--ink-2');
+  Chart.defaults.borderColor = cssv('--grid');
+  const o=cfg.options||{}; const pl=o.plugins||{};
+  cfg.options = Object.assign({responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}}, o);
+  cfg.options.plugins = Object.assign({}, pl, {legend:{display:false}, tooltip:Object.assign({backgroundColor:cssv('--ink'), titleColor:cssv('--paper'), bodyColor:cssv('--paper'), padding:10, cornerRadius:6}, pl.tooltip||{})});
+  CH[id] = new Chart(el, cfg);
+}
+function legend(items){ return `<div class="legend">${items.map(([l,c])=>`<span><i class="dot" style="background:var(${c})"></i>${esc(l)}</span>`).join('')}</div>`; }
+function heatBg(x, max, varName){ if(!x||!max) return ''; const a=Math.min(1,x/max); return `background:color-mix(in srgb, var(${varName||'--h2'}) ${Math.round(a*55)}%, transparent)`; }
+function spark(s){
+  const mx=Math.max(...s.map(v=>v>0?v:0),0.0001);
+  return `<span class="spark" title="${s.map((v,i)=>mesLab(M[i])+': '+n2(v)).join(' · ')}">`+s.map((v,i)=>`<i class="${v>0?'':'z'} ${i===MI?'cur':''}" style="height:${v>0?Math.max(2,Math.round(v/mx*18)):2}px"></i>`).join('')+'</span>';
+}
+
+/* ====================== render ====================== */
+function render(){
+  if(!D.data) return;
+  const f={resumen:rResumen, horizonte:rHorizonte, clientes:rClientes, compradores:rCompradores, motivos:rMotivos, pda:rPda, visitas:rVisitas, mapa:rMapa}[S.tab];
+  f && f();
+  enviarAlto();
+}
+function enviarAlto(){ if(window.parent!==window) setTimeout(()=>{ try{ window.parent.postMessage({gcncAlto: document.documentElement.scrollHeight},'*'); }catch(e){} },120); }
+window.addEventListener('resize', enviarAlto);
+
+/* ---------- agregados por promotor ---------- */
+function tablaHorizonte(un){
+  const rows={}; const tot={};
+  clientesFiltrados().forEach(c=>{
+    const f=flags(c,un); if(!f) return;
+    const key=c.spv+'|'+c.pv;
+    const r = rows[key] || (rows[key]={spv:c.spv,pv:c.pv,cart:0,ma:0,u1:0,u2:0,u3:0,u6:0,u9:0,u12:0,compra:0});
+    r.cart++; ['ma','u1','u2','u3','u6','u9','u12'].forEach(k=>{ if(f[k]) r[k]++; }); if(serie(c,un)[MI]>0) r.compra++;
+  });
+  return Object.values(rows).sort((a,b)=>a.spv.localeCompare(b.spv)||a.pv.localeCompare(b.pv));
+}
+function sumRows(rs,label){ const o={pv:label,cart:0,ma:0,u1:0,u2:0,u3:0,u6:0,u9:0,u12:0,compra:0}; rs.forEach(r=>Object.keys(o).forEach(k=>{ if(k!=='pv') o[k]+=r[k]; })); return o; }
+function totalesUn(un){ const rs=tablaHorizonte(un); return sumRows(rs,'ZUPPA'); }
+
+/* ====================== RESUMEN ====================== */
+function rResumen(){
+  const v=$('#v-resumen');
+  const T={}; ['TOTAL','CVZA','NABS'].forEach(u=>T[u]=totalesUn(u));
+  const t=T[S.un];
+  // frecuencia U12M (sobre total: clientes que no compran nada hace 12 meses)
+  const u12=clientesFiltrados().filter(c=>{const f=flags(c,'TOTAL'); return f&&f.u12;});
+  const frecOk=u12.filter(c=>c.per===4).length, frecQ=u12.filter(c=>c.per===2).length;
+  const frecMal=u12.length-frecOk-frecQ;
+  // BEES Force
+  const mt=D.data.motivos.total.filter(b=>!b.pendiente), mu=D.data.motivos.un;
+  const mesesRel=[...new Set([...mt,...mu].filter(b=>b.regs.length).map(b=>b.mes))].sort();
+  const pend=D.data.motivos.total.filter(b=>b.pendiente);
+  const relUnU = mu.reduce((a,b)=>a+b.regs.filter(enFiltro).length,0);
+  const relTot = mt.reduce((a,b)=>a+b.regs.filter(enFiltro).length,0);
+  // PDA
+  const pdaMeses=D.data.pda.total.map(p=>p.label.toLowerCase());
+  const pdaSinAccion=[...D.data.pda.un].reduce((a,p)=>a+[...p.cerveza,...p.nabs].filter(x=>!x.accion).length,0);
+  const pdaNoReal=D.data.pda.total.reduce((a,p)=>a+[...p.cerveza,...p.nabs].filter(x=>/NO REALIZADO/.test(x.status)).length,0);
+  // visitas SPV mes
+  const mesAct=D.data.meta.mesActual; const obj=D.data.meta.objetivoVisitasSpv;
+  const vis=D.visitas.filter(x=>x.fecha.slice(0,7)===mesAct && x.estado==='Realizada' && (!S.spv||x.spv===S.spv));
+  const spvsVis=S.spv?[S.spv]:['GUILLEN','SANS'];
+  const visOk=spvsVis.every(s=>vis.filter(x=>x.spv===s).length>=obj);
+  const compr = t.cart? t.compra/t.cart : null;
+  const objUn = D.data.meta.objetivos[S.un];
+  v.innerHTML = `
+  <div class="sec-h"><h2>Estado del punto de auditoría</h2><p>Nivel 1 (100 %) exige: seguimiento de CNC abierto por horizonte y unidad de negocio, relevamiento del motivo en BEES Force para los U3M de CZA y NABs con un plan de acción asociado, y la frecuencia de contacto de los U12M. Cada punto enlaza a su evidencia.</p></div>
+  <div class="kpis">
+    <div class="kpi"><span class="l">Cartera ${S.spv||S.pv?'filtrada':'total'}</span><span class="v">${n0(t.cart)}</span><span class="d">clientes activos en la base</span></div>
+    <div class="kpi"><span class="l">CNC U3M · ${UNS[S.un].lab}</span><span class="v">${n0(t.u3)}</span><span class="d">${pc(t.u3/t.cart,1)} de la cartera</span></div>
+    <div class="kpi"><span class="l">CNC U6M · ${UNS[S.un].lab}</span><span class="v">${n0(t.u6)}</span><span class="d">${pc(t.u6/t.cart,1)} de la cartera</span></div>
+    <div class="kpi"><span class="l">CNC U12M · ${UNS[S.un].lab}</span><span class="v">${n0(t.u12)}</span><span class="d">${pc(t.u12/t.cart,1)} de la cartera</span></div>
+    <div class="kpi"><span class="l">Compradores ${mesLab(mesAct)} · ${UNS[S.un].lab}</span><span class="v">${pc(compr)}</span><span class="d">objetivo ${pc(objUn)} · mes en curso</span></div>
+  </div>
+  <div class="grid2">
+    <div class="panel">
+      <div class="ph"><h3>Checklist Nivel 1</h3><span class="hint">se actualiza con cada carga</span></div>
+      ${chk('ok','Seguimiento anual de toda la cartera por negocio', `${n0(T.TOTAL.cart)} clientes con compra mes a mes de ${mesLab(M[0])} a ${mesLab(M[MI])}. Compradores por CVZA, NABs, MATCH, AGUAS y MKTP en el evolutivo.`, 'compradores')}
+      ${chk('ok','CNC abiertos por horizonte (U3M / U6M / U12M), promotor y supervisor', `Total ${n0(T.TOTAL.u3)} / ${n0(T.TOTAL.u6)} / ${n0(T.TOTAL.u12)} · Cerveza ${n0(T.CVZA.u3)} / ${n0(T.CVZA.u6)} / ${n0(T.CVZA.u12)} · NABs ${n0(T.NABS.u3)} / ${n0(T.NABS.u6)} / ${n0(T.NABS.u12)}.`, 'horizonte')}
+      ${chk(pend.length?'warn':'ok','Relevamiento mensual del motivo en BEES Force (U3M CZA y NABs)', `${mesesRel.length} meses con relevamiento (${mesesRel.map(mesLab).join(', ')}): ${n0(relUnU)} tareas por negocio y ${n0(relTot)} en el total.${pend.length?' Falta el dato de '+pend.map(b=>b.label.toLowerCase()).join(', ')+' en MOTIVOS BEES FORCE TOTAL.':''}`, 'motivos')}
+      ${chk(pdaSinAccion||pdaNoReal?'warn':'ok','Plan de acción (PDA) asociado a cada motivo, por mes', `PDA cargados para ${pdaMeses.join(', ')}.${pdaNoReal?' '+pdaNoReal+' acciones del total figuran como "NO REALIZADO".':''}${pdaSinAccion?' '+pdaSinAccion+' filas de PDA por negocio sin acción escrita.':''}`, 'pda')}
+      ${chk(frecMal? 'bad' : (frecQ?'warn':'ok'),'Frecuencia de contacto de los CNC U12M (0,25 o 0,50 con oportunidad de censo)', `${u12.length} clientes sin compra en ningún negocio hace 12 meses: ${frecOk} con frecuencia mensual, ${frecQ} quincenal${frecMal?', <strong>'+frecMal+' con otra frecuencia</strong>':''}.`, 'horizonte')}
+      ${chk(visOk?'ok':'warn','Visitas de supervisores a CNC con motivo', `${vis.length} visitas realizadas en ${mesLL(mesAct)}; objetivo ${obj} por supervisor por mes.`, 'visitas')}
+    </div>
+    <div class="panel">
+      <div class="ph"><h3>CNC por horizonte y negocio</h3><span class="hint">clientes, acumulado</span></div>
+      ${legend([['Total','--s7'],['Cerveza','--s4'],['NABs','--s1']])}
+      <div class="chart"><canvas id="cResHz" aria-label="CNC por horizonte y negocio"></canvas></div>
+      <div class="tw" style="margin-top:12px"><table><thead><tr><th>Negocio</th><th class="n">Cartera</th><th class="n">U3M</th><th class="n">U6M</th><th class="n">U12M</th><th class="n">Compra ${mesLab(mesAct)}</th></tr></thead><tbody>
+      ${['TOTAL','CVZA','NABS'].map(u=>`<tr><td>${UNS[u].lab}</td><td class="n">${n0(T[u].cart)}</td><td class="n">${n0(T[u].u3)}</td><td class="n">${n0(T[u].u6)}</td><td class="n">${n0(T[u].u12)}</td><td class="n">${pc(T[u].compra/T[u].cart,1)}</td></tr>`).join('')}
+      </tbody></table></div>
+    </div>
+  </div>
+  ${reconciliacion()}
+  ${D.data.meta.avisos.length?`<div class="note warn"><b>Avisos de la última carga</b><ul style="margin:4px 0 0;padding-left:18px">${D.data.meta.avisos.map(a=>`<li>${esc(a)}</li>`).join('')}</ul></div>`:''}
+  <details class="sop"><summary>Cómo usar este tablero</summary><ol>
+    <li><b>Negocio</b> arriba cambia todos los números entre Total (cualquier negocio), Cerveza y NABs. Supervisor y promotor filtran todas las pestañas.</li>
+    <li><b>Horizonte CNC</b>: U3M, U6M y U12M son acumulados, igual que en el Excel: un cliente U12M también es U6M y U3M. El mes en curso no cuenta porque todavía está abierto.</li>
+    <li><b>Clientes</b>: listado para trabajar en calle y para mostrar al auditor. Se descarga en CSV.</li>
+    <li><b>Motivos BEES Force</b>: lo que relevaron los promotores cada mes y si el cliente volvió a comprar después.</li>
+    <li><b>Planes de acción</b>: el PDA de cada mes responde a los motivos relevados el mes anterior.</li>
+    <li><b>Visitas SPV</b>: cada supervisor agenda y carga sus visitas a CNC con motivo (qué notó, plan de acción, compromiso). Se guardan en la planilla.</li>
+    <li>Para actualizar: pegar las hojas nuevas en el Google Sheet y correr <b>🚫 Gestión CNC → Actualizar tablero en GitHub</b>.</li>
+  </ol></details>`;
+  v.querySelectorAll('[data-go]').forEach(a=>a.onclick=e=>{e.preventDefault(); irTab(a.dataset.go);});
+  chart('cResHz',{type:'bar',data:{labels:['U3M','U6M','U12M'],datasets:['TOTAL','CVZA','NABS'].map(u=>({label:UNS[u].lab,data:[T[u].u3,T[u].u6,T[u].u12],backgroundColor:cssv(UNS[u].col),borderRadius:4,borderSkipped:'start',borderColor:cssv('--panel'),borderWidth:1}))},
+    options:{scales:{y:{beginAtZero:true,grid:{color:cssv('--grid')}},x:{grid:{display:false}}}}});
+}
+function chk(st,t,p,go){ const ic={ok:'✓',warn:'!',bad:'✕'}[st]; return `<div class="check"><span class="ic ${st}" aria-label="${st==='ok'?'cumple':st==='warn'?'revisar':'no cumple'}">${ic}</span><div><b>${t}</b><p>${p}</p></div><a href="#" class="go" data-go="${go}">Ver →</a></div>`; }
+function enFiltro(r){ if(!S.spv && !S.pv) return true; const pv=r.pv || (CLI[r.cod]||{}).pv; const spv=(CLI[r.cod]||{}).spv || spvDe(pv); return (!S.pv||pv===S.pv) && (!S.spv||spv===S.spv); }
+function spvDe(pv){ const p=D.data.meta.promotores.find(x=>x.pv===pv); return p?p.spv:''; }
+let CLI={};
+function reconciliacion(){
+  // diferencias entre criterio auditoría y Excel (solo se muestra en criterio auditoría)
+  const un=S.un, k=UNS[un].tx;
+  const cs=clientesFiltrados();
+  let tx=0, nuevos=0;
+  const save=S.crit;
+  S.crit='aud'; const aud=cs.filter(c=>{const f=flags(c,un);return f&&f.u3;}); S.crit='excel'; const exc=cs.filter(c=>{const f=flags(c,un);return f&&f.u3;}); S.crit=save;
+  const setA=new Set(aud.map(c=>c.cod)), setE=new Set(exc.map(c=>c.cod));
+  aud.forEach(c=>{ if(!setE.has(c.cod)) tx++; }); exc.forEach(c=>{ if(!setA.has(c.cod)) nuevos++; });
+  if(!tx && !nuevos) return '';
+  return `<div class="note"><b>Diferencia con el Excel (U3M ${UNS[un].lab}): tablero ${n0(aud.length)} vs Excel ${n0(exc.length)}.</b>
+    ${tx?` Se suman ${n0(tx)} clientes que no compraron en la ventana pero el Excel no cuenta porque sus ventas están guardadas como texto ("0"), casi todos sin ninguna compra registrada.`:''}
+    ${nuevos?` Se sacan ${n0(nuevos)} altas nuevas: todavía no tenían los 3 meses en cartera cuando empezó la ventana.`:''}
+    Con "Criterio de conteo → Igual al Excel" ves los números de tu planilla.</div>`;
+}
+
+/* ====================== HORIZONTE ====================== */
+function rHorizonte(){
+  const v=$('#v-horizonte'); const un=S.un;
+  const rows=tablaHorizonte(un);
+  const spvs=[...new Set(rows.map(r=>r.spv))];
+  const mx=Math.max(...rows.map(r=>r.u3),1);
+  let body='';
+  spvs.forEach(s=>{ const rs=rows.filter(r=>r.spv===s); rs.forEach(r=>body+=filaHz(r,mx,false)); if(spvs.length>1||!S.pv) body+=filaHz(sumRows(rs,s),0,'sub'); });
+  const tot=sumRows(rows,'ZUPPA'); if(spvs.length>1) body+=filaHz(tot,0,'tot');
+  // exclusivos por promotor
+  const ex={}; clientesFiltrados().forEach(c=>{ const f=flags(c,un); if(!f||!f.u3) return; const e=ex[c.pv]||(ex[c.pv]={b1:0,b2:0,b3:0}); e['b'+f.bucket]++; });
+  const exRows=Object.entries(ex).sort((a,b)=>(b[1].b1+b[1].b2+b[1].b3)-(a[1].b1+a[1].b2+a[1].b3));
+  const exMax=Math.max(...exRows.map(([,e])=>e.b1+e.b2+e.b3),1);
+  // evolución U3M mes a mes (sobre la cartera actual)
+  const evoMeses=[]; for(let m=3;m<=MI;m++) evoMeses.push(m);
+  const evo={}; ['TOTAL','CVZA','NABS'].forEach(u=>evo[u]=evoMeses.map(m=>clientesFiltrados().filter(c=>{ const s=serie(c,u); if(!s||excluidoTexto(c,u)) return false; if(!sinCompra(s,3,m)) return false; if(S.crit==='aud' && c.alta && c.alta.slice(0,7)>M[m-3]) return false; return true; }).length));
+  // localidad y día de visita
+  const loc={}, gv={};
+  clientesFiltrados().forEach(c=>{ const f=flags(c,un); if(!f) return; const l=loc[c.loc]||(loc[c.loc]={cart:0,u3:0,u6:0,u12:0,ma:0}); l.cart++; ['u3','u6','u12','ma'].forEach(k=>{if(f[k]) l[k]++;});
+    if(f.u3){ const g=c.gv||c.vis||'–'; const x=gv[c.pv]||(gv[c.pv]={spv:c.spv}); x[g]=(x[g]||0)+1; } });
+  const locRows=Object.entries(loc).sort((a,b)=>b[1].u3-a[1].u3);
+  const gvCols=['LU - JU','MA - VI','MI - SA','DOM'];
+  // frecuencia U12M (total)
+  const u12=clientesFiltrados().filter(c=>{const f=flags(c,'TOTAL');return f&&f.u12;});
+  const perCount={}; u12.forEach(c=>{perCount[c.per]=(perCount[c.per]||0)+1;});
+  const u12un = un==='TOTAL'?[]:clientesFiltrados().filter(c=>{const f=flags(c,un);return f&&f.u12;});
+  const perUn={}; u12un.forEach(c=>{perUn[c.per]=(perUn[c.per]||0)+1;});
+
+  v.innerHTML=`
+  <div class="sec-h"><h2>Horizonte temporal de no compra · ${UNS[un].lab}</h2><p>Clientes sin compra en los últimos 3, 6 y 12 meses cerrados, por supervisor y promotor. Acumulado: el U12M está incluido en el U6M y el U3M. "Mes en curso" son los que todavía no compraron en ${mesLL(M[MI])}.</p></div>
+  <div class="panel"><div class="ph"><h3>Apertura por supervisor y promotor</h3><span class="hint">tocá un promotor para ver sus clientes</span></div>
+  <div class="tw"><table id="tHz"><thead><tr><th>Promotor</th><th class="n">Cartera</th><th class="n">Mes en curso</th><th class="n">Últ. mes</th><th class="n">U2M</th><th class="n">U3M</th><th class="n">% U3M</th><th class="n">U6M</th><th class="n">U9M</th><th class="n">U12M</th></tr></thead><tbody>${body}</tbody></table></div></div>
+  <div class="grid2">
+    <div class="panel"><div class="ph"><h3>Antigüedad de la no compra</h3><span class="hint">CNC U3M separados en tramos exclusivos</span></div>
+      ${legend([['3 a 5 meses','--h1'],['6 a 11 meses','--h2'],['12 meses o más','--h3']])}
+      <div style="display:flex;flex-direction:column;gap:6px">${exRows.map(([pv,e])=>{const t=e.b1+e.b2+e.b3; return `<div class="bar-h"><span>${esc(pv)}</span><span class="track" style="width:${Math.max(8,t/exMax*100)}%">${[['b1','--h1'],['b2','--h2'],['b3','--h3']].map(([k,c])=>e[k]?`<i style="flex:${e[k]};background:var(${c})" title="${k==='b1'?'3–5':k==='b2'?'6–11':'12+'} meses: ${e[k]}"></i>`:'').join('')}</span><span class="num">${t}</span></div>`;}).join('')||'<p class="hint">Sin CNC U3M con este filtro.</p>'}</div>
+    </div>
+    <div class="panel"><div class="ph"><h3>Evolución de CNC U3M</h3><span class="hint">cada mes, sobre la cartera actual</span></div>
+      ${legend([['Total','--s7'],['Cerveza','--s4'],['NABs','--s1']])}
+      <div class="chart"><canvas id="cHzEvo"></canvas></div>
+    </div>
+  </div>
+  <div class="panel"><div class="ph"><h3>Frecuencia de contacto de los U12M</h3><span class="hint">requisito: 0,25 (mensual) · 0,50 (quincenal) si hay oportunidad por censo · se modifica cuando el cliente vuelve a comprar</span></div>
+    <div class="grid2">
+      <div><p class="hint" style="margin:0 0 6px">Sin compra en <b>ningún negocio</b> hace 12 meses: ${u12.length} clientes</p>${tablaPer(perCount)}</div>
+      ${un==='TOTAL'?`<div><p class="hint" style="margin:0 0 6px">Elegí Cerveza o NABs arriba para ver los U12M de cada negocio (siguen comprando otros productos).</p></div>`:`<div><p class="hint" style="margin:0 0 6px">U12M de ${UNS[un].lab}: ${u12un.length} clientes (compran otros negocios)</p>${tablaPer(perUn)}</div>`}
+    </div>
+    ${u12.length?`<div class="tw" style="margin-top:10px;max-height:320px"><table><thead><tr><th>Código</th><th>Cliente</th><th>Promotor</th><th>Visita</th><th>Frecuencia</th><th>Estado</th></tr></thead><tbody>${u12.slice().sort((a,b)=>(a.per===4?2:a.per===2?1:0)-(b.per===4?2:b.per===2?1:0)).map(c=>`<tr class="click" data-cod="${c.cod}"><td class="n">${c.cod}</td><td>${esc(c.rs)}</td><td>${esc(c.pv)}</td><td>${esc(c.vis)}</td><td>${PER_LAB[c.per]||c.per}</td><td>${c.per===4?'<span class="chip ok">✓ cumple</span>':c.per===2?'<span class="chip warn">cumple si hay censo</span>':'<span class="chip bad">ajustar a 0,25</span>'}</td></tr>`).join('')}</tbody></table></div>`:''}
+  </div>
+  <div class="grid2">
+    <div class="panel"><div class="ph"><h3>CNC por localidad</h3><span class="hint">${UNS[un].lab}</span></div>
+      <div class="tw" style="max-height:420px"><table><thead><tr><th>Localidad</th><th class="n">Cartera</th><th class="n">U3M</th><th class="n">U6M</th><th class="n">U12M</th><th class="n">Mes en curso</th></tr></thead><tbody>
+      ${locRows.map(([l,x])=>`<tr><td>${esc(l)}</td><td class="n">${x.cart}</td><td class="n">${x.u3}</td><td class="n">${x.u6}</td><td class="n">${x.u12}</td><td class="n">${x.ma}</td></tr>`).join('')}</tbody></table></div></div>
+    <div class="panel"><div class="ph"><h3>CNC U3M por día de visita</h3><span class="hint">para planificar la salida</span></div>
+      <div class="tw" style="max-height:420px"><table><thead><tr><th>SPV</th><th>Promotor</th>${gvCols.map(g=>`<th class="n">${g}</th>`).join('')}<th class="n">Total</th></tr></thead><tbody>
+      ${Object.entries(gv).sort((a,b)=>a[1].spv.localeCompare(b[1].spv)||a[0].localeCompare(b[0])).map(([pv,x])=>`<tr><td>${esc(x.spv)}</td><td>${esc(pv)}</td>${gvCols.map(g=>`<td class="n">${x[g]||0}</td>`).join('')}<td class="n"><b>${gvCols.reduce((a,g)=>a+(x[g]||0),0)}</b></td></tr>`).join('')}</tbody></table></div></div>
+  </div>
+  ${D.data.edfRobados.length?`<div class="panel"><div class="ph"><h3>EDF robados</h3><span class="hint">clientes que dejaron de comprar por robo de heladera · ${D.data.edfRobados.reduce((a,e)=>a+e.total,0)} equipos</span></div>
+   <div class="tw"><table><thead><tr><th>Código</th><th>Cliente</th><th>Promotor</th><th>Negocio</th><th class="n">EDF</th><th>Hipótesis</th><th>PDA</th><th>Comentario</th></tr></thead><tbody>
+   ${D.data.edfRobados.filter(e=>(!S.pv||e.pv===S.pv)&&(!S.spv||spvDe(e.pv)===S.spv)).map(e=>`<tr><td class="n">${e.cod}</td><td>${esc(e.rs)}</td><td>${esc(e.pv)}</td><td>${esc(e.negocio)}</td><td class="n">${e.total}</td><td>${esc(e.hipotesis)}</td><td>${esc(e.pda)}</td><td>${esc(e.coment)}</td></tr>`).join('')}</tbody></table></div></div>`:''}`;
+  v.querySelectorAll('#tHz tr[data-pv]').forEach(tr=>tr.onclick=()=>{ S.pv=tr.dataset.pv; S.spv=spvDe(tr.dataset.pv)||S.spv; initFiltros(); CL.hz='u3'; irTab('clientes'); });
+  v.querySelectorAll('tr[data-cod]').forEach(tr=>tr.onclick=()=>fichaCliente(+tr.dataset.cod));
+  chart('cHzEvo',{type:'line',data:{labels:evoMeses.map(m=>mesLab(M[m])),datasets:['TOTAL','CVZA','NABS'].map(u=>({label:UNS[u].lab,data:evo[u],borderColor:cssv(UNS[u].col),backgroundColor:cssv(UNS[u].col),borderWidth:2,pointRadius:3,tension:.25}))},
+    options:{scales:{y:{beginAtZero:true,grid:{color:cssv('--grid')}},x:{grid:{display:false}}}}});
+}
+function filaHz(r,mx,cls){
+  const p=r.cart? r.u3/r.cart : 0;
+  return `<tr class="${cls||'click'}" ${cls?'':`data-pv="${esc(r.pv)}"`}><td>${cls?'<b>'+esc(r.pv)+'</b>':esc(r.pv)}</td><td class="n">${n0(r.cart)}</td><td class="n">${n0(r.ma)}</td><td class="n">${n0(r.u1)}</td><td class="n">${n0(r.u2)}</td>
+  <td class="n"><span class="heat" style="${cls?'':heatBg(r.u3,mx)}">${n0(r.u3)}</span></td><td class="n">${pc(p,1)}</td><td class="n">${n0(r.u6)}</td><td class="n">${n0(r.u9)}</td><td class="n">${n0(r.u12)}</td></tr>`;
+}
+function tablaPer(pc0){
+  const ks=Object.keys(pc0).sort(); if(!ks.length) return '<p class="hint">Sin clientes.</p>';
+  return `<div class="tw"><table><thead><tr><th>Frecuencia</th><th class="n">Clientes</th><th>Estado</th></tr></thead><tbody>${ks.map(k=>`<tr><td>${PER_LAB[k]||('Periodicidad '+k)}</td><td class="n">${pc0[k]}</td><td>${+k===4?'<span class="chip ok">✓ cumple</span>':+k===2?'<span class="chip warn">con censo</span>':'<span class="chip bad">ajustar</span>'}</td></tr>`).join('')}</tbody></table></div>`;
+}
+
+/* ====================== CLIENTES ====================== */
+const CL={hz:'u3', q:'', loc:'', mot:'', pag:0, orden:'meses'};
+function rClientes(){
+  const v=$('#v-clientes'); const un=S.un;
+  const cs=clientesFiltrados();
+  const locs=[...new Set(cs.map(c=>c.loc))].sort();
+  const q=CL.q.trim().toUpperCase();
+  let rows=cs.map(c=>({c,f:flags(c,un),m:ultimoMotivo(c.cod)})).filter(x=>x.f);
+  rows=rows.filter(x=> CL.hz==='todos' ? true : CL.hz==='ma' ? x.f.ma : x.f[CL.hz]);
+  if(CL.loc) rows=rows.filter(x=>x.c.loc===CL.loc);
+  if(CL.mot==='con') rows=rows.filter(x=>x.m); else if(CL.mot==='sin') rows=rows.filter(x=>!x.m);
+  if(q) rows=rows.filter(x=>String(x.c.cod).includes(q)||x.c.rs.toUpperCase().includes(q)||(x.c.dom||'').toUpperCase().includes(q));
+  const ord={meses:(a,b)=>b.f.meses-a.f.meses, vol:(a,b)=>volPrevio(serie(b.c,un))-volPrevio(serie(a.c,un)), pv:(a,b)=>a.c.pv.localeCompare(b.c.pv)||b.f.meses-a.f.meses}[CL.orden];
+  rows.sort(ord);
+  CL.rows=rows;
+  const PAG=150, pages=Math.max(1,Math.ceil(rows.length/PAG)); if(CL.pag>=pages) CL.pag=0;
+  const vis=rows.slice(CL.pag*PAG,(CL.pag+1)*PAG);
+  v.innerHTML=`
+  <div class="sec-h"><h2>Listado de clientes · ${UNS[un].lab}</h2><p>Cada fila muestra la compra de los últimos ${M.length} meses (${mesLab(M[0])} a ${mesLab(M[MI])}), cuántos meses cerrados lleva sin comprar y el último motivo relevado en BEES Force.</p></div>
+  <div class="filters" style="padding:0">
+    <div class="f"><label for="clHz">Horizonte</label><select id="clHz">${[['u3','CNC U3M'],['u6','CNC U6M'],['u12','CNC U12M'],['u1','Sin compra el último mes'],['ma','Sin compra en el mes en curso'],['todos','Todos los clientes']].map(([k,l])=>`<option value="${k}" ${CL.hz===k?'selected':''}>${l}</option>`).join('')}</select></div>
+    <div class="f"><label for="clLoc">Localidad</label><select id="clLoc"><option value="">Todas</option>${locs.map(l=>`<option ${l===CL.loc?'selected':''}>${esc(l)}</option>`).join('')}</select></div>
+    <div class="f"><label for="clMot">Motivo BEES Force</label><select id="clMot"><option value="">Todos</option><option value="con" ${CL.mot==='con'?'selected':''}>Con motivo relevado</option><option value="sin" ${CL.mot==='sin'?'selected':''}>Sin relevar</option></select></div>
+    <div class="f"><label for="clOrd">Ordenar por</label><select id="clOrd"><option value="meses" ${CL.orden==='meses'?'selected':''}>Meses sin compra</option><option value="vol" ${CL.orden==='vol'?'selected':''}>Volumen histórico</option><option value="pv" ${CL.orden==='pv'?'selected':''}>Promotor</option></select></div>
+    <div class="f" style="flex:1;min-width:180px"><label for="clQ">Buscar</label><input id="clQ" placeholder="Código, razón social o domicilio" value="${esc(CL.q)}"></div>
+    <button class="btn" id="clCsv">Descargar CSV</button>
+  </div>
+  <div class="row"><span class="chip info">${n0(rows.length)} clientes</span><span class="hint">Tocá un cliente para ver su ficha. HL por mes; la barra marcada es el mes en curso.</span></div>
+  <div class="tw"><table><thead><tr><th class="n">Código</th><th>Cliente</th><th>Promotor</th><th>Visita</th><th>Subcanal</th><th>Localidad</th><th>Compra por mes</th><th class="n">Meses sin compra</th><th>Horizonte</th><th class="n">HL/mes prom.</th><th>Frecuencia</th><th>Último motivo</th></tr></thead><tbody>
+  ${vis.map(({c,f,m})=>`<tr class="click" data-cod="${c.cod}"><td class="n">${c.cod}</td><td>${esc(c.rs)}${c.edfRob?' <span class="chip bad">EDF robado</span>':''}</td><td>${esc(c.pv)}</td><td>${esc(c.vis)}</td><td>${esc(c.sub)}</td><td>${esc(c.loc)}</td><td>${spark(serie(c,un))}</td><td class="n">${f.nunca?'sin compras':f.meses}</td><td>${chipHz(f)}</td><td class="n">${n2(volPrevio(serie(c,un)))}</td><td>${PER_LAB[c.per]||'–'}</td><td>${m?`<span class="chip"><i class="dot" style="background:var(${MOT_COL[m.motivo]||'--s0'})"></i>${esc(m.motivo.toLowerCase())}</span> <span class="hint">${mesLab(m.mes)}</span>`:'<span class="hint">–</span>'}</td></tr>`).join('')}
+  </tbody></table></div>
+  ${pages>1?`<div class="row"><button class="btn sm" id="clPrev" ${CL.pag?'':'disabled'}>← Anterior</button><span class="hint">Página ${CL.pag+1} de ${pages}</span><button class="btn sm" id="clNext" ${CL.pag<pages-1?'':'disabled'}>Siguiente →</button></div>`:''}`;
+  const on=(id,k,ev='change')=>{ const el=$(id); el.addEventListener(ev,()=>{ CL[k]=el.value; CL.pag=0; if(k==='q'){ clearTimeout(CL.t); CL.t=setTimeout(()=>{rClientes(); const i=$('#clQ'); i.focus(); i.setSelectionRange(i.value.length,i.value.length);},250);} else rClientes(); }); };
+  on('#clHz','hz'); on('#clLoc','loc'); on('#clMot','mot'); on('#clOrd','orden'); on('#clQ','q','input');
+  $('#clCsv').onclick=()=>csvClientes(rows);
+  const pv=$('#clPrev'), nx=$('#clNext'); if(pv) pv.onclick=()=>{CL.pag--; rClientes();}; if(nx) nx.onclick=()=>{CL.pag++; rClientes();};
+  v.querySelectorAll('tr[data-cod]').forEach(tr=>tr.onclick=()=>fichaCliente(+tr.dataset.cod));
+  enviarAlto();
+}
+function chipHz(f){ if(f.u12) return '<span class="chip bad">U12M</span>'; if(f.u6) return '<span class="chip warn">U6M</span>'; if(f.u3) return '<span class="chip warn">U3M</span>'; if(f.u1) return '<span class="chip">Últ. mes</span>'; if(f.ma) return '<span class="chip">Mes en curso</span>'; return '<span class="chip ok">Compra</span>'; }
+function csvClientes(rows){
+  const un=S.un;
+  const head=['Codigo','Razon social','Domicilio','Canal','Subcanal','Localidad','Supervisor','Promotor','Visita','Periodicidad','Negocio','Horizonte','Meses sin compra',...M.map(mesLab),'Ultimo motivo BEES Force','Mes relevamiento','Respuesta'];
+  const lines=[head].concat(rows.map(({c,f,m})=>[c.cod,c.rs,c.dom,c.canal,c.sub,c.loc,c.spv,c.pv,c.vis,c.per,UNS[un].lab,horizonteLab(f),f.nunca?'sin compras':f.meses,...serie(c,un).map(x=>String(x).replace('.',',')),m?m.motivo:'',m?m.mes:'',m?m.resp:'']));
+  const csv='﻿'+lines.map(r=>r.map(x=>{const s=String(x==null?'':x); return /[;"\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}).join(';')).join('\n');
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'})); a.download=`CNC_${UNS[un].lab}_${CL.hz}_${D.data.meta.mesActual}.csv`; document.body.appendChild(a); a.click(); a.remove();
+}
+function fichaCliente(cod){
+  const c=CLI[cod]; const d=$('#dlgCliente'); if(!c) return;
+  const regs=[]; D.data.motivos.total.forEach(b=>b.regs.forEach(r=>{ if(r.cod===cod) regs.push({...r,mes:b.mes,src:'Total'}); })); D.data.motivos.un.forEach(b=>b.regs.forEach(r=>{ if(r.cod===cod) regs.push({...r,mes:b.mes,src:r.un==='NABS'?'NABs':'Cerveza'}); }));
+  regs.sort((a,b)=>a.fecha<b.fecha?1:-1);
+  const vis=D.visitas.filter(x=>+x.cod===cod);
+  const fl=u=>flags(c,u);
+  d.innerHTML=`<form method="dialog"><div class="row"><h3 style="flex:1">${esc(c.rs)} <span class="hint mono">#${c.cod}</span></h3><button class="btn sm">Cerrar</button></div>
+  <p class="hint" style="margin:0">${esc(c.dom)} · ${esc(c.loc)} · ${esc(c.canal)} / ${esc(c.sub)} · Promotor ${esc(c.pv)} (${esc(c.spv)}) · visita ${esc(c.vis)} · ${PER_LAB[c.per]||''}${c.alta?' · alta '+fDate(c.alta):''}${c.ult?' · última compra '+fDate(c.ult):''}</p>
+  <div class="tw"><table><thead><tr><th>Negocio</th>${M.map(m=>`<th class="n">${mesLab(m)}</th>`).join('')}<th>Horizonte</th></tr></thead><tbody>
+  ${['TOTAL','CVZA','NABS'].map(u=>{const s=serie(c,u); return s?`<tr><td>${UNS[u].lab}</td>${s.map((x,i)=>`<td class="n" style="${x>0?'':'color:var(--ink-3)'}">${x>0?n2(x):'0'}</td>`).join('')}<td>${chipHz(fl(u))}</td></tr>`:'';}).join('')}
+  </tbody></table></div>
+  <h3 style="font-size:15px">Relevamientos BEES Force</h3>
+  ${regs.length?`<div class="tw"><table><thead><tr><th>Fecha</th><th>Base</th><th>Motivo</th><th>Respuesta del promotor</th><th>Días sin pedido</th></tr></thead><tbody>${regs.map(r=>`<tr><td>${fDate(r.fecha)}</td><td>${r.src}</td><td>${esc(r.motivo)}</td><td class="txt">${esc(r.resp)}</td><td class="n">${r.dias??'–'}</td></tr>`).join('')}</tbody></table></div>`:'<p class="hint" style="margin:0">Sin relevamientos cargados.</p>'}
+  <h3 style="font-size:15px">Visitas de supervisor</h3>
+  ${vis.length?vis.map(x=>`<div class="note"><b>${fDate(x.fecha)} · ${esc(x.spv)} · ${esc(x.estado)}</b><br>${esc(x.nota)}${x.plan?'<br><b>Plan:</b> '+esc(x.plan):''}${x.resultado?'<br><b>Resultado:</b> '+esc(x.resultado):''}</div>`).join(''):'<p class="hint" style="margin:0">Sin visitas cargadas.</p>'}
+  ${puedeCargar()?`<div class="row"><span class="sp"></span><button type="button" class="btn primary" id="fcVis">Agendar visita a este cliente</button></div>`:''}
+  </form>`;
+  d.showModal();
+  const b=$('#fcVis'); if(b) b.onclick=()=>{ d.close(); abrirVisita({cod:c.cod, fecha:hoyISO(), estado:'Programada'}); };
+}
+
+/* ====================== COMPRADORES ====================== */
+const CP={mes:null};
+function rCompradores(){
+  const v=$('#v-compradores'); const un=S.un;
+  const R=D.data.resumen.ZUPPA||{};
+  const key={TOTAL:'TOTAL %',CVZA:'CVZA %',NABS:'UNG %'}[un];
+  const r=R[key]||{2025:[],2026:[]};
+  const evo=D.data.evolutivo; const pct0=evo.pct[un]||{meses:[],filas:[]};
+  const nMesAct=+D.data.meta.mesActual.slice(5,7);
+  const pct={meses:pct0.meses.slice(0,nMesAct), filas:pct0.filas.map(f=>({...f,pct:f.pct.slice(0,nMesAct)}))};
+  const obj=D.data.meta.objetivos[un];
+  const filas=pct.filas.filter(f=>f.pv && (!S.spv||f.spv===S.spv) && (!S.pv||f.pv===S.pv));
+  const unBlocks=evo.un; if(!CP.mes) CP.mes=unBlocks.length?unBlocks[unBlocks.length-1].label:null;
+  const blk=unBlocks.find(b=>b.label===CP.mes);
+  const cols=['TOTAL','CVZA','NABS','MATCH','AGUAS','MKTP'];
+  const objUn=evo.objetivosUn||{};
+  // compradores del mes en curso (calculado con la base)
+  const rows=tablaHorizonte(un);
+  const diasRest=diasHabilesRestantes();
+  const comp=D.data.evolutivo.comparativo[un]||{};
+  v.innerHTML=`
+  <div class="sec-h"><h2>Compradores y evolutivo · ${UNS[un].lab}</h2><p>Seguimiento anual de toda la cartera: qué porcentaje compra cada mes, comparado con 2025 y con el objetivo, y en qué negocios compra cada cliente (CVZA, NABs, MATCH, AGUAS, MKTP).</p></div>
+  <div class="grid2">
+    <div class="panel"><div class="ph"><h3>% de clientes compradores por mes</h3><span class="hint">hoja RESUMEN · ${un==='NABS'?'UNG':UNS[un].lab}</span></div>
+      ${legend([['2026','--s1'],['2025','--s0'],['Objetivo '+pc(obj),'--good']])}
+      <div class="chart"><canvas id="cCompYoY"></canvas></div></div>
+    <div class="panel"><div class="ph"><h3>Compradores de ${mesLL(M[MI])}</h3><span class="hint">mes en curso · objetivo ${pc(obj)} · ${diasRest} días hábiles restantes</span></div>
+      <div class="tw" style="max-height:330px"><table><thead><tr><th>Promotor</th><th class="n">Cartera</th><th class="n">Compraron</th><th class="n">Avance</th><th class="n">Faltan p/ objetivo</th><th class="n">Por día</th></tr></thead><tbody>
+      ${rows.map(x=>{const a=x.compra/x.cart, falta=Math.max(0,Math.ceil(x.cart*obj-x.compra)); return `<tr><td>${esc(x.pv)}</td><td class="n">${x.cart}</td><td class="n">${x.compra}</td><td class="n"><span class="chip ${a>=obj?'ok':a>=obj-.1?'warn':'bad'}">${pc(a,1)}</span></td><td class="n">${falta}</td><td class="n">${diasRest?n1(falta/diasRest):'–'}</td></tr>`;}).join('')}
+      ${(()=>{const t=sumRows(rows,'Total'); const a=t.compra/t.cart; const falta=Math.max(0,Math.ceil(t.cart*obj-t.compra)); return `<tr class="tot"><td>Total</td><td class="n">${t.cart}</td><td class="n">${t.compra}</td><td class="n">${pc(a,1)}</td><td class="n">${falta}</td><td class="n">${diasRest?n1(falta/diasRest):'–'}</td></tr>`;})()}
+      </tbody></table></div></div>
+  </div>
+  <div class="panel"><div class="ph"><h3>% comprador por promotor, mes a mes (2026)</h3><span class="hint">hoja EVOLUTIVO · verde ≥ objetivo ${pc(obj)}, ámbar a menos de 10 puntos, rojo más abajo</span></div>
+    <div class="tw"><table><thead><tr><th>SPV</th><th>Promotor</th><th class="n">Clientes</th>${pct.meses.map(m=>`<th class="n">${m.slice(0,3).toLowerCase()}</th>`).join('')}</tr></thead><tbody>
+    ${filas.map(f=>`<tr><td>${esc(f.spv)}</td><td>${esc(f.pv)}</td><td class="n">${f.clientes}</td>${f.pct.map(x=>`<td class="n">${x==null?'':`<span class="chip ${x>=obj?'ok':x>=obj-.1?'warn':'bad'}">${pc(x)}</span>`}</td>`).join('')}</tr>`).join('')}
+    ${!S.pv?pct.filas.filter(f=>!f.pv && (!S.spv||f.spv===S.spv)).map(f=>`<tr class="${f.spv==='ZUPPA'?'tot':'sub'}"><td>${esc(f.spv)}</td><td></td><td class="n">${f.clientes}</td>${f.pct.map(x=>`<td class="n">${x==null?'':pc(x)}</td>`).join('')}</tr>`).join(''):''}
+    ${comp['2025 COMPRADOR']&&!S.spv&&!S.pv?`<tr><td colspan="3" class="hint">Zuppa 2025</td>${comp['2025 COMPRADOR'].slice(0,nMesAct).map(x=>`<td class="n hint">${x==null?'':pc(x)}</td>`).join('')}</tr>`:''}
+    </tbody></table></div></div>
+  <div class="panel"><div class="ph"><h3>Compras activas por unidad de negocio</h3>
+    <div class="f"><label for="cpMes">Mes</label><select id="cpMes">${unBlocks.map(b=>`<option ${b.label===CP.mes?'selected':''}>${b.label}</option>`).join('')}</select></div></div>
+    <p class="hint" style="margin:0 0 8px">Clientes que compraron cada negocio en el mes y % sobre la cartera del promotor. Objetivos: ${cols.map(k=>k+' '+pc(objUn[k])).join(' · ')}.</p>
+    ${blk?`<div class="tw"><table><thead><tr><th>SPV</th><th>Promotor</th><th class="n">Clientes</th>${cols.map(k=>`<th class="n">${k}</th>`).join('')}</tr></thead><tbody>
+    ${blk.filas.filter(f=>(!S.spv||f.spv===S.spv)&&(!S.pv||f.pv===S.pv||!f.pv&&false)).map(f=>`<tr class="${!f.pv?(f.spv==='ZUPPA'?'tot':'sub'):''}"><td>${esc(f.spv)}</td><td>${esc(f.pv)}</td><td class="n">${f.clientes}</td>${cols.map(k=>{const p=f.clientes?f[k]/f.clientes:0; const o=objUn[k]; return `<td class="n">${f[k]} <span class="chip ${o==null?'':p>=o?'ok':p>=o*.85?'warn':'bad'}">${pc(p)}</span></td>`;}).join('')}</tr>`).join('')}
+    </tbody></table></div>`:'<p class="hint">Sin datos en EVOLUTIVO.</p>'}
+  </div>
+  ${canalesPanel()}`;
+  $('#cpMes') && ($('#cpMes').onchange=e=>{CP.mes=e.target.value; rCompradores();});
+  const labels=MES_L.map(m=>m);
+  chart('cCompYoY',{type:'line',data:{labels,datasets:[
+    {label:'2026',data:(r['2026']||[]).map(x=>x==null?null:x*100),borderColor:cssv('--s1'),backgroundColor:cssv('--s1'),borderWidth:2,pointRadius:3,tension:.25,spanGaps:false},
+    {label:'2025',data:(r['2025']||[]).map(x=>x==null?null:x*100),borderColor:cssv('--s0'),backgroundColor:cssv('--s0'),borderWidth:2,pointRadius:2,borderDash:[5,4],tension:.25},
+    {label:'Objetivo',data:labels.map(()=>obj*100),borderColor:cssv('--good'),borderWidth:1.5,pointRadius:0,borderDash:[2,3]}]},
+    options:{scales:{y:{suggestedMin:40,suggestedMax:100,ticks:{callback:x=>x+' %'},grid:{color:cssv('--grid')}},x:{grid:{display:false}}},plugins:{tooltip:{callbacks:{label:c=>c.dataset.label+': '+(c.raw==null?'–':n1(c.raw)+' %')}}}}});
+}
+function canalesPanel(){
+  const R=D.data.resumen; const ks=['K+T','AS'].filter(k=>R[k]); if(!ks.length) return '';
+  return `<div class="panel"><div class="ph"><h3>Compradores de cerveza por canal, 2025 vs 2026</h3><span class="hint">hoja RESUMEN</span></div><div class="tw"><table><thead><tr><th>Canal</th><th>Año</th>${MES_L.map(m=>`<th class="n">${m}</th>`).join('')}</tr></thead><tbody>
+  ${ks.map(k=>{const o=R[k]['CVZA %']; if(!o) return ''; return ['2025','2026'].map(y=>`<tr><td>${k}</td><td>${y}</td>${o[y].map(x=>`<td class="n">${x==null?'':pc(x)}</td>`).join('')}</tr>`).join('');}).join('')}
+  </tbody></table></div></div>`;
+}
+function diasHabilesRestantes(){
+  const hoy=hoyISO(); if(hoy.slice(0,7)!==M[MI]) return 0;
+  const [y,m,d]=hoy.split('-').map(Number); const fin=new Date(Date.UTC(y,m,0)).getUTCDate(); let n=0;
+  for(let i=d;i<=fin;i++){ const w=new Date(Date.UTC(y,m-1,i)).getUTCDay(); if(w!==0) n++; } return n;
+}
+
+/* ====================== MOTIVOS ====================== */
+const MO={base:'UN', mes:''};
+function regsBase(){
+  const bl = MO.base==='TOTAL' ? D.data.motivos.total : D.data.motivos.un;
+  return bl.map(b=>({...b, regs:b.regs.filter(r=>enFiltro(r) && (MO.base==='TOTAL' || S.un==='TOTAL' || r.un===S.un))}));
+}
+function recupero(r,mes){
+  const c=CLI[r.cod]; const idx=M.indexOf(mes);
+  const un = r.un==='NABS'?'NABS':(r.un==='CVZA'?'CVZA':'TOTAL');
+  if(c && idx>=0){ const s=serie(c,un); const sig = idx+1<=MI ? s[idx+1]>0 : null; let alDia=false; for(let i=idx+1;i<=MI;i++) if(s[i]>0) alDia=true; return {sig, alDia, fuente:'base'}; }
+  const v = un==='NABS'? r.vN : un==='CVZA'? r.vC : ((r.vC||0)+(r.vN||0));
+  return {sig: v==null?null: v>0, alDia: v>0, fuente:'hoja'};
+}
+function rMotivos(){
+  const v=$('#v-motivos');
+  const bl=regsBase().filter(b=>!b.pendiente);
+  const pend=(MO.base==='TOTAL'?D.data.motivos.total:D.data.motivos.un).filter(b=>b.pendiente);
+  const motivos=[...new Set(bl.flatMap(b=>b.regs.map(r=>r.motivo)))].sort((a,b)=>(MOT_COL[a]?0:1)-(MOT_COL[b]?0:1)||a.localeCompare(b));
+  const colM=m=>MOT_COL[m]||'--s0';
+  // cobertura sobre base U3M (UN)
+  const cob = bl.map(b=>{
+    const idx=M.indexOf(b.mes); if(idx<3) return null;
+    const unBase = MO.base==='TOTAL'?['TOTAL']:(S.un==='TOTAL'?['CVZA','NABS']:[S.un]);
+    let base=0, cubiertos=0;
+    unBase.forEach(u=>{ const set=new Set(b.regs.filter(r=>MO.base==='TOTAL'||r.un===u).map(r=>r.cod));
+      clientesFiltrados().forEach(c=>{ const s=serie(c,u); if(!s||excluidoTexto(c,u)) return; if(sinCompra(s,3,idx) && (S.crit==='excel'||!c.alta||c.alta.slice(0,7)<=M[idx-3])){ base++; if(set.has(c.cod)) cubiertos++; } }); });
+    return {mes:b.mes, base, cubiertos, rel:b.regs.length};
+  });
+  // recupero
+  const allRegs=bl.flatMap(b=>b.regs.map(r=>({...r, mes:b.mes, rec:recupero(r,b.mes)})));
+  const selMes = MO.mes && bl.some(b=>b.mes===MO.mes) ? MO.mes : '';
+  const lista = allRegs.filter(r=>!selMes||r.mes===selMes);
+  const recM={}; allRegs.forEach(r=>{ const o=recM[r.motivo]||(recM[r.motivo]={n:0,sig:0,al:0,nsig:0}); o.n++; if(r.rec.sig!=null){o.nsig++; if(r.rec.sig) o.sig++;} if(r.rec.alDia) o.al++; });
+  const porPv={}; allRegs.forEach(r=>{ const pv=r.pv||(CLI[r.cod]||{}).pv||'–'; const o=porPv[pv]||(porPv[pv]={}); o[r.mes]=(o[r.mes]||0)+1; o.al=(o.al||0)+(r.rec.alDia?1:0); o.n=(o.n||0)+1; });
+  const mesesB=bl.map(b=>b.mes);
+  v.innerHTML=`
+  <div class="sec-h"><h2>Motivos de no compra relevados en BEES Force</h2><p>Tareas que NDS asigna a los promotores para los CNC U3M. "Por negocio" es la base que separa Cerveza y NABs (MOTIVOS BEES FORCE UN); "Total" es la de clientes sin ningún pedido (MOTIVOS BEES FORCE TOTAL). El recupero cruza cada cliente con su compra de los meses siguientes.</p></div>
+  <div class="filters" style="padding:0">
+    <div class="f"><label>Base</label><div class="seg" id="moBase"><button type="button" data-v="UN" aria-pressed="${MO.base==='UN'}">Por negocio</button><button type="button" data-v="TOTAL" aria-pressed="${MO.base==='TOTAL'}">Total</button></div></div>
+    <div class="f"><label for="moMes">Mes del listado</label><select id="moMes"><option value="">Todos</option>${mesesB.map(m=>`<option value="${m}" ${m===selMes?'selected':''}>${mesLL(m)}</option>`).join('')}</select></div>
+  </div>
+  ${(()=>{const fuera=allRegs.filter(r=>!CLI[r.cod]).length; return fuera?`<div class="note">${fuera} clientes relevados ya no están en la base de clientes actual (posibles bajas). Para ellos el recupero se toma de la venta del mes siguiente que trae la hoja de BEES Force.</div>`:'';})()}
+  ${pend.length?`<div class="note warn"><b>Pendiente de dato:</b> ${pend.map(b=>esc(b.aviso)).join(' ')}</div>`:''}
+  <div class="kpis">
+    <div class="kpi"><span class="l">Relevamientos</span><span class="v">${n0(allRegs.length)}</span><span class="d">${mesesB.length} meses · ${mesesB.map(mesLab).join(', ')}</span></div>
+    <div class="kpi"><span class="l">Volvieron a comprar el mes siguiente</span><span class="v">${pc(allRegs.filter(r=>r.rec.sig).length/Math.max(1,allRegs.filter(r=>r.rec.sig!=null).length))}</span><span class="d">${n0(allRegs.filter(r=>r.rec.sig).length)} clientes</span></div>
+    <div class="kpi"><span class="l">Recuperados a la fecha</span><span class="v">${pc(allRegs.filter(r=>r.rec.alDia).length/Math.max(1,allRegs.length))}</span><span class="d">compraron en algún mes posterior</span></div>
+    <div class="kpi"><span class="l">Motivo principal</span><span class="v" style="font-size:19px">${esc((Object.entries(recM).sort((a,b)=>b[1].n-a[1].n)[0]||['–'])[0].toLowerCase())}</span><span class="d">${pc((Object.entries(recM).sort((a,b)=>b[1].n-a[1].n)[0]||[0,{n:0}])[1].n/Math.max(1,allRegs.length))} de los relevamientos</span></div>
+  </div>
+  <div class="grid2">
+    <div class="panel"><div class="ph"><h3>Motivos por mes</h3><span class="hint">clientes relevados</span></div>${legend(motivos.map(m=>[m.toLowerCase(),colM(m)]))}<div class="chart"><canvas id="cMot"></canvas></div></div>
+    <div class="panel"><div class="ph"><h3>Recupero por motivo</h3><span class="hint">% que volvió a comprar</span></div>
+      <div class="tw"><table><thead><tr><th>Motivo</th><th class="n">Relevados</th><th class="n">Compró mes siguiente</th><th class="n">Recuperado a la fecha</th></tr></thead><tbody>
+      ${Object.entries(recM).sort((a,b)=>b[1].n-a[1].n).map(([m,o])=>`<tr><td><span class="mk"><i class="dot" style="background:var(${colM(m)})"></i>${esc(m.toLowerCase())}</span></td><td class="n">${o.n}</td><td class="n">${o.sig} · ${pc(o.sig/Math.max(1,o.nsig))}</td><td class="n">${o.al} · ${pc(o.al/o.n)}</td></tr>`).join('')}
+      </tbody></table></div>
+      <p class="hint" style="margin:8px 0 0">${MO.base==='UN'?'Recupero medido en el negocio relevado (Cerveza o NABs).':'Recupero medido en cualquier negocio.'} El relevamiento de ${mesLab(M[MI-1])} solo puede medirse contra ${mesLab(M[MI])}, que está en curso.</p></div>
+  </div>
+  <div class="grid2">
+    <div class="panel"><div class="ph"><h3>Cobertura de la base U3M</h3><span class="hint">relevados ÷ CNC U3M del mes (calculado)</span></div>
+      <div class="tw"><table><thead><tr><th>Mes</th><th class="n">CNC U3M</th><th class="n">Relevados</th><th class="n">Relevados que eran U3M</th><th class="n">Cobertura de la base</th></tr></thead><tbody>
+      ${cob.filter(Boolean).map(x=>`<tr><td>${mesLL(x.mes)}</td><td class="n">${x.base}</td><td class="n">${x.rel}</td><td class="n">${x.cubiertos} · ${pc(x.cubiertos/Math.max(1,x.rel))}</td><td class="n">${pc(x.cubiertos/Math.max(1,x.base),1)}</td></tr>`).join('')}
+      </tbody></table></div><p class="hint" style="margin:8px 0 0">NDS define a qué clientes asigna la tarea (más de 90 días sin pedido en BEES), por eso la base no coincide exacto con el U3M de la facturación.</p></div>
+    <div class="panel"><div class="ph"><h3>Relevamientos por promotor</h3><span class="hint">tareas por mes</span></div>
+      <div class="tw" style="max-height:360px"><table><thead><tr><th>Promotor</th>${mesesB.map(m=>`<th class="n">${mesLab(m)}</th>`).join('')}<th class="n">Total</th><th class="n">Recuperados</th></tr></thead><tbody>
+      ${Object.entries(porPv).sort((a,b)=>b[1].n-a[1].n).map(([pv,o])=>`<tr><td>${esc(pv)}</td>${mesesB.map(m=>`<td class="n">${o[m]||''}</td>`).join('')}<td class="n"><b>${o.n}</b></td><td class="n">${o.al} · ${pc(o.al/o.n)}</td></tr>`).join('')}
+      </tbody></table></div></div>
+  </div>
+  <div class="panel"><div class="ph"><h3>Detalle de clientes relevados</h3><span class="chip info">${n0(lista.length)} registros</span></div>
+    <div class="tw" style="max-height:520px"><table><thead><tr><th>Mes</th><th>Fecha</th><th class="n">Código</th><th>Cliente</th><th>Promotor</th>${MO.base==='UN'?'<th>Negocio</th>':''}<th>Motivo</th><th>Respuesta</th><th class="n">Días sin pedido</th><th>Mes siguiente</th><th>A la fecha</th></tr></thead><tbody>
+    ${lista.map(r=>`<tr class="click" data-cod="${r.cod}"><td>${mesLab(r.mes)}</td><td>${fDate(r.fecha)}</td><td class="n">${r.cod}</td><td>${esc(r.rs||(CLI[r.cod]||{}).rs||'')}</td><td>${esc(r.pv||(CLI[r.cod]||{}).pv||'')}</td>${MO.base==='UN'?`<td>${r.un==='NABS'?'NABs':'Cerveza'}</td>`:''}<td><span class="mk"><i class="dot" style="background:var(${colM(r.motivo)})"></i>${esc(r.motivo.toLowerCase())}</span></td><td class="txt">${esc(r.resp)}</td><td class="n">${r.dias??'–'}</td><td>${r.rec.sig==null?'<span class="hint">en curso</span>':r.rec.sig?'<span class="chip ok">compró</span>':'<span class="chip">no</span>'}</td><td>${r.rec.alDia?'<span class="chip ok">recuperado</span>':'<span class="chip bad">sigue sin comprar</span>'}</td></tr>`).join('')}
+    </tbody></table></div></div>`;
+  v.querySelectorAll('#moBase button').forEach(b=>b.onclick=()=>{MO.base=b.dataset.v; MO.mes=''; rMotivos();});
+  $('#moMes').onchange=e=>{MO.mes=e.target.value; rMotivos();};
+  v.querySelectorAll('tr[data-cod]').forEach(tr=>tr.onclick=()=>fichaCliente(+tr.dataset.cod));
+  chart('cMot',{type:'bar',data:{labels:mesesB.map(mesLab),datasets:motivos.map(m=>({label:m.toLowerCase(),data:bl.map(b=>b.regs.filter(r=>r.motivo===m).length),backgroundColor:cssv(colM(m)),borderColor:cssv('--panel'),borderWidth:{top:2},borderRadius:0}))},
+    options:{scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,beginAtZero:true,grid:{color:cssv('--grid')}}}}});
+  enviarAlto();
+}
+
+/* ====================== PDA ====================== */
+const PD={base:'TOTAL'};
+function rPda(){
+  const v=$('#v-pda');
+  const P = PD.base==='TOTAL'? D.data.pda.total : D.data.pda.un;
+  const stChip=s=>!s?'<span class="chip warn">sin estado</span>':/NO REALIZADO/.test(s)?'<span class="chip bad">no realizado</span>':/PROCESO/.test(s)?'<span class="chip info">en proceso</span>':/REALIZ|OK|CUMPL/.test(s)?'<span class="chip ok">'+esc(s.toLowerCase())+'</span>':'<span class="chip">'+esc(s.toLowerCase())+'</span>';
+  // recuperados calculados para comparar (relevamiento del mes anterior)
+  const relBl = PD.base==='TOTAL'? D.data.motivos.total : D.data.motivos.un;
+  v.innerHTML=`
+  <div class="sec-h"><h2>Planes de acción (PDA) por motivo</h2><p>Cada PDA responde a los motivos relevados el mes anterior: el PDA de mayo trabaja sobre el relevamiento de abril. Se muestran la acción, el estado, la fecha límite y los clientes recuperados que informa la hoja, junto al recupero calculado con la facturación.</p></div>
+  <div class="filters" style="padding:0"><div class="f"><label>Base</label><div class="seg" id="pdBase"><button type="button" data-v="TOTAL" aria-pressed="${PD.base==='TOTAL'}">Total</button><button type="button" data-v="UN" aria-pressed="${PD.base==='UN'}">Por negocio</button></div></div></div>
+  ${P.slice().reverse().map(p=>{
+    const prev=sumaMes(p.mes,-1); const rb=relBl.find(b=>b.mes===prev);
+    const regs = rb? rb.regs.filter(enFiltro):[];
+    const recC = regs.filter(r=>{const c=CLI[r.cod]; if(!c) return false; const i=M.indexOf(p.mes); return i>=0 && i<=MI && (c.c||[])[i]>0;}).length;
+    const recN = regs.filter(r=>{const c=CLI[r.cod]; if(!c) return false; const i=M.indexOf(p.mes); return i>=0 && i<=MI && (c.n||[])[i]>0;}).length;
+    const recs=p.recuperados.filter(x=>(!S.pv||x.pv===S.pv)&&(!S.spv||x.pv===S.spv||spvDe(x.pv)===S.spv||x.pv==='ZUPPA'&&!S.pv&&!S.spv));
+    return `<div class="panel"><div class="ph"><h3>PDA ${mesLL(p.mes)}</h3><span class="hint">sobre el relevamiento de ${mesLL(prev)}${rb?' · '+regs.length+' clientes relevados':''}</span></div>
+    ${['cerveza','nabs'].map(sec=>p[sec].length?`<p class="hint" style="margin:6px 0 4px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">PDA ${sec==='cerveza'?'Cerveza':'NABs'}</p>
+      <div class="tw"><table><thead><tr><th>Motivo</th><th class="n">Clientes</th><th>Acción</th><th>Estado</th><th>Fecha límite</th><th>Responsable</th></tr></thead><tbody>
+      ${p[sec].map(x=>`<tr><td><span class="mk"><i class="dot" style="background:var(${MOT_COL[x.motivo]||'--s0'})"></i>${esc(x.motivo.toLowerCase())}</span></td><td class="n">${x.clientes??'–'}</td><td class="txt">${x.accion?esc(x.accion):'<span class="chip warn">sin acción cargada</span>'}</td><td>${stChip(x.status)}</td><td>${fDate(x.deadline)}</td><td>${esc(x.resp)}</td></tr>`).join('')}
+      </tbody></table></div>`:'').join('')}
+    ${recs.length?`<p class="hint" style="margin:10px 0 4px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">Clientes recuperados (informado en la hoja)</p>
+      <div class="tw"><table><thead><tr><th>Promotor</th><th class="n">Relevados</th><th class="n">Real CVZA</th><th class="n">Real NABs</th><th class="n">Avance CVZA</th><th class="n">Avance NABs</th></tr></thead><tbody>
+      ${recs.map(x=>{const base=x.cant!=null?x.cant:((x.nN||0)+(x.nC||0)); const bc=x.cant!=null?x.cant:x.nC, bn=x.cant!=null?x.cant:x.nN; return `<tr class="${x.total?(x.pv==='ZUPPA'?'tot':'sub'):''}"><td>${esc(x.pv)}</td><td class="n">${base||'–'}</td><td class="n">${x.realC??'–'}</td><td class="n">${x.realN??'–'}</td><td class="n">${bc&&x.realC!=null?pc(x.realC/bc):'–'}</td><td class="n">${bn&&x.realN!=null?pc(x.realN/bn):'–'}</td></tr>`;}).join('')}
+      </tbody></table></div>`:''}
+    ${rb&&M.indexOf(p.mes)>=0?`<p class="hint" style="margin:8px 0 0">Calculado con la facturación: de los ${regs.length} relevados en ${mesLab(prev)}, ${recC} compraron cerveza y ${recN} NABs en ${mesLab(p.mes)}${p.mes===M[MI]?' (mes en curso)':''}.</p>`:''}
+    </div>`;}).join('')}`;
+  v.querySelectorAll('#pdBase button').forEach(b=>b.onclick=()=>{PD.base=b.dataset.v; rPda();});
+}
+
+/* ====================== VISITAS SPV ====================== */
+const VS={mes:null};
+function puedeCargar(){ return S.user && !S.user.lectura; }
+function rVisitas(){
+  const v=$('#v-visitas');
+  if(!VS.mes) VS.mes=hoyISO().slice(0,7);
+  const obj=D.data.meta.objetivoVisitasSpv;
+  const vis=D.visitas.filter(x=>(!S.spv||x.spv===S.spv)&&(!S.pv||x.pv===S.pv));
+  const delMes=vis.filter(x=>x.fecha.slice(0,7)===VS.mes);
+  const spvs=S.spv?[S.spv]:['GUILLEN','SANS'];
+  const [y,m]=VS.mes.split('-').map(Number);
+  const first=new Date(Date.UTC(y,m-1,1)); const dow=(first.getUTCDay()+6)%7; const fin=new Date(Date.UTC(y,m,0)).getUTCDate();
+  const cells=[]; for(let i=0;i<dow;i++) cells.push(null); for(let d=1;d<=fin;d++) cells.push(d); while(cells.length%7) cells.push(null);
+  const hoy=hoyISO();
+  // sugeridos: CNC U3M (CVZA o NABs) con motivo relevado, del equipo, sin visita en el mes, por volumen histórico
+  const visitadosMes=new Set(delMes.map(x=>+x.cod));
+  const sug=clientesFiltrados().map(c=>{ const fc=flags(c,'CVZA'), fn=flags(c,'NABS'); const m=ultimoMotivo(c.cod); if(!m) return null; if(!(fc&&fc.u3)&&!(fn&&fn.u3)) return null; if(visitadosMes.has(c.cod)) return null;
+    return {c,m,un:(fc&&fc.u3)&&(fn&&fn.u3)?'Cerveza y NABs':(fc&&fc.u3)?'Cerveza':'NABs',vol:volPrevio(c.c||[])+volPrevio(c.n||[]),f:fc&&fc.u3?fc:fn}; }).filter(Boolean).sort((a,b)=>b.vol-a.vol).slice(0,25);
+  // efectividad: visitas realizadas y si el cliente compró después
+  const real=vis.filter(x=>x.estado==='Realizada');
+  const efect=real.map(x=>{ const c=CLI[+x.cod]; if(!c) return null; const i=M.indexOf(x.fecha.slice(0,7)); if(i<0||i>=MI) return null; let comp=false; for(let j=i+1;j<=MI;j++) if((c.t||[])[j]>0) comp=true; return comp; }).filter(z=>z!=null);
+  v.innerHTML=`
+  <div class="sec-h"><h2>Visitas de supervisores a CNC con motivo</h2><p>Los supervisores destinan parte de sus horas en calle a visitar clientes con motivo de no compra para profundizar la causa y mejorar la experiencia. Objetivo: ${obj} visitas realizadas por supervisor por mes.</p></div>
+  ${!D.api?`<div class="note warn"><b>Todavía no está conectada la planilla.</b> Las visitas se guardan solo en este navegador hasta que se cargue la URL de la Web App en CNC_CFG y se actualice el tablero.</div>`:D.visitasError?`<div class="note warn"><b>No pude leer las visitas de la planilla.</b> Revisá la conexión y recargá.</div>`:''}
+  ${!puedeCargar()?`<div class="note">Para agendar o cargar visitas, <a href="#" id="vLogin">ingresá como supervisor</a>. Desde Ruta CCC entrás ya identificado.</div>`:''}
+  <div class="kpis">
+    ${spvs.map(s=>{const n=delMes.filter(x=>x.spv===s&&x.estado==='Realizada').length, pr=delMes.filter(x=>x.spv===s&&x.estado==='Programada').length; return `<div class="kpi"><span class="l">${esc(s)} · ${mesLL(VS.mes)}</span><span class="v">${n} / ${obj}</span><div class="prog" role="img" aria-label="${n} de ${obj} visitas"><i style="width:${Math.min(100,n/obj*100)}%"></i></div><span class="d">${pr} programadas</span></div>`;}).join('')}
+    <div class="kpi"><span class="l">Compraron en los meses siguientes</span><span class="v">${efect.length?pc(efect.filter(Boolean).length/efect.length):'–'}</span><span class="d">${efect.length?efect.filter(Boolean).length+' de '+efect.length+' visitas de meses cerrados':'se mide desde el mes siguiente a la visita'}</span></div>
+  </div>
+  <div class="panel">
+    <div class="row" style="margin-bottom:10px"><button class="btn sm" id="vPrev" aria-label="Mes anterior">←</button><h3 style="min-width:150px;text-align:center">${mesLL(VS.mes)}</h3><button class="btn sm" id="vNext" aria-label="Mes siguiente">→</button><span class="sp"></span>
+      ${legend([['Programada','--accent'],['Realizada','--good'],['Cancelada','--bad']])}
+      ${puedeCargar()?'<button class="btn primary" id="vNueva">+ Nueva visita</button>':''}</div>
+    <div class="cal">${['lun','mar','mié','jue','vie','sáb','dom'].map(d=>`<div class="dh">${d}</div>`).join('')}
+    ${cells.map(d=>{ if(!d) return '<div></div>'; const iso=VS.mes+'-'+String(d).padStart(2,'0'); const evs=delMes.filter(x=>x.fecha===iso);
+      return `<div class="d ${iso===hoy?'hoy':''}" data-f="${iso}"><span class="dn">${d}</span>${evs.map(x=>`<span class="ev ${x.estado==='Realizada'?'real':x.estado==='Cancelada'?'canc':'prog'}" data-id="${esc(x.id)}" title="${esc(x.spv+' · '+x.cliente)}">${esc((x.spv||'').slice(0,1))} · ${esc(x.cliente)}</span>`).join('')}</div>`;}).join('')}
+    </div>
+  </div>
+  <div class="panel"><div class="ph"><h3>Visitas de ${mesLL(VS.mes)}</h3><span class="chip info">${delMes.length}</span></div>
+    ${delMes.length?`<div class="tw"><table><thead><tr><th>Fecha</th><th>SPV</th><th>Estado</th><th>Cliente</th><th>Promotor</th><th>Motivo BEES</th><th>Causa observada</th><th>Qué notó</th><th>Plan de acción</th><th>Compromiso</th><th>Resultado</th></tr></thead><tbody>
+    ${delMes.sort((a,b)=>a.fecha<b.fecha?-1:1).map(x=>`<tr class="click" data-id="${esc(x.id)}"><td>${fDate(x.fecha)}</td><td>${esc(x.spv)}</td><td>${x.estado==='Realizada'?'<span class="chip ok">realizada</span>':x.estado==='Cancelada'?'<span class="chip bad">cancelada</span>':'<span class="chip info">programada</span>'}</td><td>${esc(x.cliente)} <span class="hint mono">#${esc(x.cod)}</span></td><td>${esc(x.pv)}</td><td>${esc((x.motivo||'').toLowerCase())}</td><td>${esc(x.causa)}</td><td class="txt">${esc(x.nota)}</td><td class="txt">${esc(x.plan)}</td><td>${fDate(x.compromiso)}</td><td>${esc(x.resultado)}</td></tr>`).join('')}
+    </tbody></table></div>`:'<p class="hint" style="margin:0">Sin visitas en este mes.</p>'}
+  </div>
+  <div class="panel"><div class="ph"><h3>Clientes sugeridos para visitar</h3><span class="hint">CNC U3M con motivo relevado, sin visita este mes, ordenados por volumen que compraban</span></div>
+    <div class="tw" style="max-height:420px"><table><thead><tr><th class="n">Código</th><th>Cliente</th><th>Promotor</th><th>Visita</th><th>Negocio sin compra</th><th class="n">Meses</th><th>Motivo</th><th>Respuesta</th><th class="n">HL/mes prom.</th>${puedeCargar()?'<th></th>':''}</tr></thead><tbody>
+    ${sug.map(x=>`<tr><td class="n">${x.c.cod}</td><td>${esc(x.c.rs)}</td><td>${esc(x.c.pv)}</td><td>${esc(x.c.vis)}</td><td>${x.un}</td><td class="n">${x.f.nunca?'nunca compró':x.f.meses}</td><td>${esc(x.m.motivo.toLowerCase())}</td><td class="txt">${esc(x.m.resp)}</td><td class="n">${n2(x.vol)}</td>${puedeCargar()?`<td><button class="btn sm" data-ag="${x.c.cod}">Agendar</button></td>`:''}</tr>`).join('')||'<tr><td colspan="9" class="hint">No hay sugeridos con este filtro.</td></tr>'}
+    </tbody></table></div></div>`;
+  $('#vPrev').onclick=()=>{VS.mes=sumaMes(VS.mes,-1); rVisitas();}; $('#vNext').onclick=()=>{VS.mes=sumaMes(VS.mes,1); rVisitas();};
+  const vl=$('#vLogin'); if(vl) vl.onclick=e=>{e.preventDefault(); abrirLogin();};
+  const nv=$('#vNueva'); if(nv) nv.onclick=()=>abrirVisita({fecha:hoyISO(),estado:'Programada'});
+  v.querySelectorAll('[data-ag]').forEach(b=>b.onclick=()=>abrirVisita({cod:+b.dataset.ag,fecha:hoyISO(),estado:'Programada'}));
+  v.querySelectorAll('.cal .d').forEach(d=>d.onclick=e=>{ const ev=e.target.closest('.ev'); if(ev){ abrirVisita(D.visitas.find(x=>x.id===ev.dataset.id)); return; } if(puedeCargar()) abrirVisita({fecha:d.dataset.f,estado:'Programada'}); });
+  v.querySelectorAll('tr[data-id]').forEach(tr=>tr.onclick=()=>abrirVisita(D.visitas.find(x=>x.id===tr.dataset.id)));
+  enviarAlto();
+}
+const CAUSAS=['Precio / condiciones comerciales','Compra en mayorista / feria','Problema de servicio o entrega','Falta de EDF o EDF en mal estado','Deuda / cuenta corriente','Baja rotación del producto','Cambio de dueño o de rubro','Local cerrado temporalmente','Cerró definitivamente','Otro'];
+function abrirVisita(x){
+  if(!x) return; const d=$('#dlgVisita'); const edit=!!x.id; const ro=!puedeCargar() || (S.user.scope==='own' && edit && x.spv!==S.user.spv);
+  const c=x.cod?CLI[+x.cod]:null; const m=c?ultimoMotivo(c.cod):null;
+  const spvDef = x.spv || (S.user&&S.user.spv) || (c?c.spv:'');
+  d.innerHTML=`<form id="fVis"><div class="row"><h3 style="flex:1">${edit?'Visita a '+esc(x.cliente):'Nueva visita a CNC'}</h3><button type="button" class="btn sm" id="vxClose">Cerrar</button></div>
+  <div class="fgrid">
+    <div class="f full"><label for="vCli">Cliente (código o nombre)</label><input id="vCli" list="vCliList" value="${c?esc(c.cod+' · '+c.rs):''}" ${ro?'disabled':''} required><datalist id="vCliList"></datalist></div>
+    <div class="f full hint" id="vCliInfo">${c?infoCli(c,m):'Escribí al menos 3 letras o el código.'}</div>
+    <div class="f"><label for="vSpv">Supervisor</label><select id="vSpv" ${ro||(S.user&&S.user.scope==='own')?'disabled':''}>${['GUILLEN','SANS'].map(s=>`<option ${s===spvDef?'selected':''}>${s}</option>`).join('')}</select></div>
+    <div class="f"><label for="vFecha">Fecha</label><input id="vFecha" type="date" value="${esc(x.fecha||hoyISO())}" ${ro?'disabled':''} required></div>
+    <div class="f"><label for="vEstado">Estado</label><select id="vEstado" ${ro?'disabled':''}>${['Programada','Realizada','Cancelada'].map(s=>`<option ${s===x.estado?'selected':''}>${s}</option>`).join('')}</select></div>
+    <div class="f"><label for="vCausa">Causa que observó</label><select id="vCausa" ${ro?'disabled':''}><option value="">Elegí…</option>${CAUSAS.map(s=>`<option ${s===x.causa?'selected':''}>${s}</option>`).join('')}</select></div>
+    <div class="f full"><label for="vNota">Qué notó en la visita</label><textarea id="vNota" ${ro?'disabled':''} placeholder="Qué dijo el cliente, cómo está el local, exhibición, competencia, precios que vio…">${esc(x.nota||'')}</textarea></div>
+    <div class="f"><label for="vExp">Experiencia del cliente con Zuppa (1 a 5)</label><select id="vExp" ${ro?'disabled':''}><option value="">–</option>${[1,2,3,4,5].map(n=>`<option ${String(n)===String(x.experiencia)?'selected':''}>${n}</option>`).join('')}</select></div>
+    <div class="f"><label for="vComp">Competencia / precio visto</label><input id="vComp" value="${esc(x.competencia||'')}" ${ro?'disabled':''} placeholder="Ej.: mayorista X, lata 473 a $…"></div>
+    <div class="f full"><label for="vPlan">Plan de acción acordado</label><textarea id="vPlan" ${ro?'disabled':''} placeholder="Acción concreta, con quién y para cuándo">${esc(x.plan||'')}</textarea></div>
+    <div class="f"><label for="vResp">Responsable</label><input id="vResp" value="${esc(x.responsable||'')}" ${ro?'disabled':''}></div>
+    <div class="f"><label for="vCompr">Fecha compromiso</label><input id="vCompr" type="date" value="${esc(x.compromiso||'')}" ${ro?'disabled':''}></div>
+    <div class="f"><label for="vRes">Resultado</label><select id="vRes" ${ro?'disabled':''}>${['','Pendiente','Volvió a comprar','No volvió a comprar','Cliente cerrado'].map(s=>`<option ${s===(x.resultado||'')?'selected':''}>${s}</option>`).join('')}</select></div>
+    <div class="f"><label for="vProx">Próximo seguimiento</label><input id="vProx" type="date" value="${esc(x.proximo||'')}" ${ro?'disabled':''}></div>
+  </div>
+  <div class="hint" id="vErr"></div>
+  ${ro?'':`<div class="row">${edit?'<button type="button" class="btn danger" id="vDel">Borrar</button><span class="hint" id="vDelConf"></span>':''}<span class="sp"></span><button class="btn primary" id="vSave">Guardar visita</button></div>`}
+  </form>`;
+  d.showModal();
+  $('#vxClose').onclick=()=>d.close();
+  let sel=c;
+  const inp=$('#vCli');
+  inp.addEventListener('input',()=>{ const q=inp.value.trim().toUpperCase(); const dl=$('#vCliList'); sel=null;
+    const mm=/^(\d+)/.exec(q); if(mm && CLI[+mm[1]] && q.includes('·')) { sel=CLI[+mm[1]]; }
+    if(q.length>=3||/^\d+$/.test(q)){ const base=D.data.clientes.filter(k=>(!S.user||S.user.scope!=='own'||k.spv===S.user.spv)); dl.innerHTML=base.filter(k=>String(k.cod).startsWith(q)||k.rs.toUpperCase().includes(q)).slice(0,30).map(k=>`<option value="${esc(k.cod+' · '+k.rs)}">`).join(''); }
+    if(!sel && mm && CLI[+mm[1]] && String(CLI[+mm[1]].cod)===q) sel=CLI[+mm[1]];
+    $('#vCliInfo').innerHTML = sel? infoCli(sel, ultimoMotivo(sel.cod)) : 'Elegí un cliente de la lista.';
+  });
+  const del=$('#vDel'); if(del){ let arm=false; del.onclick=async()=>{ if(!arm){ arm=true; del.textContent='Confirmar borrado'; $('#vDelConf').textContent='Tocá de nuevo para borrar.'; return; } await borrarVisita(x.id); d.close(); rVisitas(); }; }
+  $('#fVis').onsubmit=async e=>{ e.preventDefault(); if(ro) return;
+    if(!sel){ $('#vErr').textContent='Elegí un cliente de la lista (código · nombre).'; return; }
+    const f=flags(sel,'CVZA'), fn=flags(sel,'NABS'); const mm=ultimoMotivo(sel.cod);
+    const vi={ id:x.id||'', spv:$('#vSpv').value, fecha:$('#vFecha').value, estado:$('#vEstado').value, cod:String(sel.cod), cliente:sel.rs, pv:sel.pv,
+      un: [(f&&f.u3)?'CVZA':'', (fn&&fn.u3)?'NABS':''].filter(Boolean).join(' + ') || 'Total', horizonte: horizonteLab(flags(sel,'TOTAL')), motivo: mm?mm.motivo:'',
+      causa:$('#vCausa').value, nota:$('#vNota').value.trim(), experiencia:$('#vExp').value, competencia:$('#vComp').value.trim(), plan:$('#vPlan').value.trim(),
+      responsable:$('#vResp').value.trim(), compromiso:$('#vCompr').value, resultado:$('#vRes').value, proximo:$('#vProx').value, creado:x.creado||'' };
+    if(vi.estado==='Realizada' && !vi.nota){ $('#vErr').textContent='Para marcarla como realizada contá qué notaste en la visita.'; return; }
+    $('#vSave').disabled=true; $('#vSave').textContent='Guardando…';
+    try{ await guardarVisita(vi); d.close(); toast('Visita guardada'); rVisitas(); }
+    catch(err){ $('#vErr').textContent='No se pudo guardar: '+err.message; $('#vSave').disabled=false; $('#vSave').textContent='Guardar visita'; }
+  };
+}
+function infoCli(c,m){ const f=flags(c,'CVZA'), fn=flags(c,'NABS'); return `${esc(c.pv)} · visita ${esc(c.vis)} · ${esc(c.loc)} · Cerveza: ${horizonteLab(f)} · NABs: ${horizonteLab(fn)}${m?` · <b>motivo BEES:</b> ${esc(m.motivo.toLowerCase())} (${mesLab(m.mes)}) “${esc(m.resp)}”`:' · sin motivo relevado'}`; }
+async function guardarVisita(vi){
+  if(!D.api){ if(!vi.id) vi.id='L'+Date.now(); const i=D.visitas.findIndex(x=>x.id===vi.id); if(i>=0) D.visitas[i]=vi; else D.visitas.push(vi); lsSet('gcnc_visitas_local',D.visitas); return; }
+  const r=await fetch(D.api,{method:'POST',body:JSON.stringify({action:'guardarVisita',visita:vi})}); const j=await r.json(); if(!j.ok) throw new Error(j.error||'error de la planilla');
+  const i=D.visitas.findIndex(x=>x.id===j.visita.id); if(i>=0) D.visitas[i]=j.visita; else D.visitas.push(j.visita);
+}
+async function borrarVisita(id){
+  if(!D.api){ D.visitas=D.visitas.filter(x=>x.id!==id); lsSet('gcnc_visitas_local',D.visitas); return; }
+  await fetch(D.api,{method:'POST',body:JSON.stringify({action:'borrarVisita',id})}); D.visitas=D.visitas.filter(x=>x.id!==id); toast('Visita borrada');
+}
+
+/* ====================== MAPA ====================== */
+let MAP=null, LAYER=null; const MP={hz:'u3'};
+function rMapa(){
+  const v=$('#v-mapa'); const un=S.un;
+  if(!v.dataset.ok){
+    v.innerHTML=`<div class="sec-h"><h2>Mapa de clientes no compradores</h2><p>Color por antigüedad de la no compra. Tocá un punto para ver el cliente.</p></div>
+    <div class="filters" style="padding:0"><div class="f"><label for="mpHz">Mostrar</label><select id="mpHz"><option value="u3">CNC U3M</option><option value="u6">CNC U6M</option><option value="u12">CNC U12M</option><option value="u1">Sin compra el último mes</option></select></div>
+    <div id="mpLeg" style="align-self:center"></div><span class="hint" id="mpCount" style="align-self:center"></span></div>
+    <div id="map" role="region" aria-label="Mapa de CNC"></div>`;
+    v.dataset.ok=1; $('#mpHz').onchange=e=>{MP.hz=e.target.value; rMapa();};
+  }
+  $('#mpLeg').innerHTML=legend([['3 a 5 meses','--h1'],['6 a 11 meses','--h2'],['12 meses o más','--h3'],['Último mes','--s0']]);
+  if(typeof L==='undefined'){ $('#map').innerHTML='<p class="hint" style="padding:16px">No se pudo cargar el mapa.</p>'; return; }
+  if(!MAP){ MAP=L.map('map',{scrollWheelZoom:false}).setView([-32.93,-68.78],11); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap'}).addTo(MAP); }
+  if(LAYER) LAYER.remove(); LAYER=L.layerGroup().addTo(MAP);
+  const pts=[]; clientesFiltrados().forEach(c=>{ if(!c.geo) return; const f=flags(c,un); if(!f||!f[MP.hz]) return; pts.push([c,f]); });
+  const col=f=>cssv(f.bucket===3?'--h3':f.bucket===2?'--h2':f.bucket===1?'--h1':'--s0');
+  pts.forEach(([c,f])=>{ L.circleMarker(c.geo,{radius:6,color:cssv('--panel'),weight:1.5,fillColor:col(f),fillOpacity:.95}).bindPopup(`<b>${esc(c.rs)}</b> #${c.cod}<br>${esc(c.dom)}<br>${esc(c.pv)} · visita ${esc(c.vis)}<br>${horizonteLab(f)} · ${f.nunca?'sin compras':f.meses+' meses sin compra'}`).addTo(LAYER); });
+  $('#mpCount').textContent=pts.length+' clientes en el mapa';
+  if(pts.length){ MAP.fitBounds(L.latLngBounds(pts.map(p=>p[0].geo)).pad(.08)); }
+  setTimeout(()=>MAP.invalidateSize(),60);
+}
+
+/* ====================== arranque ====================== */
+cargar().then(()=>{ D.data.clientes.forEach(c=>CLI[c.cod]=c); const h=location.hash.slice(1); if(h && document.querySelector(`#tabs [data-t="${h}"]`)) irTab(h); else render(); })
+  .catch(e=>{ $('#v-resumen').innerHTML=`<div class="note warn"><b>No pude cargar data.json.</b> ${esc(e.message)}. Corré “Actualizar tablero en GitHub” desde la planilla.</div>`; });
+window.addEventListener('hashchange',()=>{ const h=location.hash.slice(1); if(D.data && h!==S.tab && document.querySelector(`#tabs [data-t="${h}"]`)) irTab(h); });
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>render());
+</script>
+</html>
