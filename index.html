@@ -235,6 +235,101 @@ td,th{padding:7px 11px}
   .rings{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
 body.embed .brand h1{font-size:18px}
+/* v4 */
+.kpi[data-act]{cursor:pointer;transition:transform .12s, box-shadow .12s}
+.kpi[data-act]:hover{transform:translateY(-2px);box-shadow:0 2px 4px rgba(20,27,52,.06),0 12px 24px rgba(20,27,52,.09)}
+.kpi .d{font-size:11.5px}
+.kpi{position:relative}
+.kgo{position:absolute;right:14px;top:12px;color:var(--ink-3);font-size:15px}
+.kpi[data-act]:hover .kgo{color:var(--accent)}
+.tcard .tl span{font-size:10px}
+.av.foto{object-fit:cover;display:inline-block;padding:0;border:2px solid var(--panel);box-shadow:0 0 0 1px var(--rule-2)}
+.tcard .th .av{width:42px;height:42px;font-size:13px}
+.panel > .ph h3 .av{width:48px;height:48px;vertical-align:middle}
+.tcard .th .hint{margin-left:50px!important}
+.av{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;font-size:11px;font-weight:700;flex:none;margin-right:8px;font-family:var(--f-display)}
+.pcol{display:flex;align-items:center;gap:0;white-space:nowrap}
+.pcol b{font-weight:600}
+.pcol .go{margin-left:10px;font-size:11.5px;color:var(--accent);opacity:0;transition:opacity .12s}
+tr:hover .pcol .go{opacity:1}
+.pbar{position:relative;display:block;height:9px;background:var(--panel-2);border-radius:5px;overflow:visible;min-width:60px}
+.pbar i{display:block;height:100%;border-radius:5px}
+.pbar b{position:absolute;top:-3px;width:2px;height:15px;background:var(--ink);border-radius:1px;transform:translateX(-1px)}
+/* equipo */
+.eqgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.eqgrid.big{grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}
+.eqgrid.big .tcard .tg b{font-size:26px}
+.eqgrid.one{grid-template-columns:minmax(260px,360px) 1fr;align-items:start}
+.tcard{border:1px solid var(--rule);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:9px;background:var(--panel)}
+.tcard[data-eq]{cursor:pointer;transition:border-color .12s, transform .12s}
+.tcard[data-eq]:hover{border-color:var(--accent);transform:translateY(-2px)}
+.tcard .th{display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;font-weight:700;font-size:14.5px;font-family:var(--f-display)}
+.tcard .th .hint{font-family:var(--f-body);font-weight:500;flex-basis:100%;margin-left:36px;margin-top:-6px}
+.tcard .tg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.tcard .tg div{display:flex;flex-direction:column}
+.tcard .tg .l,.tcard .tl span{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);font-weight:700}
+.tcard .tg b{font-family:var(--f-display);font-size:20px;font-weight:600;line-height:1.1}
+.tcard .tl{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.tcard .tl b{font-family:var(--f-display);font-weight:600;white-space:nowrap}
+.tcard .tl span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.stk{display:flex;gap:2px;height:8px;border-radius:4px;overflow:hidden}
+.stk i{display:block;height:100%}
+.qlinks{display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start}
+/* botonera horizonte */
+.hzbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.hzbar button{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--rule-2);background:var(--panel);border-radius:999px;padding:7px 12px;cursor:pointer;font-weight:600;font-size:13px;color:var(--ink-2)}
+.hzbar button:hover{border-color:var(--ink-3)}
+.hzbar button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.hzbar .cnt{font-family:var(--f-mono);font-size:11.5px;background:var(--panel-2);color:var(--ink);border-radius:999px;padding:1px 7px}
+.hzbar button[aria-pressed="true"] .cnt{background:rgba(255,255,255,.18);color:var(--paper)}
+.hzbar .acum{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink-2);margin-left:6px;cursor:pointer}
+/* tabla horizonte */
+.hz-tools{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:end;margin-bottom:14px}
+table.hzt td{padding:11px 14px;font-size:14px}
+table.hzt th{padding:9px 14px;font-size:11px}
+table.hzt tr.grp th{background:transparent;font-size:10.5px;letter-spacing:.1em;border-bottom:0;padding-bottom:0}
+table.hzt th.g-rec{color:var(--ink-3);text-align:center;border-bottom:2px solid var(--rule-2)!important}
+table.hzt th.g-cnc{color:var(--h3);text-align:center;border-bottom:2px solid var(--h2)!important}
+table.hzt .ccol{background:color-mix(in srgb, var(--accent) 6%, transparent);font-weight:700}
+td.bc{position:relative}
+td.bc::before{content:"";position:absolute;right:6px;top:7px;bottom:7px;width:calc((100% - 12px) * var(--w) / 100);background:color-mix(in srgb, var(--c) 30%, transparent);border-radius:4px}
+td.bc span{position:relative;font-weight:600}
+td.bc.agg::before{display:none}
+tr.pvrow{cursor:pointer}
+tr.pvrow:hover td{background:var(--accent-soft)}
+tr.spvrow td{background:var(--panel-2);font-weight:700;cursor:pointer;border-top:2px solid var(--rule-2)}
+tr.spvrow .caret{display:inline-block;width:16px;color:var(--ink-3)}
+tr.totrow td{background:var(--amber-soft);font-weight:700}
+/* heatmap compradores */
+table.hm td{padding:9px 12px;font-size:14px}
+table.hm td.hmc{font-weight:600;border-left:2px solid var(--panel)}
+table.hm td.hmc.ok{background:color-mix(in srgb, var(--good) 20%, transparent);color:var(--good)}
+table.hm td.hmc.warn{background:color-mix(in srgb, var(--warn) 18%, transparent);color:var(--warn)}
+table.hm td.hmc.bad{background:color-mix(in srgb, var(--bad) 15%, transparent);color:var(--bad)}
+table.hm th.cur{color:var(--accent)}
+table.unt td{padding:9px 12px}
+.uc{display:flex;flex-direction:column;gap:4px;min-width:96px}
+/* listas de barras */
+.blist{display:flex;flex-direction:column;gap:8px}
+.bl{display:grid;grid-template-columns:minmax(150px,190px) minmax(80px,1fr) 64px minmax(150px,auto);gap:12px;align-items:center;font-size:13.5px}
+.bl.tot{border-top:1px solid var(--rule);padding-top:8px}
+.bl .bn{display:flex;align-items:center}
+.bl .bv{font-family:var(--f-display);font-weight:600;text-align:right;font-size:15px}
+.bl .bx{color:var(--ink-2);font-size:12.5px}
+.recup{display:flex;flex-direction:column;gap:6px}
+.rc{display:grid;grid-template-columns:minmax(150px,190px) 110px 1fr 1fr;gap:16px;align-items:center;padding:8px 10px;border-radius:10px;font-size:14px}
+.rc:nth-child(even){background:var(--panel-2)}
+.rc.tot{background:var(--amber-soft);font-weight:600}
+.rc .bn{display:flex;align-items:center}
+.rc .rn{color:var(--ink-2)}
+.rc .rn b{font-family:var(--f-display);font-size:16px;color:var(--ink)}
+.rc .rb{display:grid;grid-template-columns:62px 1fr 34px 46px;gap:8px;align-items:center}
+.rc .rb .rl{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);font-weight:700}
+.rc .rb b{font-family:var(--f-display);text-align:right}
+@media (max-width:900px){ .bl,.rc{grid-template-columns:1fr 1fr} .eqgrid.big{grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}
+.eqgrid.big .tcard .tg b{font-size:26px}
+.eqgrid.one{grid-template-columns:1fr} }
+
 
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -305,6 +400,7 @@ body.embed .brand h1{font-size:18px}
 'use strict';
 /* ====================== estado y utilidades ====================== */
 const D = { data:null, visitas:[], api:'' };
+let FOTOS = {};
 const S = { un:'TOTAL', spv:'', pv:'', crit:'aud', tab:'resumen', user:null };
 const MES_L = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
 const MES_LL = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
@@ -362,6 +458,7 @@ async function cargar(){
   const push=(b,src)=>b.regs.forEach(r=>{ const prev=MOT_IDX[r.cod]; if(!prev || prev.fecha<=r.fecha) MOT_IDX[r.cod]={...r, mes:b.mes, src}; });
   D.data.motivos.total.forEach(b=>push(b,'TOTAL'));
   D.data.motivos.un.forEach(b=>push(b,'UN'));
+  try{ const rf=await fetch('fotos.json',{cache:'no-store'}); if(rf.ok) FOTOS=await rf.json(); }catch(e){}
   D.data.clientes.forEach(c=>CLI[c.cod]=c);
   initUser(); initFiltros();
   $('#subTitle').textContent = `Datos al ${D.data.meta.generado} · mes en curso ${mesLL(D.data.meta.mesActual)} (parcial) · U3M = sin compra en ${mesLab(M[MI-3])}, ${mesLab(M[MI-2])} y ${mesLab(M[MI-1])}`;
@@ -387,7 +484,7 @@ function initUser(){
   pintarUser();
 }
 function pintarUser(){
-  $('#userTag').innerHTML = S.user ? `👤 ${esc(S.user.name)}${!new URLSearchParams(location.search).get('embed')?' · <a href="#" id="logout">salir</a>':''}` : `<a href="#" id="loginLink">Ingresar como supervisor</a>`;
+  $('#userTag').innerHTML = S.user ? `${S.user.spv&&FOTOS[S.user.spv]?`<img class="av foto" src="${FOTOS[S.user.spv]}" alt="" style="width:34px;height:34px;vertical-align:middle">`:'👤 '}${esc(S.user.name)}${!new URLSearchParams(location.search).get('embed')?' · <a href="#" id="logout">salir</a>':''}` : `<a href="#" id="loginLink">Ingresar como supervisor</a>`;
   const ll=$('#loginLink'); if(ll) ll.onclick=e=>{e.preventDefault(); abrirLogin();};
   const lo=$('#logout'); if(lo) lo.onclick=e=>{e.preventDefault(); S.user=null; try{sessionStorage.removeItem('gcncUser');}catch(_){} S.spv=''; initFiltros(); pintarUser(); render();};
 }
@@ -428,6 +525,7 @@ function chart(id,cfg){
   if(CH[id]) CH[id].destroy();
   const el=document.getElementById(id); if(!el) return;
   Chart.defaults.font.family = cssv('--f-body') || 'system-ui';
+  Chart.defaults.animation = false;
   Chart.defaults.color = cssv('--ink-2');
   Chart.defaults.borderColor = cssv('--grid');
   const o=cfg.options||{}; const pl=o.plugins||{};
@@ -458,12 +556,13 @@ function tablaHorizonte(un){
   clientesFiltrados().forEach(c=>{
     const f=flags(c,un); if(!f) return;
     const key=c.spv+'|'+c.pv;
-    const r = rows[key] || (rows[key]={spv:c.spv,pv:c.pv,cart:0,ma:0,u1:0,u2:0,u3:0,u6:0,u9:0,u12:0,compra:0});
+    const r = rows[key] || (rows[key]={spv:c.spv,pv:c.pv,cart:0,ma:0,u1:0,u2:0,u3:0,u6:0,u9:0,u12:0,compra:0,x3:0,x6:0,x9:0,x12:0});
     r.cart++; ['ma','u1','u2','u3','u6','u9','u12'].forEach(k=>{ if(f[k]) r[k]++; }); if(serie(c,un)[MI]>0) r.compra++;
+    if(f.u3&&!f.u6) r.x3++; else if(f.u6&&!f.u9) r.x6++; else if(f.u9&&!f.u12) r.x9++; else if(f.u12) r.x12++;
   });
   return Object.values(rows).sort((a,b)=>a.spv.localeCompare(b.spv)||a.pv.localeCompare(b.pv));
 }
-function sumRows(rs,label){ const o={pv:label,cart:0,ma:0,u1:0,u2:0,u3:0,u6:0,u9:0,u12:0,compra:0}; rs.forEach(r=>Object.keys(o).forEach(k=>{ if(k!=='pv') o[k]+=r[k]; })); return o; }
+function sumRows(rs,label){ const o={pv:label,cart:0,ma:0,u1:0,u2:0,u3:0,u6:0,u9:0,u12:0,compra:0,x3:0,x6:0,x9:0,x12:0}; rs.forEach(r=>Object.keys(o).forEach(k=>{ if(k!=='pv') o[k]+=r[k]; })); return o; }
 function totalesUn(un){ const rs=tablaHorizonte(un); return sumRows(rs,'ZUPPA'); }
 
 /* ====================== RESUMEN ====================== */
@@ -485,17 +584,18 @@ function rResumen(){
   v.innerHTML = `
   <div class="sec-h"><h2>Gestión de clientes no compradores</h2><p>Seguimiento de toda la cartera por negocio, clientes no compradores por horizonte (U3M, U6M, U12M), motivos relevados en BEES Force, planes de acción y visitas de supervisores.</p></div>
   <div class="kpis">
-    ${kpi('Cartera '+(S.spv||S.pv?'filtrada':'total'), n0(t.cart), 'clientes activos en la base', 'users', '--s7')}
-    ${kpi('CNC U3M · '+UNS[S.un].lab, n0(t.u3), pc(t.u3/t.cart,1)+' de la cartera', 'clock', '--h2')}
-    ${kpi('CNC U6M · '+UNS[S.un].lab, n0(t.u6), pc(t.u6/t.cart,1)+' de la cartera', 'clock', '--h2')}
-    ${kpi('CNC U12M · '+UNS[S.un].lab, n0(t.u12), pc(t.u12/t.cart,1)+' de la cartera', 'alert', '--bad')}
-    ${kpi('Relevados BEES Force', n0(A.relUnU), 'tareas por negocio · '+A.mesesRel.length+' meses', 'chat', '--s1')}
+    ${kpi('Cartera '+(S.spv||S.pv?'filtrada':'total'), n0(t.cart), 'clientes activos', 'users', '--s7','horizonte')}
+    ${kpi('CNC U3M · '+UNS[S.un].lab, n0(t.u3), pc(t.u3/t.cart,1)+' de la cartera', 'clock', '--h2','clientes:cnc:1')}
+    ${kpi('CNC U6M · '+UNS[S.un].lab, n0(t.u6), pc(t.u6/t.cart,1)+' de la cartera', 'clock', '--h2','clientes:u6:1')}
+    ${kpi('CNC U12M · '+UNS[S.un].lab, n0(t.u12), pc(t.u12/t.cart,1)+' de la cartera', 'alert', '--bad','clientes:u12:1')}
+    ${kpi('Relevados BEES Force', n0(A.relUnU), 'tareas por negocio', 'chat', '--s1','motivos')}
   </div>
+  ${equipoPanel(T)}
   <div class="grid2">
     <div style="display:flex;flex-direction:column;gap:18px;min-width:0">
     <div class="panel">
       <div class="ph"><h3>Compradores de ${mesLL(mesAct)}</h3><span class="hint">mes en curso · contra objetivo</span></div>
-      <div class="rings">${['TOTAL','CVZA','NABS'].map(u=>ring(T[u].compra/T[u].cart, D.data.meta.objetivos[u], UNS[u].col, UNS[u].lab)).join('')}</div>
+      <div class="rings" data-act="compradores" role="button" tabindex="0" title="Ver compradores y evolutivo" style="cursor:pointer">${['TOTAL','CVZA','NABS'].map(u=>ring(T[u].compra/T[u].cart, D.data.meta.objetivos[u], UNS[u].col, UNS[u].lab)).join('')}</div>
     </div>
     <div class="panel"><div class="ph"><h3>Evolución de CNC U3M</h3><span class="hint">cada mes, sobre la cartera actual</span></div>
       ${legend([['Total','--s7'],['Cerveza','--s4'],['NABs','--s1']])}
@@ -520,6 +620,7 @@ function rResumen(){
     <li><b>Control auditoría</b>: estado de cada requisito del Nivel 1 y lo que falta corregir.</li>
     <li>Para actualizar: pegar las hojas nuevas en el Google Sheet y correr <b>🚫 Gestión CNC → Actualizar tablero en GitHub</b>.</li>
   </ol></details>`;
+  activarAcciones(v); activarEquipo(v);
   chart('cResHz',{type:'bar',data:{labels:['U3M','U6M','U12M'],datasets:['TOTAL','CVZA','NABS'].map(u=>({label:UNS[u].lab,data:[T[u].u3,T[u].u6,T[u].u12],backgroundColor:cssv(UNS[u].col),borderRadius:4,borderSkipped:'start',borderColor:cssv('--panel'),borderWidth:1}))},
     options:{scales:{y:{beginAtZero:true,grid:{color:cssv('--grid')}},x:{grid:{display:false}}}}});
   chart('cResEvo',{type:'line',data:{labels:evoMeses.map(m=>mesLab(M[m])),datasets:['TOTAL','CVZA','NABS'].map(u=>({label:UNS[u].lab,data:evo[u],borderColor:cssv(UNS[u].col),backgroundColor:cssv(UNS[u].col),borderWidth:2,pointRadius:3,tension:.25}))},
@@ -588,7 +689,7 @@ function rAuditoria(){
 }
 
 const ICONS={users:'<circle cx="9" cy="8" r="3.2"/><path d="M3 19c.8-3.3 3.2-5 6-5s5.2 1.7 6 5"/><path d="M16 5.5a3 3 0 0 1 0 5.6M18 14c1.6.6 2.6 2.2 3 5"/>',clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',alert:'<path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17h.01"/>',chat:'<path d="M5 5h14v10H9l-4 4z"/><path d="M9 9h6M9 12h4"/>'};
-function kpi(l,v,d,ic,col){ return `<div class="kpi"><span class="ico" style="background:color-mix(in srgb, var(${col}) 16%, transparent);color:var(${col})"><svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[ic]||''}</svg></span><span class="tx"><span class="l">${esc(l)}</span><span class="v">${v}</span><span class="d">${d}</span></span></div>`; }
+function kpi(l,v,d,ic,col,act){ return `<div class="kpi"${act?` data-act="${act}" role="button" tabindex="0" title="Ver detalle"`:''}><span class="ico" style="background:color-mix(in srgb, var(${col}) 16%, transparent);color:var(${col})"><svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[ic]||''}</svg></span><span class="tx"><span class="l">${esc(l)}</span><span class="v">${v}</span><span class="d">${d}</span></span>${act?'<span class="kgo" aria-hidden="true">→</span>':''}</div>`; }
 function ring(p,obj,col,lab){
   const r=44, c=2*Math.PI*r, v=Math.max(0,Math.min(1,p||0)); const ok=v>=obj;
   const oa=obj*360-90, ox=60+r*Math.cos(oa*Math.PI/180), oy=60+r*Math.sin(oa*Math.PI/180);
@@ -620,15 +721,81 @@ function reconciliacion(){
     Con "Criterio de conteo → Igual al Excel" ves los números de tu planilla.</div>`;
 }
 
+
+/* ---------- acciones y botonera de horizonte ---------- */
+function activarAcciones(root){
+  root.querySelectorAll('[data-act]').forEach(el=>{ const go=()=>{ const [tab,hz,ac]=el.dataset.act.split(':'); if(hz){ CL.hz=hz; CL.acum=ac==='1'; CL.pag=0; MP.hz=hz; MP.acum=ac==='1'; } irTab(tab); };
+    el.onclick=go; el.onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); go(); } }; });
+}
+function enHz(f,k,acum){ if(!f) return false;
+  if(k==='todos') return true; if(k==='cnc') return f.u3; if(k==='ma') return f.ma; if(k==='u1') return acum? f.u1 : (f.u1&&!f.u3);
+  if(acum) return !!f[k];
+  return k==='u3'? f.bucket===1 : k==='u6'? f.bucket===2 : k==='u12'? f.bucket===3 : false; }
+function hzBar(id, sel, acum, cnt, extra){
+  const opts=[['cnc','Todos los CNC','--accent'],['u3',acum?'U3M o más':'U3M · 3 a 5 meses','--h1'],['u6',acum?'U6M o más':'U6M · 6 a 11 meses','--h2'],['u12','U12M · 12 meses o más','--h3']].concat(extra||[]);
+  return `<div class="hzbar" id="${id}" role="group" aria-label="Horizonte">${opts.map(([k,l,c])=>`<button type="button" data-k="${k}" aria-pressed="${k===sel}">${c?`<i class="dot" style="background:var(${c})"></i>`:''}${l}<span class="cnt">${n0(cnt(k))}</span></button>`).join('')}
+   <label class="acum"><input type="checkbox" ${acum?'checked':''}> Acumulado (U3M incluye U6M y U12M, como el Excel)</label></div>`;
+}
+function bindHzBar(id, st, rerender){
+  const el=document.getElementById(id); if(!el) return;
+  el.querySelectorAll('button').forEach(b=>b.onclick=()=>{ st.hz=b.dataset.k; st.pag=0; rerender(); });
+  el.querySelector('input').onchange=e=>{ st.acum=e.target.checked; rerender(); };
+}
+function iniciales(s){ return String(s||'').split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase(); }
+const SPV_COL={GUILLEN:'--s7',SANS:'--s1',OTROS:'--s0'};
+function avatar(pv,spv){ const f=FOTOS[pv]||FOTOS[String(pv||'').split(' ')[0]]; if(f) return `<img class="av foto" src="${f}" alt="" loading="lazy">`; return `<span class="av" style="background:color-mix(in srgb, var(${SPV_COL[spv]||'--s0'}) 22%, var(--panel));color:var(${SPV_COL[spv]||'--s0'})">${esc(iniciales(pv))}</span>`; }
+function barra(p,obj,col){ const w=Math.max(0,Math.min(1,p||0))*100; return `<span class="pbar"><i style="width:${w}%;background:var(${col})"></i>${obj!=null?`<b style="left:${Math.min(100,obj*100)}%" title="objetivo ${pc(obj)}"></b>`:''}</span>`; }
+function estCol(p,obj){ return p>=obj?'--good':p>=obj-.1?'--warn':'--bad'; }
+
+/* ---------- panel de equipo (Resumen) ---------- */
+function statsEquipo(){
+  const rows=tablaHorizonte(S.un);
+  const rel={}, rec={};
+  D.data.motivos.un.forEach(b=>b.regs.forEach(r=>{ if(S.un!=='TOTAL' && r.un!==S.un) return; const pv=r.pv||(CLI[r.cod]||{}).pv; if(!pv) return; rel[pv]=(rel[pv]||0)+1; if(recupero(r,b.mes).alDia) rec[pv]=(rec[pv]||0)+1; }));
+  const mes=D.data.meta.mesActual;
+  const vis={}; D.visitas.forEach(x=>{ if(x.fecha.slice(0,7)===mes && x.estado==='Realizada') vis[x.spv]=(vis[x.spv]||0)+1; });
+  return {rows,rel,rec,vis};
+}
+function equipoPanel(){
+  const E=statsEquipo(); const obj=D.data.meta.objetivos[S.un]; const objV=D.data.meta.objetivoVisitasSpv;
+  const tar=(x,titulo,sub,act,extra)=>{ const pC=x.cart?x.compra/x.cart:0; const tot=x.x3+x.x6+x.x9+x.x12;
+    return `<div class="tcard" ${act?`data-eq="${esc(act)}" role="button" tabindex="0"`:''}>
+      <div class="th">${titulo}<span class="hint">${sub}</span></div>
+      <div class="tg">
+        <div><span class="l">Cartera</span><b>${n0(x.cart)}</b></div>
+        <div><span class="l">CNC U3M</span><b>${n0(x.u3)}</b><span class="hint">${pc(x.u3/Math.max(1,x.cart),1)}</span></div>
+        <div><span class="l">U12M</span><b>${n0(x.u12)}</b></div>
+      </div>
+      <div class="stk" title="3–5 m: ${x.x3} · 6–11 m: ${x.x6+x.x9} · 12+ m: ${x.x12}">${tot?[['x3','--h1'],['x6','--h2'],['x9','--h2'],['x12','--h3']].map(([k,c])=>x[k]?`<i style="flex:${x[k]};background:var(${c})"></i>`:'').join(''):'<i style="flex:1;background:var(--panel-2)"></i>'}</div>
+      <div class="tl"><span>Compran ${mesLab(D.data.meta.mesActual)}</span><b style="color:var(${estCol(pC,obj)})">${pc(pC,1)}</b></div>${barra(pC,obj,estCol(pC,obj))}
+      ${extra||''}
+    </div>`; };
+  if(S.pv){
+    const x=E.rows.find(r=>r.pv===S.pv); if(!x) return '';
+    return `<div class="panel"><div class="ph"><h3>${avatar(S.pv,x.spv)} ${esc(S.pv)}</h3><button class="btn sm" id="eqVolver">← Volver al equipo de ${esc(x.spv)}</button></div>
+      <div class="eqgrid one">${tar(x,'Resumen del promotor',esc(x.spv),'', `<div class="tl"><span>Relevados BEES Force</span><b>${E.rel[x.pv]||0}</b></div><div class="tl"><span>Recuperados a la fecha</span><b>${E.rel[x.pv]?pc((E.rec[x.pv]||0)/E.rel[x.pv]):'–'}</b></div>`)}
+      <div class="qlinks">${[['clientes:cnc:1','Ver sus clientes no compradores'],['mapa:cnc:1','Ver sus CNC en el mapa'],['motivos','Ver sus motivos BEES Force'],['compradores','Ver su evolutivo de compradores'],['horizonte','Ver su horizonte']].map(([a,l])=>`<button class="btn" data-act="${a}">${l} →</button>`).join('')}</div></div></div>`;
+  }
+  if(S.spv){
+    const rs=E.rows.filter(r=>r.spv===S.spv);
+    return `<div class="panel"><div class="ph"><h3>Equipo de ${esc(S.spv)} · ${UNS[S.un].lab}</h3><span class="hint">tocá un promotor para ver su detalle · la barra de colores muestra sus CNC por antigüedad</span></div>
+      <div class="eqgrid">${rs.sort((a,b)=>b.u3/b.cart-a.u3/a.cart).map(x=>tar(x,`${avatar(x.pv,x.spv)} ${esc(x.pv)}`,`${E.rel[x.pv]||0} relevados BEES`,'pv:'+x.pv)).join('')}</div></div>`;
+  }
+  const spvs=[...new Set(E.rows.map(r=>r.spv))].filter(s=>s!=='OTROS').sort();
+  return `<div class="panel"><div class="ph"><h3>Supervisores · ${UNS[S.un].lab}</h3><span class="hint">tocá un supervisor para ver a su equipo</span></div>
+    <div class="eqgrid big">${spvs.map(s=>{ const rs=E.rows.filter(r=>r.spv===s); const x=sumRows(rs,s); const nrel=rs.reduce((a,r)=>a+(E.rel[r.pv]||0),0);
+      return tar(x,`${avatar(s,s)} ${esc(s)}`,`${rs.length} promotor${rs.length===1?'':'es'}`,'spv:'+s, s!=='OTROS'?`<div class="tl"><span>Visitas a CNC ${mesLab(D.data.meta.mesActual)}</span><b>${E.vis[s]||0} / ${objV}</b></div><div class="tl"><span>Relevados BEES Force</span><b>${nrel}</b></div>`:''); }).join('')}</div></div>`;
+}
+function activarEquipo(root){
+  root.querySelectorAll('[data-eq]').forEach(el=>{ const go=()=>{ const [k,val]=el.dataset.eq.split(/:(.+)/); if(k==='spv'){ S.spv=val; S.pv=''; } else { S.pv=val; S.spv=spvDe(val)||S.spv; } initFiltros(); render(); };
+    el.onclick=go; el.onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); go(); } }; });
+  const vb=root.querySelector('#eqVolver'); if(vb) vb.onclick=()=>{ S.pv=''; initFiltros(); render(); };
+}
+
 /* ====================== HORIZONTE ====================== */
 function rHorizonte(){
   const v=$('#v-horizonte'); const un=S.un;
   const rows=tablaHorizonte(un);
-  const spvs=[...new Set(rows.map(r=>r.spv))];
-  const mx=Math.max(...rows.map(r=>r.u3),1);
-  let body='';
-  spvs.forEach(s=>{ const rs=rows.filter(r=>r.spv===s); rs.forEach(r=>body+=filaHz(r,mx,false)); if(spvs.length>1||!S.pv) body+=filaHz(sumRows(rs,s),0,'sub'); });
-  const tot=sumRows(rows,'ZUPPA'); if(spvs.length>1) body+=filaHz(tot,0,'tot');
   // exclusivos por promotor
   const ex={}; clientesFiltrados().forEach(c=>{ const f=flags(c,un); if(!f||!f.u3) return; const e=ex[c.pv]||(ex[c.pv]={b1:0,b2:0,b3:0}); e['b'+f.bucket]++; });
   const exRows=Object.entries(ex).sort((a,b)=>(b[1].b1+b[1].b2+b[1].b3)-(a[1].b1+a[1].b2+a[1].b3));
@@ -649,9 +816,8 @@ function rHorizonte(){
   const perUn={}; u12un.forEach(c=>{perUn[c.per]=(perUn[c.per]||0)+1;});
 
   v.innerHTML=`
-  <div class="sec-h"><h2>Horizonte temporal de no compra · ${UNS[un].lab}</h2><p>Clientes sin compra en los últimos 3, 6 y 12 meses cerrados, por supervisor y promotor. Acumulado: el U12M está incluido en el U6M y el U3M. "Mes en curso" son los que todavía no compraron en ${mesLL(M[MI])}.</p></div>
-  <div class="panel"><div class="ph"><h3>Apertura por supervisor y promotor</h3><span class="hint">tocá un promotor para ver sus clientes</span></div>
-  <div class="tw"><table id="tHz"><thead><tr><th>Promotor</th><th class="n">Cartera</th><th class="n">Mes en curso</th><th class="n">Últ. mes</th><th class="n">U2M</th><th class="n">U3M</th><th class="n">% U3M</th><th class="n">U6M</th><th class="n">U9M</th><th class="n">U12M</th></tr></thead><tbody>${body}</tbody></table></div></div>
+  <div class="sec-h"><h2>Horizonte temporal de no compra · ${UNS[un].lab}</h2><p>Clientes sin compra por supervisor y promotor. El mes en curso (${mesLL(M[MI])}) no cuenta para el horizonte porque todavía está abierto.</p></div>
+  ${tablaHzNueva(rows)}
   <div class="grid2">
     <div class="panel"><div class="ph"><h3>Antigüedad de la no compra</h3><span class="hint">CNC U3M separados en tramos exclusivos</span></div>
       ${legend([['3 a 5 meses','--h1'],['6 a 11 meses','--h2'],['12 meses o más','--h3']])}
@@ -677,18 +843,66 @@ function rHorizonte(){
       <div class="tw" style="max-height:420px"><table><thead><tr><th>SPV</th><th>Promotor</th>${gvCols.map(g=>`<th class="n">${g}</th>`).join('')}<th class="n">Total</th></tr></thead><tbody>
       ${Object.entries(gv).sort((a,b)=>a[1].spv.localeCompare(b[1].spv)||a[0].localeCompare(b[0])).map(([pv,x])=>`<tr><td>${esc(x.spv)}</td><td>${esc(pv)}</td>${gvCols.map(g=>`<td class="n">${x[g]||0}</td>`).join('')}<td class="n"><b>${gvCols.reduce((a,g)=>a+(x[g]||0),0)}</b></td></tr>`).join('')}</tbody></table></div></div>
   </div>
-  ${D.data.edfRobados.length?`<div class="panel"><div class="ph"><h3>EDF robados</h3><span class="hint">clientes que dejaron de comprar por robo de heladera · ${D.data.edfRobados.reduce((a,e)=>a+e.total,0)} equipos</span></div>
-   <div class="tw"><table><thead><tr><th>Código</th><th>Cliente</th><th>Promotor</th><th>Negocio</th><th class="n">EDF</th><th>Hipótesis</th><th>PDA</th><th>Comentario</th></tr></thead><tbody>
-   ${D.data.edfRobados.filter(e=>(!S.pv||e.pv===S.pv)&&(!S.spv||spvDe(e.pv)===S.spv)).map(e=>`<tr><td class="n">${e.cod}</td><td>${esc(e.rs)}</td><td>${esc(e.pv)}</td><td>${esc(e.negocio)}</td><td class="n">${e.total}</td><td>${esc(e.hipotesis)}</td><td>${esc(e.pda)}</td><td>${esc(e.coment)}</td></tr>`).join('')}</tbody></table></div></div>`:''}`;
-  v.querySelectorAll('#tHz tr[data-pv]').forEach(tr=>tr.onclick=()=>{ S.pv=tr.dataset.pv; S.spv=spvDe(tr.dataset.pv)||S.spv; initFiltros(); CL.hz='u3'; irTab('clientes'); });
+  ${edfPanel()}`;
+  bindHzTabla(v);
   v.querySelectorAll('tr[data-cod]').forEach(tr=>tr.onclick=()=>fichaCliente(+tr.dataset.cod));
   chart('cHzEvo',{type:'line',data:{labels:evoMeses.map(m=>mesLab(M[m])),datasets:['TOTAL','CVZA','NABS'].map(u=>({label:UNS[u].lab,data:evo[u],borderColor:cssv(UNS[u].col),backgroundColor:cssv(UNS[u].col),borderWidth:2,pointRadius:3,tension:.25}))},
     options:{scales:{y:{beginAtZero:true,grid:{color:cssv('--grid')}},x:{grid:{display:false}}}}});
 }
-function filaHz(r,mx,cls){
-  const p=r.cart? r.u3/r.cart : 0;
-  return `<tr class="${cls||'click'}" ${cls?'':`data-pv="${esc(r.pv)}"`}><td>${cls?'<b>'+esc(r.pv)+'</b>':esc(r.pv)}</td><td class="n">${n0(r.cart)}</td><td class="n">${n0(r.ma)}</td><td class="n">${n0(r.u1)}</td><td class="n">${n0(r.u2)}</td>
-  <td class="n"><span class="heat" style="${cls?'':heatBg(r.u3,mx)}">${n0(r.u3)}</span></td><td class="n">${pc(p,1)}</td><td class="n">${n0(r.u6)}</td><td class="n">${n0(r.u9)}</td><td class="n">${n0(r.u12)}</td></tr>`;
+const HZS={modo:'acum', med:'n', cerr:{}};
+function tablaHzNueva(rows){
+  const acum=HZS.modo==='acum', pct=HZS.med==='pct';
+  const cnc = acum ? [['u3','U3M'],['u6','U6M'],['u9','U9M'],['u12','U12M']] : [['x3','3 a 5 m'],['x6','6 a 8 m'],['x9','9 a 11 m'],['x12','12 m o más']];
+  const ccol=['--h1','--h2','--h2','--h3'];
+  const rec=[['ma','Sin compra '+mesLab(M[MI])],['u1','Últ. mes'],['u2','U2M']];
+  const spvs=[...new Set(rows.map(r=>r.spv))];
+  const allSpv=[...new Set(D.data.clientes.map(c=>c.spv))].sort((a,b)=>(a==='OTROS')-(b==='OTROS')||a.localeCompare(b));
+  const mx={}; [...rec,...cnc].forEach(([k])=>mx[k]=Math.max(1,...rows.map(r=>pct? r[k]/Math.max(1,r.cart) : r[k])));
+  const val=(r,k)=> pct ? pc(r[k]/Math.max(1,r.cart),1) : n0(r[k]);
+  const cel=(r,k,col,cls)=>{ const x=pct? r[k]/Math.max(1,r.cart) : r[k]; const w=cls?0:Math.round(x/mx[k]*100); return `<td class="n bc ${cls||''}" style="--w:${w};--c:var(${col})"><span>${val(r,k)}</span></td>`; };
+  const fila=(r,cls,spv)=>`<tr class="${cls||'pvrow'}" ${cls?(cls==='spvrow'?`data-spv="${esc(r.pv)}"`:''):`data-pv="${esc(r.pv)}"`}>
+     <td class="pcol">${cls==='spvrow'?`<span class="caret">${HZS.cerr[r.pv]?'▸':'▾'}</span>`:''}${cls==='totrow'?'':avatar(r.pv, cls==='spvrow'?r.pv:spv)}<b>${esc(r.pv)}</b>${cls?'':'<span class="go">ver clientes →</span>'}</td>
+     <td class="n ccol">${n0(r.cart)}</td>
+     ${rec.map(([k])=>cel(r,k,'--s0',cls?'agg':'')).join('')}
+     ${cnc.map(([k],i)=>cel(r,k,ccol[i],cls?'agg':'')).join('')}</tr>`;
+  let body='';
+  spvs.forEach(s=>{ const rs=rows.filter(r=>r.spv===s); body+=fila(sumRows(rs,s),'spvrow'); if(!HZS.cerr[s]) rs.forEach(r=>body+=fila(r,'',s)); });
+  if(spvs.length>1) body+=fila(sumRows(rows,'ZUPPA'),'totrow');
+  const seg=(id,opts,cur)=>`<div class="seg" id="${id}">${opts.map(([k,l])=>`<button type="button" data-v="${k}" aria-pressed="${k===cur}">${l}</button>`).join('')}</div>`;
+  return `<div class="panel">
+    <div class="hz-tools">
+      <div class="f"><label>Supervisor</label>${seg('hzSpv',[['','Todos'],...allSpv.map(s=>[s,s])],S.spv)}</div>
+      <div class="f"><label>Horizonte</label>${seg('hzModo',[['acum','Acumulado (como el Excel)'],['tramo','Por tramo']],HZS.modo)}</div>
+      <div class="f"><label>Mostrar</label>${seg('hzMed',[['n','Cantidad'],['pct','% de la cartera']],HZS.med)}</div>
+      <span class="sp"></span><span class="hint">Tocá un supervisor para plegarlo · tocá un promotor para ver sus clientes</span>
+    </div>
+    <div class="tw"><table class="hzt" id="tHz">
+      <thead><tr class="grp"><th colspan="2"></th><th colspan="3" class="g-rec">Compra reciente</th><th colspan="4" class="g-cnc">Clientes no compradores ${acum?'(acumulado)':'(por tramo)'}</th></tr>
+      <tr><th>Promotor</th><th class="n ccol">Cartera</th>${rec.map(([,l])=>`<th class="n">${l}</th>`).join('')}${cnc.map(([,l],i)=>`<th class="n"><i class="dot" style="background:var(${ccol[i]})"></i> ${l}</th>`).join('')}</tr></thead>
+      <tbody>${body}</tbody></table></div></div>`;
+}
+function bindHzTabla(v){
+  v.querySelectorAll('#hzSpv button').forEach(b=>b.onclick=()=>{ S.spv=b.dataset.v; S.pv=''; initFiltros(); rHorizonte(); });
+  v.querySelectorAll('#hzModo button').forEach(b=>b.onclick=()=>{ HZS.modo=b.dataset.v; rHorizonte(); });
+  v.querySelectorAll('#hzMed button').forEach(b=>b.onclick=()=>{ HZS.med=b.dataset.v; rHorizonte(); });
+  v.querySelectorAll('#tHz tr[data-spv]').forEach(tr=>tr.onclick=()=>{ const s=tr.dataset.spv; HZS.cerr[s]=!HZS.cerr[s]; rHorizonte(); });
+  v.querySelectorAll('#tHz tr[data-pv]').forEach(tr=>tr.onclick=()=>{ S.pv=tr.dataset.pv; S.spv=spvDe(tr.dataset.pv)||S.spv; initFiltros(); CL.hz='cnc'; CL.acum=true; irTab('clientes'); });
+}
+function edfPanel(){
+  const all=D.data.edfRobados||[]; if(!all.length) return '';
+  const L=all.filter(e=>(!S.pv||e.pv===S.pv)&&(!S.spv||spvDe(e.pv)===S.spv));
+  const sum=k=>L.reduce((a,e)=>a+(e[k]||0),0);
+  const usd=x=>'USD '+nf.format(x);
+  return `<div class="panel"><div class="ph"><h3>EDF robados</h3><span class="hint">clientes que dejaron de comprar por robo de heladera · hoja EDF ROBADOS</span></div>
+   <div class="kpis" style="margin-bottom:14px">
+     ${kpi('Clientes con EDF robado', n0(L.length), L.filter(e=>!CLI[e.cod]).length+' ya dados de baja', 'alert', '--bad')}
+     ${kpi('Heladeras robadas', n0(sum('total')), 'Cerveza '+sum('cvza')+' · UNG '+sum('ung'), 'users', '--s4')}
+     ${kpi('Valor a reponer', usd(sum('usd')), 'USD 1.000 por heladera', 'chat', '--bad')}
+   </div>
+   <div class="tw"><table><thead><tr><th class="n">Código</th><th>Cliente</th><th>Dirección</th><th>Promotor</th><th>Negocio</th><th class="n">CVZA</th><th class="n">UNG</th><th class="n">Total</th><th class="n">USD</th><th>Hipótesis</th><th>PDA a tomar</th><th>Comentario</th></tr></thead><tbody>
+   ${L.map(e=>`<tr ${CLI[e.cod]?`class="click" data-cod="${e.cod}"`:''}><td class="n">${e.cod}</td><td><b style="font-weight:600">${e.rs&&!/^#/.test(e.rs)?esc(e.rs):'<span class="hint">sin nombre en la hoja</span>'}</b>${CLI[e.cod]?'':' <span class="chip">baja</span>'}</td><td>${esc(e.dom&&!/^#/.test(e.dom)?e.dom:'')}</td><td>${e.pv&&!/^#/.test(e.pv)?`<span class="pcol">${avatar(e.pv,spvDe(e.pv))}${esc(e.pv)}</span>`:'–'}</td><td>${esc(e.negocio)}</td><td class="n">${e.cvza||''}</td><td class="n">${e.ung||''}</td><td class="n"><b>${e.total}</b></td><td class="n" style="color:var(--bad);font-weight:600">${e.usd?usd(e.usd):'–'}</td><td>${esc(e.hipotesis)}</td><td><span class="chip bad">${esc(e.pda)}</span></td><td class="txt">${esc(e.coment)}</td></tr>`).join('')}
+   <tr class="totrow"><td></td><td>Total</td><td></td><td></td><td></td><td class="n">${sum('cvza')}</td><td class="n">${sum('ung')}</td><td class="n">${sum('total')}</td><td class="n">${usd(sum('usd'))}</td><td colspan="3"></td></tr>
+   </tbody></table></div></div>`;
 }
 function tablaPer(pc0){
   const ks=Object.keys(pc0).sort(); if(!ks.length) return '<p class="hint">Sin clientes.</p>';
@@ -696,17 +910,18 @@ function tablaPer(pc0){
 }
 
 /* ====================== CLIENTES ====================== */
-const CL={hz:'u3', q:'', loc:'', mot:'', pag:0, orden:'meses'};
+const CL={hz:'cnc', acum:false, q:'', loc:'', mot:'', pag:0, orden:'meses'};
 function rClientes(){
   const v=$('#v-clientes'); const un=S.un;
   const cs=clientesFiltrados();
   const locs=[...new Set(cs.map(c=>c.loc))].sort();
   const q=CL.q.trim().toUpperCase();
-  let rows=cs.map(c=>({c,f:flags(c,un),m:ultimoMotivo(c.cod)})).filter(x=>x.f);
-  rows=rows.filter(x=> CL.hz==='todos' ? true : CL.hz==='ma' ? x.f.ma : x.f[CL.hz]);
-  if(CL.loc) rows=rows.filter(x=>x.c.loc===CL.loc);
-  if(CL.mot==='con') rows=rows.filter(x=>x.m); else if(CL.mot==='sin') rows=rows.filter(x=>!x.m);
-  if(q) rows=rows.filter(x=>String(x.c.cod).includes(q)||x.c.rs.toUpperCase().includes(q)||(x.c.dom||'').toUpperCase().includes(q));
+  let base=cs.map(c=>({c,f:flags(c,un),m:ultimoMotivo(c.cod)})).filter(x=>x.f);
+  if(CL.loc) base=base.filter(x=>x.c.loc===CL.loc);
+  if(CL.mot==='con') base=base.filter(x=>x.m); else if(CL.mot==='sin') base=base.filter(x=>!x.m);
+  if(q) base=base.filter(x=>String(x.c.cod).includes(q)||x.c.rs.toUpperCase().includes(q)||(x.c.dom||'').toUpperCase().includes(q));
+  const pasa=(x,k)=> k==='edf' ? !!x.c.edfRob : enHz(x.f,k,CL.acum);
+  let rows=base.filter(x=>pasa(x,CL.hz));
   const ord={meses:(a,b)=>b.f.meses-a.f.meses, vol:(a,b)=>volPrevio(serie(b.c,un))-volPrevio(serie(a.c,un)), pv:(a,b)=>a.c.pv.localeCompare(b.c.pv)||b.f.meses-a.f.meses}[CL.orden];
   rows.sort(ord);
   CL.rows=rows;
@@ -714,8 +929,8 @@ function rClientes(){
   const vis=rows.slice(CL.pag*PAG,(CL.pag+1)*PAG);
   v.innerHTML=`
   <div class="sec-h"><h2>Listado de clientes · ${UNS[un].lab}</h2><p>Cada fila muestra la compra de los últimos ${M.length} meses (${mesLab(M[0])} a ${mesLab(M[MI])}), cuántos meses cerrados lleva sin comprar y el último motivo relevado en BEES Force.</p></div>
+  ${hzBar('clBar', CL.hz, CL.acum, k=>base.filter(x=>pasa(x,k)).length, [['u1','Sin compra el último mes'],['ma','Sin compra en '+mesLab(M[MI])],['edf','EDF robado','--bad'],['todos','Todos los clientes']])}
   <div class="filters" style="padding:0">
-    <div class="f"><label for="clHz">Horizonte</label><select id="clHz">${[['u3','CNC U3M'],['u6','CNC U6M'],['u12','CNC U12M'],['u1','Sin compra el último mes'],['ma','Sin compra en el mes en curso'],['todos','Todos los clientes']].map(([k,l])=>`<option value="${k}" ${CL.hz===k?'selected':''}>${l}</option>`).join('')}</select></div>
     <div class="f"><label for="clLoc">Localidad</label><select id="clLoc"><option value="">Todas</option>${locs.map(l=>`<option ${l===CL.loc?'selected':''}>${esc(l)}</option>`).join('')}</select></div>
     <div class="f"><label for="clMot">Motivo BEES Force</label><select id="clMot"><option value="">Todos</option><option value="con" ${CL.mot==='con'?'selected':''}>Con motivo relevado</option><option value="sin" ${CL.mot==='sin'?'selected':''}>Sin relevar</option></select></div>
     <div class="f"><label for="clOrd">Ordenar por</label><select id="clOrd"><option value="meses" ${CL.orden==='meses'?'selected':''}>Meses sin compra</option><option value="vol" ${CL.orden==='vol'?'selected':''}>Volumen histórico</option><option value="pv" ${CL.orden==='pv'?'selected':''}>Promotor</option></select></div>
@@ -728,7 +943,7 @@ function rClientes(){
   </tbody></table></div>
   ${pages>1?`<div class="row"><button class="btn sm" id="clPrev" ${CL.pag?'':'disabled'}>← Anterior</button><span class="hint">Página ${CL.pag+1} de ${pages}</span><button class="btn sm" id="clNext" ${CL.pag<pages-1?'':'disabled'}>Siguiente →</button></div>`:''}`;
   const on=(id,k,ev='change')=>{ const el=$(id); el.addEventListener(ev,()=>{ CL[k]=el.value; CL.pag=0; if(k==='q'){ clearTimeout(CL.t); CL.t=setTimeout(()=>{rClientes(); const i=$('#clQ'); i.focus(); i.setSelectionRange(i.value.length,i.value.length);},250);} else rClientes(); }); };
-  on('#clHz','hz'); on('#clLoc','loc'); on('#clMot','mot'); on('#clOrd','orden'); on('#clQ','q','input');
+  bindHzBar('clBar', CL, rClientes); on('#clLoc','loc'); on('#clMot','mot'); on('#clOrd','orden'); on('#clQ','q','input');
   $('#clCsv').onclick=()=>csvClientes(rows);
   const pv=$('#clPrev'), nx=$('#clNext'); if(pv) pv.onclick=()=>{CL.pag--; rClientes();}; if(nx) nx.onclick=()=>{CL.pag++; rClientes();};
   v.querySelectorAll('tr[data-cod]').forEach(tr=>tr.onclick=()=>fichaCliente(+tr.dataset.cod));
@@ -791,22 +1006,23 @@ function rCompradores(){
       ${legend([['2026','--s1'],['2025','--s0'],['Objetivo '+pc(obj),'--good']])}
       <div class="chart"><canvas id="cCompYoY"></canvas></div></div>
     <div class="panel"><div class="ph"><h3>Compradores de ${mesLL(M[MI])}</h3><span class="hint">mes en curso · objetivo ${pc(obj)} · ${diasRest} días hábiles restantes</span></div>
-      <div class="tw" style="max-height:330px"><table><thead><tr><th>Promotor</th><th class="n">Cartera</th><th class="n">Compraron</th><th class="n">Avance</th><th class="n">Faltan p/ objetivo</th><th class="n">Por día</th></tr></thead><tbody>
-      ${rows.map(x=>{const a=x.compra/x.cart, falta=Math.max(0,Math.ceil(x.cart*obj-x.compra)); return `<tr><td>${esc(x.pv)}</td><td class="n">${x.cart}</td><td class="n">${x.compra}</td><td class="n"><span class="chip ${a>=obj?'ok':a>=obj-.1?'warn':'bad'}">${pc(a,1)}</span></td><td class="n">${falta}</td><td class="n">${diasRest?n1(falta/diasRest):'–'}</td></tr>`;}).join('')}
-      ${(()=>{const t=sumRows(rows,'Total'); const a=t.compra/t.cart; const falta=Math.max(0,Math.ceil(t.cart*obj-t.compra)); return `<tr class="tot"><td>Total</td><td class="n">${t.cart}</td><td class="n">${t.compra}</td><td class="n">${pc(a,1)}</td><td class="n">${falta}</td><td class="n">${diasRest?n1(falta/diasRest):'–'}</td></tr>`;})()}
-      </tbody></table></div></div>
+      <div class="blist">${rows.slice().sort((x,y)=>y.compra/y.cart-x.compra/x.cart).concat(rows.length>1?[sumRows(rows,'Total')]:[]).map(x=>{const a=x.compra/Math.max(1,x.cart), falta=Math.max(0,Math.ceil(x.cart*obj-x.compra)); const tot=x.pv==='Total';
+        return `<div class="bl ${tot?'tot':''}"><span class="bn">${tot?'':avatar(x.pv,x.spv)}<b>${esc(x.pv)}</b></span>${barra(a,obj,estCol(a,obj))}<span class="bv" style="color:var(${estCol(a,obj)})">${pc(a,1)}</span><span class="bx">${x.compra}/${x.cart}${falta?` · faltan <b>${falta}</b>${diasRest?' ('+n1(falta/diasRest)+'/día)':''}`:' · <b style="color:var(--good)">en objetivo</b>'}</span></div>`;}).join('')}</div>
+</div>
   </div>
   <div class="panel"><div class="ph"><h3>% comprador por promotor, mes a mes (2026)</h3><span class="hint">hoja EVOLUTIVO · verde ≥ objetivo ${pc(obj)}, ámbar a menos de 10 puntos, rojo más abajo</span></div>
-    <div class="tw"><table><thead><tr><th>SPV</th><th>Promotor</th><th class="n">Clientes</th>${pct.meses.map(m=>`<th class="n">${m.slice(0,3).toLowerCase()}</th>`).join('')}</tr></thead><tbody>
-    ${filas.map(f=>`<tr><td>${esc(f.spv)}</td><td>${esc(f.pv)}</td><td class="n">${f.clientes}</td>${f.pct.map(x=>`<td class="n">${x==null?'':`<span class="chip ${x>=obj?'ok':x>=obj-.1?'warn':'bad'}">${pc(x)}</span>`}</td>`).join('')}</tr>`).join('')}
-    ${!S.pv?pct.filas.filter(f=>!f.pv && (!S.spv||f.spv===S.spv)).map(f=>`<tr class="${f.spv==='ZUPPA'?'tot':'sub'}"><td>${esc(f.spv)}</td><td></td><td class="n">${f.clientes}</td>${f.pct.map(x=>`<td class="n">${x==null?'':pc(x)}</td>`).join('')}</tr>`).join(''):''}
-    ${comp['2025 COMPRADOR']&&!S.spv&&!S.pv?`<tr><td colspan="3" class="hint">Zuppa 2025</td>${comp['2025 COMPRADOR'].slice(0,nMesAct).map(x=>`<td class="n hint">${x==null?'':pc(x)}</td>`).join('')}</tr>`:''}
+    <div class="tw"><table class="hm"><thead><tr><th>Promotor</th><th class="n">Clientes</th>${pct.meses.map((m,i)=>`<th class="n ${i===pct.meses.length-1?'cur':''}">${m.slice(0,3).toLowerCase()}</th>`).join('')}<th class="n">Promedio</th></tr></thead><tbody>
+    ${[...new Set(filas.map(f=>f.spv))].map(s=>{ const tot=pct.filas.find(f=>!f.pv&&f.spv===s);
+      return (tot&&!S.pv?`<tr class="spvrow"><td class="pcol">${avatar(s,s)}<b>${esc(s)}</b></td><td class="n">${tot.clientes}</td>${tot.pct.map(x=>hmCell(x,obj,true)).join('')}${hmCell(prom(tot.pct),obj,true)}</tr>`:'')
+      + filas.filter(f=>f.spv===s).map(f=>`<tr><td class="pcol">${avatar(f.pv,f.spv)}<b>${esc(f.pv)}</b></td><td class="n">${f.clientes}</td>${f.pct.map(x=>hmCell(x,obj)).join('')}${hmCell(prom(f.pct),obj)}</tr>`).join(''); }).join('')}
+    ${!S.pv&&!S.spv?pct.filas.filter(f=>f.spv==='ZUPPA').map(f=>`<tr class="totrow"><td class="pcol"><b>ZUPPA 2026</b></td><td class="n">${f.clientes}</td>${f.pct.map(x=>hmCell(x,obj,true)).join('')}${hmCell(prom(f.pct),obj,true)}</tr>`).join(''):''}
+    ${comp['2025 COMPRADOR']&&!S.spv&&!S.pv?`<tr><td class="pcol hint">Zuppa 2025</td><td></td>${comp['2025 COMPRADOR'].slice(0,nMesAct).map(x=>`<td class="n hint">${x==null?'':pc(x)}</td>`).join('')}<td class="n hint">${pc(prom(comp['2025 COMPRADOR'].slice(0,nMesAct)))}</td></tr>`:''}
     </tbody></table></div></div>
   <div class="panel"><div class="ph"><h3>Compras activas por unidad de negocio</h3>
     <div class="f"><label for="cpMes">Mes</label><select id="cpMes">${unBlocks.map(b=>`<option ${b.label===CP.mes?'selected':''}>${b.label}</option>`).join('')}</select></div></div>
     <p class="hint" style="margin:0 0 8px">Clientes que compraron cada negocio en el mes y % sobre la cartera del promotor. Objetivos: ${cols.map(k=>k+' '+pc(objUn[k])).join(' · ')}.</p>
-    ${blk?`<div class="tw"><table><thead><tr><th>SPV</th><th>Promotor</th><th class="n">Clientes</th>${cols.map(k=>`<th class="n">${k}</th>`).join('')}</tr></thead><tbody>
-    ${blk.filas.filter(f=>(!S.spv||f.spv===S.spv)&&(!S.pv||f.pv===S.pv||!f.pv&&false)).map(f=>`<tr class="${!f.pv?(f.spv==='ZUPPA'?'tot':'sub'):''}"><td>${esc(f.spv)}</td><td>${esc(f.pv)}</td><td class="n">${f.clientes}</td>${cols.map(k=>{const p=f.clientes?f[k]/f.clientes:0; const o=objUn[k]; return `<td class="n">${f[k]} <span class="chip ${o==null?'':p>=o?'ok':p>=o*.85?'warn':'bad'}">${pc(p)}</span></td>`;}).join('')}</tr>`).join('')}
+    ${blk?`<div class="tw"><table class="unt"><thead><tr><th>Promotor</th><th class="n">Clientes</th>${cols.map(k=>`<th>${k} <span class="hint">obj. ${pc(objUn[k])}</span></th>`).join('')}</tr></thead><tbody>
+    ${blk.filas.filter(f=>(!S.spv||f.spv===S.spv)&&(!S.pv||f.pv===S.pv)).map(f=>`<tr class="${!f.pv?(f.spv==='ZUPPA'?'totrow':'spvrow'):''}"><td class="pcol">${avatar(f.pv||f.spv,f.spv)}<b>${esc(f.pv||f.spv)}</b></td><td class="n">${f.clientes}</td>${cols.map(k=>{const p=f.clientes?f[k]/f.clientes:0; const o=objUn[k]; const c=o==null?'--s0':(p>=o?'--good':p>=o*.85?'--warn':'--bad'); return `<td><div class="uc">${barra(p,o,c)}<span><b style="color:var(${c})">${pc(p)}</b> <span class="hint">${f[k]}</span></span></div></td>`;}).join('')}</tr>`).join('')}
     </tbody></table></div>`:'<p class="hint">Sin datos en EVOLUTIVO.</p>'}
   </div>
   ${canalesPanel()}`;
@@ -818,6 +1034,8 @@ function rCompradores(){
     {label:'Objetivo',data:labels.map(()=>obj*100),borderColor:cssv('--good'),borderWidth:1.5,pointRadius:0,borderDash:[2,3]}]},
     options:{scales:{y:{suggestedMin:40,suggestedMax:100,ticks:{callback:x=>x+' %'},grid:{color:cssv('--grid')}},x:{grid:{display:false}}},plugins:{tooltip:{callbacks:{label:c=>c.dataset.label+': '+(c.raw==null?'–':n1(c.raw)+' %')}}}}});
 }
+function prom(a){ const v=(a||[]).filter(x=>x!=null); return v.length? v.reduce((s,x)=>s+x,0)/v.length : null; }
+function hmCell(x,obj,agg){ if(x==null) return '<td></td>'; const c=x>=obj?'ok':x>=obj-.1?'warn':'bad'; return `<td class="n hmc ${c} ${agg?'agg':''}">${pc(x)}</td>`; }
 function canalesPanel(){
   const R=D.data.resumen; const ks=['K+T','AS'].filter(k=>R[k]); if(!ks.length) return '';
   return `<div class="panel"><div class="ph"><h3>Compradores de cerveza por canal, 2025 vs 2026</h3><span class="hint">hoja RESUMEN</span></div><div class="tw"><table><thead><tr><th>Canal</th><th>Año</th>${MES_L.map(m=>`<th class="n">${m}</th>`).join('')}</tr></thead><tbody>
@@ -931,16 +1149,32 @@ function rPda(){
       <div class="pda-sec">${evid(p.mes,sec)}<div class="tw"><table><thead><tr><th>Motivo</th><th class="n">Clientes</th><th>Acción</th><th>Estado</th><th>Fecha límite</th><th>Responsable</th></tr></thead><tbody>
       ${p[sec].map(x=>`<tr><td><span class="mk"><i class="dot" style="background:var(${MOT_COL[x.motivo]||'--s0'})"></i>${esc(x.motivo.toLowerCase())}</span></td><td class="n">${x.clientes??'–'}</td><td class="txt">${x.accion?esc(x.accion):'<span class="chip warn">sin acción cargada</span>'}</td><td>${stChip(x.status)}</td><td>${fDate(x.deadline)}</td><td>${esc(x.resp)}</td></tr>`).join('')}
       </tbody></table></div></div>`:'').join('')}
-    ${recs.length?`<p class="hint" style="margin:10px 0 4px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">Clientes recuperados (informado en la hoja)</p>
-      <div class="tw"><table><thead><tr><th>Promotor</th><th class="n">Relevados</th><th class="n">Real CVZA</th><th class="n">Real NABs</th><th class="n">Avance CVZA</th><th class="n">Avance NABs</th></tr></thead><tbody>
-      ${recs.map(x=>{const base=x.cant!=null?x.cant:((x.nN||0)+(x.nC||0)); const bc=x.cant!=null?x.cant:x.nC, bn=x.cant!=null?x.cant:x.nN; return `<tr class="${x.total?(x.pv==='ZUPPA'?'tot':'sub'):''}"><td>${esc(x.pv)}</td><td class="n">${base||'–'}</td><td class="n">${x.realC??'–'}</td><td class="n">${x.realN??'–'}</td><td class="n">${bc&&x.realC!=null?pc(x.realC/bc):'–'}</td><td class="n">${bn&&x.realN!=null?pc(x.realN/bn):'–'}</td></tr>`;}).join('')}
-      </tbody></table></div>`:''}
-    ${rb&&M.indexOf(p.mes)>=0?`<p class="hint" style="margin:8px 0 0">Calculado con la facturación: de los ${regs.length} relevados en ${mesLab(prev)}, ${recC} compraron cerveza y ${recN} NABs en ${mesLab(p.mes)}${p.mes===M[MI]?' (mes en curso)':''}.</p>`:''}
+    ${recuperadosPanel(p, regs, recs)}
+
     </div>`;}).join('')}`;
   v.querySelectorAll('#pdBase button').forEach(b=>b.onclick=()=>{PD.base=b.dataset.v; rPda();});
   v.querySelectorAll('.evid button').forEach(b=>b.onclick=()=>verImagen(b.dataset.src, b.dataset.cap));
 }
 
+function recuperadosPanel(p, regs, recs){
+  const i=M.indexOf(p.mes); const enCurso=p.mes===M[MI];
+  const hojaTiene=recs.some(x=>!x.total&&(x.realC!=null||x.realN!=null));
+  let filas;
+  if(hojaTiene){
+    filas=recs.filter(x=>!x.total).map(x=>{ const n=x.cant!=null?x.cant:((x.nN||0)+(x.nC||0)); return {pv:x.pv, n, c:x.realC||0, nn:x.realN||0, bc:x.cant!=null?x.cant:(x.nC||0), bn:x.cant!=null?x.cant:(x.nN||0)}; });
+  } else {
+    const g={}; regs.forEach(r=>{ const c=CLI[r.cod]; const pv=r.pv||(c||{}).pv||'–'; const o=g[pv]||(g[pv]={pv,n:0,c:0,nn:0}); o.n++; if(c&&i>=0&&i<=MI){ if((c.c||[])[i]>0) o.c++; if((c.n||[])[i]>0) o.nn++; } });
+    filas=Object.values(g).map(o=>({...o,bc:o.n,bn:o.n}));
+  }
+  if(!filas.length) return '';
+  filas.sort((a,b)=>(b.c+b.nn)/Math.max(1,b.n)-(a.c+a.nn)/Math.max(1,a.n));
+  const T=filas.reduce((t,x)=>({n:t.n+x.n,c:t.c+x.c,nn:t.nn+x.nn,bc:t.bc+x.bc,bn:t.bn+x.bn}),{n:0,c:0,nn:0,bc:0,bn:0});
+  const row=(x,tot)=>`<div class="rc ${tot?'tot':''}"><span class="bn">${tot?'':avatar(x.pv,spvDe(x.pv))}<b>${tot?'Total':(x.pv==='–'?'Sin promotor (bajas)':esc(x.pv))}</b></span><span class="rn"><b>${x.n}</b> relevados</span>
+    <span class="rb"><span class="rl">Cerveza</span>${barra(x.bc?x.c/x.bc:0,null,'--s4')}<b>${x.c}</b><span class="hint">${x.bc?pc(x.c/x.bc):'–'}</span></span>
+    <span class="rb"><span class="rl">NABs</span>${barra(x.bn?x.nn/x.bn:0,null,'--s1')}<b>${x.nn}</b><span class="hint">${x.bn?pc(x.nn/x.bn):'–'}</span></span></div>`;
+  return `<div class="recup"><div class="ph" style="margin:14px 0 6px"><h3 style="font-size:15px">Clientes recuperados en ${mesLL(p.mes)}</h3><span class="hint">${hojaTiene?'informado en la hoja':'calculado con la facturación'+(enCurso?' · mes en curso, se completa a fin de mes':'')}</span></div>
+    ${row(T,true)}${filas.map(x=>row(x)).join('')}</div>`;
+}
 function evid(mes,sec){
   const ims=((D.data.evidencias||{})[mes]||{})[sec]||[];
   const cap=`Acción ${sec==='cerveza'?'Cerveza':'NABs'} · ${mesLL(mes)}`;
@@ -1069,21 +1303,24 @@ async function borrarVisita(id){
 }
 
 /* ====================== MAPA ====================== */
-let MAP=null, LAYER=null; const MP={hz:'u3'};
+let MAP=null, LAYER=null; const MP={hz:'cnc', acum:false};
 function rMapa(){
   const v=$('#v-mapa'); const un=S.un;
   if(!v.dataset.ok){
     v.innerHTML=`<div class="sec-h"><h2>Mapa de clientes no compradores</h2><p>Color por antigüedad de la no compra. Tocá un punto para ver el cliente.</p></div>
-    <div class="filters" style="padding:0"><div class="f"><label for="mpHz">Mostrar</label><select id="mpHz"><option value="u3">CNC U3M</option><option value="u6">CNC U6M</option><option value="u12">CNC U12M</option><option value="u1">Sin compra el último mes</option></select></div>
-    <div id="mpLeg" style="align-self:center"></div><span class="hint" id="mpCount" style="align-self:center"></span></div>
+    <div id="mpBar"></div>
+    <div class="row"><div id="mpLeg"></div><span class="hint" id="mpCount"></span></div>
     <div id="map" role="region" aria-label="Mapa de CNC"></div>`;
-    v.dataset.ok=1; $('#mpHz').onchange=e=>{MP.hz=e.target.value; rMapa();};
+    v.dataset.ok=1;
   }
   $('#mpLeg').innerHTML=legend([['3 a 5 meses','--h1'],['6 a 11 meses','--h2'],['12 meses o más','--h3'],['Último mes','--s0']]);
   if(typeof L==='undefined'){ $('#map').innerHTML='<p class="hint" style="padding:16px">No se pudo cargar el mapa.</p>'; return; }
   if(!MAP){ MAP=L.map('map',{scrollWheelZoom:false}).setView([-32.93,-68.78],11); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap'}).addTo(MAP); }
   if(LAYER) LAYER.remove(); LAYER=L.layerGroup().addTo(MAP);
-  const pts=[]; clientesFiltrados().forEach(c=>{ if(!c.geo) return; const f=flags(c,un); if(!f||!f[MP.hz]) return; pts.push([c,f]); });
+  const cs=clientesFiltrados().map(c=>[c,flags(c,un)]).filter(([c,f])=>f&&c.geo);
+  $('#mpBar').innerHTML=hzBar('mpHzBar', MP.hz, MP.acum, k=>cs.filter(([,f])=>enHz(f,k,MP.acum)).length, [['u1','Sin compra el último mes']]);
+  bindHzBar('mpHzBar', MP, rMapa);
+  const pts=cs.filter(([,f])=>enHz(f,MP.hz,MP.acum));
   const col=f=>cssv(f.bucket===3?'--h3':f.bucket===2?'--h2':f.bucket===1?'--h1':'--s0');
   pts.forEach(([c,f])=>{ L.circleMarker(c.geo,{radius:6,color:cssv('--panel'),weight:1.5,fillColor:col(f),fillOpacity:.95}).bindPopup(`<b>${esc(c.rs)}</b> #${c.cod}<br>${esc(c.dom)}<br>${esc(c.pv)} · visita ${esc(c.vis)}<br>${horizonteLab(f)} · ${f.nunca?'sin compras':f.meses+' meses sin compra'}${botonesMaps(c)}`).addTo(LAYER); });
   $('#mpCount').textContent=pts.length+' clientes en el mapa';
