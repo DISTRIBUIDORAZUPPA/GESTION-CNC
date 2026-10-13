@@ -1189,8 +1189,8 @@ function rMotivos(){
 }
 
 /* ====================== PDA ====================== */
-const PD={base:'TOTAL', vista:'motivo', mes:'', prio:'', res:'', seg:'', q:'', pv:'', pag:0, abierto:null};
-function segVista(){ return `<div class="f"><label>Vista</label><div class="seg" id="pdVista"><button type="button" data-v="motivo" aria-pressed="${PD.vista==='motivo'}">Por motivo</button><button type="button" data-v="cliente" aria-pressed="${PD.vista==='cliente'}">Por cliente <span class="beta">prueba</span></button></div></div>`; }
+const PD={base:'TOTAL', vista:'motivo', un:'c', mes:'', mot:'', res:'', seg:'', q:'', pv:'', pag:0, abierto:null};
+function segVista(){ return `<div class="f"><label>Vista</label><div class="seg" id="pdVista"><button type="button" data-v="motivo" aria-pressed="${PD.vista==='motivo'}">PDA BEES Force</button><button type="button" data-v="cliente" aria-pressed="${PD.vista==='cliente'}">Últimos 3 meses · por cliente</button></div></div>`; }
 function bindVista(v){ v.querySelectorAll('#pdVista button').forEach(b=>b.onclick=()=>{PD.vista=b.dataset.v; rPda(); enviarAlto();}); }
 function rPda(){
   if(PD.vista==='cliente') return rPdaCliente();
@@ -1221,191 +1221,154 @@ function rPda(){
   v.querySelectorAll('.evid button').forEach(b=>b.onclick=()=>verImagen(b.dataset.src, b.dataset.cap));
 }
 
-/* ====================== PDA POR CLIENTE (prueba) ====================== */
-// Plan SMART por cliente del mes M: CNC U3M de Cerveza o NABs al cierre de M-1 (sin compra en M-3..M-1).
-// Motivo = último relevamiento BEES Force hasta M-1. Acción = PDA del mes. Resultado = facturación real.
-const PDC_ACC={'2026-05':['combo de latas 473 para no compradores bajo drop (24+0,6)','6 Pepsi Black lata + 6 Pepsi Black 500 con 50 % de ahorro'],
-  '2026-06':['1 cajón de Quilmes 1 L a PTR mínimo (tope 2 por cliente)','50 % en Pepsi 1,5 L + 2 L'],
-  '2026-07':['1 cajón de Quilmes y Andes 1 L a PTR mínimo (tope 2 por cliente)','H2O 1,5 L 2+2 para competir'],
-  '2026-08':['latones Bajo Cero y 1890 a $2.000 de PTR','2 packs de Gatorade No Sugar con 43 % de descuento'],
-  '2026-09':['latones Bajo Cero y 1890 a $2.000 de PTR','H2O 500 cc 4+4 mixeando sabores, por BEES']};
-const PDC_UNL={c:'Cerveza',n:'NABs'}, PDC_UNK={c:'CVZA',n:'NABS'};
-const PDC_CACHE={};
-let PDC_REGS=null;
-function pdcAccion(mes){
-  if(PDC_ACC[mes]) return PDC_ACC[mes];
-  const b=(D.data.pda.total||[]).find(x=>x.mes===mes);
-  const t=x=>{ const a=((b||{})[x]||[]).map(r=>r.accion).find(Boolean); if(!a) return 'la acción del PDA del mes'; const l=a.toLowerCase(); return l.charAt(0)+l.slice(1); };
-  return [t('cerveza'),t('nabs')];
-}
-function pdcMotivo(cod,uns,hasta){
-  if(!PDC_REGS){ PDC_REGS={}; const add=(b,un)=>b.regs.forEach(r=>{ (PDC_REGS[r.cod]||(PDC_REGS[r.cod]=[])).push({...r,mes:b.mes,un:un||r.un}); });
-    D.data.motivos.total.forEach(b=>add(b,'TOTAL')); D.data.motivos.un.forEach(b=>add(b)); }
-  const ok=uns.map(k=>PDC_UNK[k]).concat('TOTAL'); let best=null, bk='';
-  (PDC_REGS[cod]||[]).forEach(r=>{ if(r.mes>hasta || !ok.includes(r.un)) return; const k=r.mes+(r.un!=='TOTAL'?'1':'0')+(r.fecha||''); if(!best||k>bk){best=r;bk=k;} });
-  return best;
-}
-function pdcHabil(y,m,dia){ const f=new Date(Date.UTC(y,m-1,dia)); while([0,6].includes(f.getUTCDay())) f.setUTCDate(f.getUTCDate()-1); return f.toISOString().slice(0,10); }
-function pdcMeses(){ // meses con PDA cargado + mes en curso, desde el primer relevamiento
-  const pm=new Set((D.data.pda.total||[]).map(b=>b.mes)); pm.add(M[MI]);
-  return M.filter((m,i)=>i>=3 && i<=MI && pm.has(m));
-}
-function pdcConstruir(mes){
-  if(PDC_CACHE[mes]) return PDC_CACHE[mes];
-  const m=M.indexOf(mes), enCurso=m===MI;
-  const eleg=(c,k)=>!c.alta || c.alta.slice(0,7)<=M[m-k];
-  const sc=(s,k)=>{ for(let j=1;j<=k;j++){ if(s[m-j]>0) return false; } return true; };
-  const rows=[];
-  D.data.clientes.forEach(c=>{
-    const us=['c','n'].filter(k=>c[k] && sc(c[k],3) && eleg(c,3)); if(!us.length) return;
-    const I={};
-    ['c','n'].forEach(k=>{ const s=c[k]; if(!s) return; let ms=0; for(let i=m-1;i>=0;i--){ if(s[i]>0) break; ms++; }
-      const prev=[]; for(let i=0;i<m;i++) if(s[i]>0) prev.push(i);
-      let luego=false; for(let i=m;i<=MI;i++) if(s[i]>0) luego=true;
-      I[k]={ms, nunca:!prev.length, ult:prev.length?M[prev[prev.length-1]]:null, vol:prev.length?prev.reduce((t,i)=>t+s[i],0)/prev.length:0, res:s[m]||0, luego}; });
-    const tramo=Math.min(...us.map(k=>I[k].ms)), nunca=us.every(k=>I[k].nunca);
-    const vol=us.reduce((t,k)=>t+I[k].vol,0), edf=(c.edfC||0)+(c.edfU||0);
-    const mot=pdcMotivo(c.cod,us,sumaMes(mes,-1));
-    const tot12 = m>=12 && c.t && sc(c.t,12) && eleg(c,12);
-    const comp=us.filter(k=>I[k].res>0);
-    const res= comp.length && comp.length===us.length ? 'rec' : comp.length ? 'par' : enCurso ? 'cur' : 'no';
-    rows.push({c,us,I,tramo,nunca,vol,edf,mot,tot12,res,comp,hl:us.reduce((t,k)=>t+I[k].res,0),luego:us.some(k=>I[k].luego)});
-  });
-  const vs=rows.map(r=>r.vol).filter(v=>v>0).sort((a,b)=>a-b);
-  const med=vs.length? (vs.length%2? vs[(vs.length-1)/2] : (vs[vs.length/2-1]+vs[vs.length/2])/2) : 0;
-  const [y,mm]=mes.split('-').map(Number);
-  const fA=pdcHabil(y,mm,15), fB=pdcHabil(y,mm,new Date(Date.UTC(y,mm,0)).getUTCDate());
-  rows.forEach(r=>{ const t=r.tramo, v=r.vol;
-    r.prio= r.nunca?'C' : (t<=5 && (v>=med||r.edf>0||r.mot))?'A' : (t<=5 || (t<=11 && (v>=med||r.edf>0)))?'B':'C';
-    r.fecha= r.prio==='A'?fA:fB; });
-  rows.sort((a,b)=>'ABC'.indexOf(a.prio)-'ABC'.indexOf(b.prio) || b.vol-a.vol);
-  return PDC_CACHE[mes]={rows,med,m,enCurso,fA,fB};
-}
-function pdcTextos(r,mes){
-  const c=r.c, us=r.us, I=r.I, mo=r.mot, acc=pdcAccion(mes);
-  const negs=us.map(k=>PDC_UNL[k]).join(' y ');
-  const S = r.nunca ? `Lograr la primera compra de ${negs}.` : r.tot12 ? `Definir la continuidad del cliente (sin compra en ningún negocio hace 12 meses): reactivarlo o darlo de baja.` : `Recuperar la compra de ${negs}.`;
-  const meta=k=>{ const i=I[k]; if(i.nunca) return `1 pedido facturado de ${PDC_UNL[k]} (primera compra)`; const o=Math.max(0.05,Math.round(i.vol*0.5*100)/100);
-    return `1 pedido de ${PDC_UNL[k]} ≥ ${n2(o)} HL (≈${Math.round(o*100)} L; 50 % de su promedio de ${n2(i.vol)} HL/mes)`; };
-  const Mt = r.tot12 ? 'Resultado registrado: 1 pedido facturado o baja iniciada en el tablero ABM.' : us.map(meta).join(' + ')+'.';
-  const A=[]; const mot=mo?mo.motivo:'';
-  if(r.tot12) A.push('Verificar si el PDV sigue operando. Si cerró, iniciar la baja en el tablero ABM; si opera, ofrecer la acción vigente y dejar la frecuencia en mensual (0,25).');
-  us.forEach(k=>{ const a=k==='c'?acc[0]:acc[1];
-    if(!mo) A.push(`<b>${PDC_UNL[k]}:</b> relevar el motivo en BEES Force en la primera visita y ofrecer la acción del mes (${esc(a)}).`);
-    else if(/MAYORISTA/.test(mot)) A.push(`<b>${PDC_UNL[k]}:</b> mostrar la ventaja de comprar directo contra el mayorista (entrega en el local, sin traslado, condición de pago) y cargar un pedido mínimo por BEES con la acción del mes (${esc(a)}).`);
-    else A.push(`<b>${PDC_UNL[k]}:</b> presentar la acción del mes (${esc(a)}) y comparar su precio de reventa con el que paga hoy, mostrando el margen por unidad.`); });
-  if(us.includes('c') && (c.edfC||0)>0) A.push(`Auditar la heladera (${c.edfC} EDF cerveza): estado, carga y exhibición; si no compra al plazo, evaluar el retiro para reasignarla.`);
-  if(r.nunca) A.push('Si el cliente no tiene intención de comprar, pedir la revisión del alta.');
-  const OBJ=D.data.meta.objetivos;
-  const R='Si compra, '+us.map(k=>`sale del U3M de ${PDC_UNL[k]} y suma a compradores ${PDC_UNL[k]} (objetivo ${Math.round(OBJ[PDC_UNK[k]]*100)} %)`).join(' y ')+'.';
-  return {S,M:Mt,A,R};
-}
+/* ====================== PDA ÚLTIMOS 3 MESES · POR CLIENTE ====================== */
+// Hoja PDA ULT 3 MESES ZUPPA: un plan por motivo para todos los CNC U3M del mes.
+// Cada cliente viene marcado con su motivo en las columnas MOTIVO ULT 3 MESES <MES> de CCC TOTAL / CVZA / NABS.
+const P3_UN={c:{sec:'CVZA',lab:'Cerveza',col:'--s4'},n:{sec:'NABS',lab:'NABs',col:'--s1'},t:{sec:'TOTAL',lab:'Total',col:'--s7'}};
+const P3_MOTCOL={'PRECIO NO COMPETITIVOS':'--m1','DIFERENCIA DE PRECIOS':'--m2','COMPRA EN MAYORISTA':'--m3','CLIENTE POTENCIAL':'--s0'};
 const PDC_EST=['Pendiente','En curso','Recuperado','No recuperado','Baja iniciada','Reprogramado'];
 const PDC_ESTCL={'Pendiente':'','En curso':'warn','Recuperado':'ok','No recuperado':'bad','Baja iniciada':'bad','Reprogramado':'info'};
 function pdcId(mes,cod){ return `PDA-${mes.slice(2,4)}${mes.slice(5,7)}-${cod}`; }
-function pdcAplicar(rows,mes){ rows.forEach(r=>{ const e=(D.planes||{})[pdcId(mes,r.c.cod)]||null; r.ed=e; r.prioE=(e&&e.prio)||r.prio; r.fechaE=(e&&e.fecha)||r.fecha; }); return rows; }
 function pdcPuedeEditar(r){ return S.user && !S.user.lectura && (S.user.scope==='all' || S.user.spv===r.c.spv); }
 function pdcChipSeg(r){ const e=r.ed; if(!e||!e.estado) return '<span class="hint">sin cargar</span>'; return `<span class="chip ${PDC_ESTCL[e.estado]||''}">${esc(e.estado)}</span>`; }
-const PDC_RES={rec:['ok','Recuperado'],par:['info','Parcial'],no:['bad','No recuperado'],cur:['','Sin compra aún']};
-function pdcChipRes(r){ const [cl,t]=PDC_RES[r.res]; return `<span class="chip ${cl}">${t}${r.res==='par'?' · '+r.comp.map(k=>PDC_UNL[k]).join(''):''}</span>`; }
-function pdcChipPrio(p){ return `<span class="prio p${p}">${p}</span>`; }
-function pdcEstUn(i){ if(!i) return ''; if(i.nunca) return 'nunca compró'; return i.ms+' m'; }
+function p3Bloques(){ return (D.data.pda3||[]).filter(b=>M.indexOf(b.mes)>=3); }
+function p3Motivo(code){ return (D.data.meta.motivosPda3||{})[code]||code; }
+function p3Plan(b,un,motivo){ return b?(b[P3_UN[un].sec]||[]).find(x=>x.motivo===motivo)||null:null; }
+function p3Equipo(c){ return (!S.spv||c.spv===S.spv)&&(!S.pv||c.pv===S.pv); }
+function p3Filas(mes,un){
+  const m=M.indexOf(mes), b=p3Bloques().find(x=>x.mes===mes), rows=[];
+  D.data.clientes.forEach(c=>{
+    const code=c.pm&&c.pm[un]&&c.pm[un][m]; if(!code) return;
+    const s=c[un]||[]; const motivo=p3Motivo(code);
+    let ms=0; for(let i=m-1;i>=0 && !(s[i]>0);i--) ms++;
+    let luego=false; for(let i=m;i<=MI;i++) if(s[i]>0) luego=true;
+    const plan=p3Plan(b,un,motivo);
+    const r={c,motivo,plan,ms,nunca:ms>=m,hl:s[m]||0,compro:(s[m]||0)>0,luego,enCurso:m===MI};
+    const e=(D.planes||{})[pdcId(mes,c.cod)]||null; r.ed=e; r.fecha=plan&&plan.deadline||''; r.fechaE=(e&&e.fecha)||r.fecha;
+    rows.push(r);
+  });
+  return rows;
+}
+function p3ChipRes(r){ if(r.compro) return `<span class="chip ok">Compró</span>`; if(r.enCurso) return `<span class="chip">Sin compra aún</span>`; return `<span class="chip bad">No compró</span>`; }
 function rPdaCliente(){
   const v=$('#v-pda');
-  const meses=pdcMeses(); if(!PD.mes || !meses.includes(PD.mes)) PD.mes=M[MI];
-  const P=pdcConstruir(PD.mes); pdcAplicar(P.rows,PD.mes);
-  const base=P.rows.filter(r=>(!S.spv||r.c.spv===S.spv)&&(!S.pv||r.c.pv===S.pv));
+  const bl=p3Bloques();
+  if(!bl.length){ v.innerHTML=`<div class="filters" style="padding:0">${segVista()}</div><div class="note warn"><b>No encuentro la hoja PDA ULT 3 MESES ZUPPA.</b> Pegala en el Sheet con ese nombre y actualizá el tablero.</div>`; bindVista(v); return; }
+  const un=PD.un||'c';
+  const conDatos=bl.filter(b=>D.data.clientes.some(c=>c.pm&&c.pm[un]&&c.pm[un][M.indexOf(b.mes)]));
+  if(!PD.mes || !bl.some(b=>b.mes===PD.mes)) PD.mes=(conDatos.length?conDatos[conDatos.length-1]:bl[bl.length-1]).mes;
+  const b=bl.find(x=>x.mes===PD.mes), m=M.indexOf(PD.mes), enCurso=m===MI;
+  const todas=p3Filas(PD.mes,un), base=todas.filter(r=>p3Equipo(r.c));
   const q=PD.q.trim().toLowerCase();
-  const rows=base.filter(r=>(!PD.prio||r.prioE===PD.prio)&&(!PD.res||r.res===PD.res)&&(!PD.seg||(PD.seg==='-'?!(r.ed&&r.ed.estado):r.ed&&r.ed.estado===PD.seg))&&(!PD.pv||r.c.pv===PD.pv)&&(!q||String(r.c.cod).includes(q)||(r.c.rs||'').toLowerCase().includes(q)||(r.c.dom||'').toLowerCase().includes(q)));
-  const cnt=(arr,f)=>arr.filter(f).length;
-  const nRec=cnt(base,r=>r.res==='rec'), nPar=cnt(base,r=>r.res==='par'), nAl=cnt(base,r=>r.luego||r.res==='rec'||r.res==='par');
-  // efectividad por mes (mismos filtros de equipo)
-  const efe=meses.map(mes=>{ const b=pdcAplicar(pdcConstruir(mes).rows,mes).filter(r=>(!S.spv||r.c.spv===S.spv)&&(!S.pv||r.c.pv===S.pv));
-    const a=b.filter(r=>r.prioE==='A'); return {mes,n:b.length,rec:cnt(b,r=>r.res==='rec'||r.res==='par'),al:cnt(b,r=>r.luego),nA:a.length,recA:cnt(a,r=>r.res==='rec'||r.res==='par'),cur:mes===M[MI]}; });
-  const maxN=Math.max(...efe.map(e=>e.n),1);
-  // por promotor
-  const g={}; base.forEach(r=>{ const o=g[r.c.pv]||(g[r.c.pv]={pv:r.c.pv,spv:r.c.spv,n:0,a:0,rec:0}); o.n++; if(r.prioE==='A') o.a++; if(r.res==='rec'||r.res==='par') o.rec++; });
-  const eq=Object.values(g).sort((a,b)=>b.rec/b.n-a.rec/a.n||b.n-a.n);
-  const PAG=40, pages=Math.max(1,Math.ceil(rows.length/PAG)); if(PD.pag>=pages) PD.pag=0;
+  const rows=base.filter(r=>(!PD.mot||r.motivo===PD.mot)&&(!PD.pv||r.c.pv===PD.pv)
+    &&(!PD.res||(PD.res==='si'?r.compro:PD.res==='luego'?(!r.compro&&r.luego):!r.compro&&!r.luego))
+    &&(!PD.seg||(PD.seg==='-'?!(r.ed&&r.ed.estado):r.ed&&r.ed.estado===PD.seg))
+    &&(!q||String(r.c.cod).includes(q)||(r.c.rs||'').toLowerCase().includes(q)||(r.c.dom||'').toLowerCase().includes(q)))
+    .sort((a,b)=>a.c.pv.localeCompare(b.c.pv)||a.motivo.localeCompare(b.motivo)||a.ms-b.ms);
+  const cnt=(a,f)=>a.filter(f).length;
+  const sec=b?b[P3_UN[un].sec]||[]:[];
+  const filtrado=!!(S.spv||S.pv);
+  const motivos=[...new Set(sec.map(x=>x.motivo).concat(base.map(r=>r.motivo)))];
+  const porMot={}; motivos.forEach(mo=>{ const rs=base.filter(r=>r.motivo===mo); porMot[mo]={n:rs.length,si:cnt(rs,r=>r.compro),al:cnt(rs,r=>r.compro||r.luego)}; });
+  const realHoja=sec.reduce((t,x)=>t+(x.real||0),0), cliHoja=sec.reduce((t,x)=>t+(x.clientes||0),0);
+  // efectividad por mes (con los filtros de equipo)
+  const efe=bl.map(x=>{ const rs=p3Filas(x.mes,un).filter(r=>p3Equipo(r.c)); return {mes:x.mes,n:rs.length,si:cnt(rs,r=>r.compro),copia:x.copia,calc:x.calculado||((D.data.meta.pmAuto||{})[un]||[]).includes(M.indexOf(x.mes)),cur:x.mes===M[MI]}; });
+  const maxN=Math.max(1,...efe.map(e=>e.n));
+  // recuperados por promotor: hoja + facturación
+  const uk=un==='t'?'t':un;
+  const g={}; base.forEach(r=>{ const o=g[r.c.pv]||(g[r.c.pv]={pv:r.c.pv,spv:r.c.spv,n:0,si:0}); o.n++; if(r.compro) o.si++; });
+  const hojaPv={}; (b?b.recuperados:[]).forEach(x=>hojaPv[x.pv]=x);
+  const eq=Object.values(g).sort((a,b)=>b.si/b.n-a.si/a.n||b.n-a.n);
+  const PAG=50, pages=Math.max(1,Math.ceil(rows.length/PAG)); if(PD.pag>=pages) PD.pag=0;
   const vis=rows.slice(PD.pag*PAG,(PD.pag+1)*PAG);
-  const acc=pdcAccion(PD.mes);
-  const nota = P.enCurso
-    ? `<b>Mes en curso.</b> La lista sale de los clientes sin compra en ${mesLab(M[P.m-3])}, ${mesLab(M[P.m-2])} y ${mesLab(M[P.m-1])}. El resultado se va completando con la facturación hasta fin de mes.`
-    : `<b>Reconstrucción.</b> Este plan se armó el 28/09/2026 aplicando las mismas reglas a los datos de ${mesLL(PD.mes)}, y el resultado sale de la facturación real. Sirve para medir qué funcionó; no reemplaza lo que se registró en su momento.`;
+  const avisos=[];
+  const auto=((D.data.meta.pmAuto||{})[un]||[]).includes(m);
+  if(b&&b.calculado) avisos.push(`<b>Completado por el tablero.</b> En la hoja, el bloque de ${mesLL(PD.mes)} es copia del de ${mesLL(b.copia)}: clientes, real y recuperados se calcularon con las marcas y la venta de ${mesLab(PD.mes)}, con deadline ${fDate(sec[0]&&sec[0].deadline)}. La acción y el status son los de ${mesLab(b.copia)}.`);
+  else if(b&&b.copia) avisos.push(`<b>El bloque de ${mesLL(PD.mes)} en PDA ULT 3 MESES ZUPPA es igual al de ${mesLL(b.copia)}.</b> Las acciones, cantidades y el real que se ven son los de ${mesLL(b.copia)} hasta que cargues los de ${mesLL(PD.mes)}.`);
+  if(auto) avisos.push(`<b>Marcas completadas por el tablero.</b> La columna MOTIVO ULT 3 MESES ${MES_LL[+PD.mes.slice(5,7)-1].toUpperCase()} de CCC ${P3_UN[un].sec} está vacía en la hoja; se usó la misma regla de los meses anteriores: el cliente que sigue sin comprar mantiene su motivo y el que entra al CNC queda como compra en mayorista.`);
+  if(!todas.length) avisos.push(`<b>La columna MOTIVO ULT 3 MESES ${MES_LL[+PD.mes.slice(5,7)-1].toUpperCase()} de CCC ${P3_UN[un].sec==='TOTAL'?'TOTAL':P3_UN[un].sec} está vacía.</b> Sin esa columna no se puede marcar a cada cliente con su plan.`);
   v.innerHTML=`
-  <div class="sec-h"><h2>Planes de acción por cliente <span class="beta lg">versión de prueba</span></h2><p>Un objetivo SMART por cada cliente CNC U3M de Cerveza o NABs: qué recuperar, cuánto, con qué acción y para cuándo. La prioridad ordena el trabajo del promotor y las visitas del supervisor.</p></div>
+  <div class="sec-h"><h2>PDA últimos 3 meses · por cliente</h2><p>Un plan por motivo para todos los CNC U3M del mes (hoja PDA ULT 3 MESES ZUPPA). Cada cliente queda marcado con su motivo y la acción que le corresponde; el resultado sale de la facturación.</p></div>
   <div class="filters" style="padding:0">${segVista()}
-    <div class="f"><label for="pdcMes">Mes del plan</label><select id="pdcMes">${meses.slice().reverse().map(m=>`<option value="${m}" ${m===PD.mes?'selected':''}>${mesLL(m)}${m===M[MI]?' · en curso':''}</option>`).join('')}</select></div>
-    <div class="f"><label>Prioridad</label><div class="seg" id="pdcPrio">${[['','Todas'],['A','A'],['B','B'],['C','C']].map(([k,l])=>`<button type="button" data-v="${k}" aria-pressed="${PD.prio===k}">${l}</button>`).join('')}</div></div>
-    <div class="f"><label for="pdcRes">Resultado</label><select id="pdcRes"><option value="">Todos</option>${Object.entries(PDC_RES).filter(([k])=>P.enCurso||k!=='cur').map(([k,[,t]])=>`<option value="${k}" ${PD.res===k?'selected':''}>${t}</option>`).join('')}</select></div>
+    <div class="f"><label>Negocio</label><div class="seg" id="p3Un">${['c','n','t'].map(k=>`<button type="button" data-v="${k}" aria-pressed="${un===k}">${P3_UN[k].lab}</button>`).join('')}</div></div>
+    <div class="f"><label for="p3Mes">Mes del plan</label><select id="p3Mes">${bl.slice().reverse().map(x=>`<option value="${x.mes}" ${x.mes===PD.mes?'selected':''}>${mesLL(x.mes)}${x.calculado?' · completado por el tablero':x.copia?' · copia de '+mesLab(x.copia):''}${x.mes===M[MI]?' · en curso':''}</option>`).join('')}</select></div>
+    <div class="f"><label for="p3Mot">Motivo</label><select id="p3Mot"><option value="">Todos</option>${motivos.map(mo=>`<option ${PD.mot===mo?'selected':''}>${esc(mo)}</option>`).join('')}</select></div>
+    <div class="f"><label for="p3Res">Facturación</label><select id="p3Res"><option value="">Todos</option><option value="si" ${PD.res==='si'?'selected':''}>Compró en el mes</option><option value="luego" ${PD.res==='luego'?'selected':''}>Compró después</option><option value="no" ${PD.res==='no'?'selected':''}>Sigue sin comprar</option></select></div>
     <div class="f"><label for="pdcSeg">Seguimiento</label><select id="pdcSeg"><option value="">Todos</option><option value="-" ${PD.seg==='-'?'selected':''}>Sin cargar</option>${PDC_EST.map(e=>`<option ${PD.seg===e?'selected':''}>${e}</option>`).join('')}</select></div>
-    <div class="f" style="flex:1;min-width:180px"><label for="pdcQ">Buscar</label><input id="pdcQ" placeholder="Código, razón social o domicilio" value="${esc(PD.q)}"></div>
+    <div class="f" style="flex:1;min-width:170px"><label for="pdcQ">Buscar</label><input id="pdcQ" placeholder="Código, razón social o domicilio" value="${esc(PD.q)}"></div>
     <button class="btn sm" id="pdcCsv" type="button">Descargar CSV</button>
   </div>
-  <div class="note ${P.enCurso?'':'warn'}">${nota}</div>
+  ${avisos.map(a=>`<div class="note warn">${a}</div>`).join('')}
   ${!D.api?`<div class="note warn"><b>Todavía no está conectada la planilla.</b> El seguimiento se guarda solo en este navegador hasta que se cargue la URL de la Web App en CNC_CFG.</div>`:D.planesError?`<div class="note warn"><b>No pude leer el seguimiento de la planilla.</b> Revisá que la Web App tenga la versión nueva y recargá.</div>`:''}
-  ${S.user&&!S.user.lectura?'':`<p class="hint" style="margin:0">Para cargar el seguimiento de cada cliente, ingresá como supervisor o jefe de ventas (abajo a la izquierda).</p>`}
   <div class="kpis">
-    <div class="kpi"><span class="tx"><span class="l">Clientes con plan</span><span class="v">${n0(base.length)}</span><span class="d">A ${cnt(base,r=>r.prioE==='A')} · B ${cnt(base,r=>r.prioE==='B')} · C ${cnt(base,r=>r.prioE==='C')}</span></span></div>
-    <div class="kpi"><span class="tx"><span class="l">Recuperados en el mes</span><span class="v">${n0(nRec+nPar)} <small>${pc((nRec+nPar)/Math.max(1,base.length))}</small></span><span class="d">${nRec} completos · ${nPar} en un solo negocio</span></span></div>
-    <div class="kpi"><span class="tx"><span class="l">Prioridad A recuperada</span><span class="v">${pc(cnt(base,r=>r.prioE==='A'&&(r.res==='rec'||r.res==='par'))/Math.max(1,cnt(base,r=>r.prioE==='A')))}</span><span class="d">plazo ${fDate(P.fA)} · B y C ${fDate(P.fB)}</span></span></div>
-    <div class="kpi"><span class="tx"><span class="l">Con seguimiento cargado</span><span class="v">${n0(cnt(base,r=>r.ed&&r.ed.estado))} <small>${pc(cnt(base,r=>r.ed&&r.ed.estado)/Math.max(1,base.length))}</small></span><span class="d">editado por supervisores y jefe de ventas</span></span></div>
-    <div class="kpi"><span class="tx"><span class="l">Recuperados a la fecha</span><span class="v">${P.enCurso?'–':pc(nAl/Math.max(1,base.length))}</span><span class="d">${P.enCurso?'se mide desde el mes siguiente':n0(nAl)+' compraron en el mes o después'}</span></span></div>
+    <div class="kpi"><span class="tx"><span class="l">CNC ${P3_UN[un].lab} con plan</span><span class="v">${n0(base.length)}</span><span class="d">sin compra en ${mesLab(M[m-3])}, ${mesLab(M[m-2])} y ${mesLab(M[m-1])}${filtrado?'':` · hoja: ${n0(cliHoja)}`}</span></span></div>
+    <div class="kpi"><span class="tx"><span class="l">Compraron en ${mesLab(PD.mes)}</span><span class="v">${base.length?n0(cnt(base,r=>r.compro)):'–'} <small>${base.length?pc(cnt(base,r=>r.compro)/base.length):''}</small></span><span class="d">${enCurso?'mes en curso, se completa a fin de mes':'según la facturación'}</span></span></div>
+    <div class="kpi"><span class="tx"><span class="l">${b&&b.calculado?'Real calculado':'Real informado en la hoja'}</span><span class="v">${b?n0(realHoja):'–'} <small>${b&&cliHoja?pc(realHoja/cliHoja):''}</small></span><span class="d">${b&&b.calculado?'el bloque de la hoja es copia del mes anterior':filtrado?'total Zuppa (la hoja no abre por equipo)':'suma de la columna REAL'}</span></span></div>
+    <div class="kpi"><span class="tx"><span class="l">Recuperados a la fecha</span><span class="v">${enCurso||!base.length?'–':pc(cnt(base,r=>r.compro||r.luego)/base.length)}</span><span class="d">${enCurso?'se mide desde el mes siguiente':!base.length?'sin clientes marcados':n0(cnt(base,r=>r.compro||r.luego))+' compraron en el mes o después'}</span></span></div>
+    <div class="kpi"><span class="tx"><span class="l">Con seguimiento cargado</span><span class="v">${n0(cnt(base,r=>r.ed&&r.ed.estado))}</span><span class="d">supervisores y jefe de ventas</span></span></div>
   </div>
+  <div class="panel"><div class="ph"><h3>Plan por motivo · ${P3_UN[un].lab} · ${mesLL(PD.mes)}</h3><span class="hint">acción, estado y real de la hoja · compraron según facturación${filtrado?' (con el filtro de equipo)':''}</span></div>
+    <div class="tw"><table><thead><tr><th>Motivo</th><th>Acción</th><th>Estado</th><th>Deadline</th><th>Responsable</th><th class="n">Clientes hoja</th><th class="n">Real hoja</th><th class="n">Marcados${filtrado?' (equipo)':''}</th><th class="n">Compraron</th></tr></thead><tbody>
+    ${motivos.map(mo=>{ const x=sec.find(y=>y.motivo===mo)||{}; const o=porMot[mo]; return `<tr class="click" data-mot="${esc(mo)}"><td><span class="mk"><i class="dot" style="background:var(${P3_MOTCOL[mo]||'--s0'})"></i>${esc(mo.toLowerCase())}</span></td>
+      <td class="txt">${x.accion?esc(x.accion):'<span class="chip warn">sin acción</span>'}</td><td>${x.status?`<span class="chip ${/NO REALIZ/.test(x.status)?'bad':/REALIZ/.test(x.status)?'ok':''}">${esc(x.status.toLowerCase())}</span>`:'<span class="chip warn">sin estado</span>'}</td>
+      <td>${fDate(x.deadline)}</td><td>${esc(x.resp||'')}</td><td class="n">${x.clientes??'–'}</td><td class="n">${x.real??'–'}${x.clientes?` <span class="hint">${pc((x.real||0)/x.clientes)}</span>`:''}</td>
+      <td class="n">${o.n}</td><td class="n"><b>${o.si}</b> <span class="hint">${o.n?pc(o.si/o.n):''}</span></td></tr>`; }).join('')}
+    </tbody></table></div>
+    <p class="hint" style="margin:8px 0 0">"Real hoja" es lo que informa la hoja; "Compraron" lo calcula el tablero con la venta del mes de cada cliente marcado. Tocá un motivo para filtrar la lista.</p></div>
   <div class="grid2">
-    <div class="panel"><div class="ph"><h3>Efectividad por mes</h3><span class="hint">tocá un mes para verlo</span></div>
-      <div class="efm">${efe.map(e=>`<button type="button" class="efr ${e.mes===PD.mes?'on':''}" data-mes="${e.mes}"><span class="efl">${mesLab(e.mes)}${e.cur?' <i>en curso</i>':''}</span>
-        <span class="efb"><i class="t" style="width:${e.n/maxN*100}%"></i><i class="r" style="width:${e.rec/maxN*100}%"></i></span>
-        <span class="efv"><b>${pc(e.rec/Math.max(1,e.n))}</b> <span class="hint">${e.rec} de ${e.n}</span></span>
-        <span class="efv"><span class="hint">A</span> <b>${pc(e.recA/Math.max(1,e.nA))}</b></span></button>`).join('')}</div>
-      <p class="hint" style="margin:10px 0 0">Barra gris: clientes con plan. Barra verde: compraron en el mes del plan (en todos o en alguno de los negocios del objetivo).</p></div>
-    <div class="panel"><div class="ph"><h3>Por promotor · ${mesLab(PD.mes)}</h3><span class="hint">tocá para filtrar</span></div>
-      <div class="tw" style="max-height:330px"><table><thead><tr><th>Promotor</th><th class="n">Clientes</th><th class="n">Prioridad A</th><th>Recuperados</th></tr></thead><tbody>
-      ${eq.map(o=>`<tr class="click ${PD.pv===o.pv?'sel':''}" data-pv="${esc(o.pv)}"><td><span class="bn">${avatar(o.pv,o.spv)}<b>${esc(o.pv)}</b></span></td><td class="n">${o.n}</td><td class="n">${o.a}</td><td><span class="rb">${barra(o.rec/o.n,null,'--good')}<b>${o.rec}</b><span class="hint">${pc(o.rec/o.n)}</span></span></td></tr>`).join('')}
+    <div class="panel"><div class="ph"><h3>Efectividad por mes · ${P3_UN[un].lab}</h3><span class="hint">tocá un mes para verlo</span></div>
+      <div class="efm">${efe.map(e=>`<button type="button" class="efr ${e.mes===PD.mes?'on':''}" data-mes="${e.mes}"><span class="efl">${mesLab(e.mes)}${e.cur?' <i>en curso</i>':e.calc?' <i>calculado</i>':e.copia?' <i>copia</i>':''}</span>
+        <span class="efb"><i class="t" style="width:${e.n/maxN*100}%"></i><i class="r" style="width:${e.si/maxN*100}%"></i></span>
+        <span class="efv"><b>${e.n?pc(e.si/e.n):'–'}</b> <span class="hint">${e.si} de ${e.n}</span></span><span></span></button>`).join('')}</div>
+      <p class="hint" style="margin:10px 0 0">Barra gris: clientes marcados con plan. Barra verde: compraron ${P3_UN[un].lab.toLowerCase()} en el mes del plan.</p></div>
+    <div class="panel"><div class="ph"><h3>Recuperados por promotor · ${mesLab(PD.mes)}</h3><span class="hint">tocá para filtrar</span></div>
+      <div class="tw" style="max-height:340px"><table><thead><tr><th>Promotor</th><th class="n">Marcados</th><th>Compraron (facturación)</th><th class="n">Hoja: cant / real</th></tr></thead><tbody>
+      ${eq.map(o=>{ const h=hojaPv[o.pv]; return `<tr class="click ${PD.pv===o.pv?'sel':''}" data-pv="${esc(o.pv)}"><td><span class="bn">${avatar(o.pv,o.spv)}<b>${esc(o.pv)}</b></span></td><td class="n">${o.n}</td><td><span class="rb">${barra(o.si/o.n,null,'--good')}<b>${o.si}</b><span class="hint">${pc(o.si/o.n)}</span></span></td><td class="n">${h&&h.cant[uk]!=null?`${h.cant[uk]} / ${h.real[uk]??'–'}`:'–'}</td></tr>`; }).join('')}
       </tbody></table></div></div>
   </div>
-  <div class="panel"><div class="ph"><h3>Plan por cliente · ${mesLL(PD.mes)}</h3><span class="chip info">${n0(rows.length)} clientes${PD.pv?' · '+esc(PD.pv)+' <button type="button" class="x" id="pdcPvX" aria-label="Quitar filtro de promotor">×</button>':''}</span></div>
-    <p class="hint" style="margin:0 0 8px">Acción del mes · Cerveza: ${esc(acc[0])} · NABs: ${esc(acc[1])}. Tocá un cliente para ver su plan SMART completo.</p>
-    <div class="tw"><table class="pdc"><thead><tr><th>Prio.</th><th>Cliente</th><th>Promotor</th><th>Negocio · meses sin compra</th><th>Motivo BEES Force</th><th>M · Meta del mes</th><th>T · Plazo</th><th>Facturación</th><th>Seguimiento</th></tr></thead><tbody>
-    ${vis.map(r=>{ const c=r.c, open=PD.abierto===c.cod, t=pdcTextos(r,PD.mes);
-      return `<tr class="click ${open?'sel':''}" data-cod="${c.cod}"><td>${pdcChipPrio(r.prioE)}${r.prioE!==r.prio?'<br><span class="hint" title="Prioridad calculada">era '+r.prio+'</span>':''}</td>
+  <div class="panel"><div class="ph"><h3>Clientes con plan · ${P3_UN[un].lab} · ${mesLL(PD.mes)}</h3><span class="chip info">${n0(rows.length)} clientes${PD.pv?' · '+esc(PD.pv)+' <button type="button" class="x" id="pdcPvX" aria-label="Quitar filtro de promotor">×</button>':''}${PD.mot?' · '+esc(PD.mot.toLowerCase())+' <button type="button" class="x" id="p3MotX" aria-label="Quitar filtro de motivo">×</button>':''}</span></div>
+    <p class="hint" style="margin:0 0 8px">La acción de cada motivo está en el cuadro de arriba. Tocá un cliente para verla junto a su seguimiento y cargarlo.</p>
+    <div class="tw"><table class="pdc"><thead><tr><th>Cliente</th><th>Promotor</th><th>Motivo</th><th class="n">Meses sin compra</th><th>Deadline</th><th>Facturación</th><th>Seguimiento</th></tr></thead><tbody>
+    ${vis.map(r=>{ const c=r.c, open=PD.abierto===c.cod, acc=r.plan&&r.plan.accion||'';
+      return `<tr class="click ${open?'sel':''}" data-cod="${c.cod}">
       <td><b>${esc(c.rs)}</b><br><span class="hint">#${c.cod} · ${esc(c.loc)} · visita ${esc(c.vis||'–')}</span></td>
       <td><span class="bn">${avatar(c.pv,c.spv)}${esc(c.pv)}</span></td>
-      <td><div class="neg">${r.us.map(k=>`<span class="chip ${k==='c'?'cz':'nb'}">${PDC_UNL[k]} · ${pdcEstUn(r.I[k])}</span>`).join('')}${r.edf?`<span class="chip">EDF ${c.edfC||0}/${c.edfU||0}</span>`:''}</div></td>
-      <td>${r.mot?`<span class="mk"><i class="dot" style="background:var(${MOT_COL[r.mot.motivo]||'--s0'})"></i>${esc(r.mot.motivo.toLowerCase())}</span><br><span class="hint">${mesLab(r.mot.mes)}</span>`:'<span class="hint">sin relevar</span>'}</td>
-      <td>${r.tot12?'<span class="chip bad">reactivar o dar de baja</span>':r.us.map(k=>r.I[k].nunca?`<span class="hint">${PDC_UNL[k]}:</span> 1.ª compra`:`<span style="white-space:nowrap"><span class="hint">${PDC_UNL[k]}:</span> ≥ ${n2(Math.max(0.05,Math.round(r.I[k].vol*50)/100))} HL</span>`).join('<br>')}</td><td class="mono" style="white-space:nowrap">${fDate(r.fechaE)}${r.fechaE!==r.fecha?'<br><span class="hint">editada</span>':''}</td><td>${pdcChipRes(r)}${r.hl?`<br><span class="hint">${n2(r.hl)} HL</span>`:''}${!P.enCurso&&r.res==='no'&&r.luego?'<br><span class="hint">compró después</span>':''}</td>
+      <td><span class="mk"><i class="dot" style="background:var(${P3_MOTCOL[r.motivo]||'--s0'})"></i>${esc(r.motivo.toLowerCase())}</span></td>
+      <td class="n">${r.nunca?`<span title="Sin compras desde ${mesLab(M[0])}, el primer mes de la serie">${r.ms}+</span>`:r.ms}</td>
+      <td class="mono" style="white-space:nowrap">${fDate(r.fechaE)}${r.fechaE!==r.fecha?'<br><span class="hint">editada</span>':''}</td>
+      <td>${p3ChipRes(r)}${r.hl?`<br><span class="hint">${n2(r.hl)} HL</span>`:''}${!r.compro&&r.luego?'<br><span class="hint">compró después</span>':''}</td>
       <td>${pdcChipSeg(r)}${r.ed&&r.ed.usuario?`<br><span class="hint">${esc(r.ed.usuario)}${r.ed.actualizado?' · '+fDate(r.ed.actualizado):''}</span>`:''}</td></tr>
-      ${open?`<tr class="det"><td colspan="9"><div class="smart">
-        <div><span class="k">S</span><b>Específico</b><p>${esc(t.S)}</p></div>
-        <div><span class="k">M</span><b>Medible</b><p>${esc(t.M)}</p>${r.ed&&r.ed.meta?`<p><b>Meta acordada:</b> ${esc(r.ed.meta)} HL</p>`:''}</div>
-        <div class="w"><span class="k">A</span><b>Alcanzable · acción</b><p>${t.A.join('<br>')}</p>${r.ed&&r.ed.accion?`<p><b>Acción acordada:</b> ${esc(r.ed.accion)}</p>`:''}${r.mot&&r.mot.resp?`<p class="hint">Respuesta del promotor (${mesLab(r.mot.mes)}): “${esc(r.mot.resp)}”</p>`:''}</div>
-        <div><span class="k">R</span><b>Relevante</b><p>${esc(t.R)}</p></div>
-        <div><span class="k">T</span><b>Plazo</b><p>${fDate(r.fechaE)} · prioridad ${r.prioE}${r.fechaE!==r.fecha?' (editada; calculada '+fDate(r.fecha)+')':r.prio==='A'?' (día hábil 15)':' (último día hábil)'}</p></div>
-        <div><span class="k ok">✓</span><b>Resultado</b><p>${PDC_RES[r.res][1]}${r.hl?' · '+n2(r.hl)+' HL facturados':''}${P.enCurso?'':' · '+(r.luego||r.res!=='no'?'recuperado a la fecha':'sigue sin comprar')}</p><button type="button" class="btn sm" data-ficha="${c.cod}">Ficha del cliente</button></div>
+      ${open?`<tr class="det"><td colspan="7"><div class="smart">
+        <div class="w"><span class="k">A</span><b>Acción del PDA · ${esc(r.motivo.toLowerCase())}</b><p>${acc?esc(acc):'La hoja no tiene acción para este motivo en este mes.'}</p>${r.ed&&r.ed.accion?`<p><b>Acción acordada:</b> ${esc(r.ed.accion)}</p>`:''}</div>
+        <div><span class="k">T</span><b>Plazo y responsable</b><p>Deadline ${fDate(r.fechaE)}${r.fechaE!==r.fecha?' (editado; en la hoja '+fDate(r.fecha)+')':''}<br>Responsable: ${esc(r.plan&&r.plan.resp||'–')}<br>Estado en la hoja: ${esc((r.plan&&r.plan.status||'–').toLowerCase())}</p></div>
+        <div><span class="k ok">✓</span><b>Resultado</b><p>${r.compro?'Compró '+P3_UN[un].lab.toLowerCase()+' en '+mesLab(PD.mes)+' · '+n2(r.hl)+' HL':r.enCurso?'Todavía no compró este mes':'No compró en '+mesLab(PD.mes)+(r.luego?', pero compró después':'; sigue sin comprar')}</p>${r.ed&&r.ed.meta?`<p><b>Meta acordada:</b> ${esc(r.ed.meta)} HL</p>`:''}<button type="button" class="btn sm" data-ficha="${c.cod}">Ficha del cliente</button></div>
       </div>${pdcForm(r)}</td></tr>`:''}`; }).join('')}
     </tbody></table></div>
     ${pages>1?`<div class="row"><button class="btn sm" id="pdcPrev" ${PD.pag?'':'disabled'}>← Anterior</button><span class="hint">Página ${PD.pag+1} de ${pages}</span><button class="btn sm" id="pdcNext" ${PD.pag<pages-1?'':'disabled'}>Siguiente →</button></div>`:''}
   </div>
-  <p class="hint">Cómo se arma: prioridad A = 3 a 5 meses sin compra y (volumen ≥ mediana del mes, con EDF o con motivo relevado); B = resto de 3 a 5 meses, o 6 a 11 meses con volumen ≥ mediana o EDF; C = 12 meses o más, nunca compró o volumen bajo. Meta = 50 % del promedio mensual histórico del cliente (mínimo 0,05 HL). Motivo = último relevamiento BEES Force hasta el mes anterior al plan.</p>`;
+  ${S.user&&!S.user.lectura?'':`<p class="hint">Para cargar el seguimiento de cada cliente, ingresá como supervisor o jefe de ventas.</p>`}`;
   bindVista(v);
   const re=()=>{ rPdaCliente(); enviarAlto(); };
-  $('#pdcMes').onchange=e=>{PD.mes=e.target.value; PD.pag=0; PD.abierto=null; re();};
-  v.querySelectorAll('#pdcPrio button').forEach(b=>b.onclick=()=>{PD.prio=b.dataset.v; PD.pag=0; re();});
-  $('#pdcRes').onchange=e=>{PD.res=e.target.value; PD.pag=0; re();};
+  v.querySelectorAll('#p3Un button').forEach(x=>x.onclick=()=>{PD.un=x.dataset.v; PD.mot=''; PD.pag=0; PD.abierto=null; re();});
+  $('#p3Mes').onchange=e=>{PD.mes=e.target.value; PD.pag=0; PD.abierto=null; re();};
+  $('#p3Mot').onchange=e=>{PD.mot=e.target.value; PD.pag=0; re();};
+  $('#p3Res').onchange=e=>{PD.res=e.target.value; PD.pag=0; re();};
   $('#pdcSeg').onchange=e=>{PD.seg=e.target.value; PD.pag=0; re();};
   $('#pdcQ').addEventListener('input',e=>{ PD.q=e.target.value; PD.pag=0; clearTimeout(PD.t); PD.t=setTimeout(()=>{ re(); const i=$('#pdcQ'); i.focus(); i.setSelectionRange(i.value.length,i.value.length); },250); });
-  v.querySelectorAll('.efr').forEach(b=>b.onclick=()=>{PD.mes=b.dataset.mes; PD.pag=0; PD.abierto=null; re();});
+  v.querySelectorAll('.efr').forEach(x=>x.onclick=()=>{PD.mes=x.dataset.mes; PD.pag=0; PD.abierto=null; re();});
   v.querySelectorAll('tr[data-pv]').forEach(tr=>tr.onclick=()=>{PD.pv=PD.pv===tr.dataset.pv?'':tr.dataset.pv; PD.pag=0; re();});
-  const x=$('#pdcPvX'); if(x) x.onclick=()=>{PD.pv=''; re();};
+  v.querySelectorAll('tr[data-mot]').forEach(tr=>tr.onclick=()=>{PD.mot=PD.mot===tr.dataset.mot?'':tr.dataset.mot; PD.pag=0; re();});
+  const x1=$('#pdcPvX'); if(x1) x1.onclick=e=>{e.stopPropagation(); PD.pv=''; re();};
+  const x2=$('#p3MotX'); if(x2) x2.onclick=e=>{e.stopPropagation(); PD.mot=''; re();};
   v.querySelectorAll('table.pdc tr[data-cod]').forEach(tr=>tr.onclick=()=>{ const c=+tr.dataset.cod; PD.abierto=PD.abierto===c?null:c; re(); });
-  const fm=$('#pdcForm'); if(fm){ fm.onclick=e=>e.stopPropagation(); fm.onsubmit=async e=>{ e.preventDefault(); const r=P.rows.find(x=>x.c.cod===+fm.dataset.cod); if(!r) return;
-    const f=new FormData(fm); const pl={id:pdcId(PD.mes,r.c.cod),mes:PD.mes,cod:String(r.c.cod),cliente:r.c.rs,spv:r.c.spv,pv:r.c.pv,
-      prio:f.get('prio')===r.prio?'':f.get('prio'),estado:f.get('estado'),accion:f.get('accion').trim(),meta:f.get('meta').trim().replace('.',','),fecha:f.get('fecha')===r.fecha?'':f.get('fecha'),obs:f.get('obs').trim(),usuario:S.user.name};
-    const b=fm.querySelector('button[type=submit]'); b.disabled=true; b.textContent='Guardando…';
-    try{ await guardarPlan(pl); toast('Seguimiento guardado'); re(); }catch(err){ b.disabled=false; b.textContent='Guardar seguimiento'; $('#pdcFormErr').textContent='No se pudo guardar: '+err.message; } }; }
-  v.querySelectorAll('[data-ficha]').forEach(b=>b.onclick=e=>{ e.stopPropagation(); fichaCliente(+b.dataset.ficha); });
+  const fm=$('#pdcForm'); if(fm){ fm.onclick=e=>e.stopPropagation(); fm.onsubmit=async e=>{ e.preventDefault(); const r=rows.find(x=>x.c.cod===+fm.dataset.cod); if(!r) return;
+    const f=new FormData(fm); const pl={id:pdcId(PD.mes,r.c.cod),mes:PD.mes,cod:String(r.c.cod),cliente:r.c.rs,spv:r.c.spv,pv:r.c.pv,prio:'',
+      estado:f.get('estado'),accion:f.get('accion').trim(),meta:f.get('meta').trim().replace('.',','),fecha:f.get('fecha')===r.fecha?'':f.get('fecha'),obs:f.get('obs').trim(),usuario:S.user.name};
+    const bt=fm.querySelector('button[type=submit]'); bt.disabled=true; bt.textContent='Guardando…';
+    try{ await guardarPlan(pl); toast('Seguimiento guardado'); re(); }catch(err){ bt.disabled=false; bt.textContent='Guardar seguimiento'; $('#pdcFormErr').textContent='No se pudo guardar: '+err.message; } }; }
+  v.querySelectorAll('[data-ficha]').forEach(x=>x.onclick=e=>{ e.stopPropagation(); fichaCliente(+x.dataset.ficha); });
   const pv=$('#pdcPrev'), nx=$('#pdcNext'); if(pv) pv.onclick=()=>{PD.pag--; re();}; if(nx) nx.onclick=()=>{PD.pag++; re();};
-  $('#pdcCsv').onclick=()=>pdcCsv(rows,PD.mes,P);
+  $('#pdcCsv').onclick=()=>p3Csv(rows,PD.mes,un);
 }
 function pdcForm(r){
   if(!pdcPuedeEditar(r)){ return r.ed&&r.ed.obs?`<div class="note" style="margin-top:12px"><b>Observaciones del seguimiento:</b> ${esc(r.ed.obs)}</div>`:''; }
@@ -1413,24 +1376,21 @@ function pdcForm(r){
   return `<form class="pdcf" id="pdcForm" data-cod="${r.c.cod}"><h4>Seguimiento <span class="hint">se guarda en la hoja CNC_PLANES${e.actualizado?' · última edición '+esc(e.usuario||'')+' '+fDate(e.actualizado):''}</span></h4>
     <div class="pdcg">
       <div class="f"><label>Estado</label><select name="estado">${PDC_EST.map(x=>`<option ${(e.estado||'Pendiente')===x?'selected':''}>${x}</option>`).join('')}</select></div>
-      <div class="f"><label>Prioridad</label><select name="prio">${['A','B','C'].map(x=>`<option ${r.prioE===x?'selected':''}>${x}</option>`).join('')}</select></div>
       <div class="f"><label>Fecha límite</label><input type="date" name="fecha" value="${esc(r.fechaE)}"></div>
-      <div class="f"><label>Meta acordada (HL)</label><input name="meta" inputmode="decimal" placeholder="la del plan" value="${esc(e.meta||'')}"></div>
-      <div class="f w"><label>Acción acordada con el cliente</label><textarea name="accion" rows="2" placeholder="Si se acordó algo distinto a la acción del mes, escribilo acá">${esc(e.accion||'')}</textarea></div>
+      <div class="f"><label>Meta acordada (HL)</label><input name="meta" inputmode="decimal" placeholder="opcional" value="${esc(e.meta||'')}"></div>
+      <div class="f w"><label>Acción acordada con el cliente</label><textarea name="accion" rows="2" placeholder="Si se acordó algo distinto a la acción del motivo, escribilo acá">${esc(e.accion||'')}</textarea></div>
       <div class="f w"><label>Observaciones</label><textarea name="obs" rows="2" placeholder="Qué pasó en la visita, próximo paso">${esc(e.obs||'')}</textarea></div>
     </div>
     <div class="row"><button type="submit" class="btn">Guardar seguimiento</button><span class="hint" id="pdcFormErr" role="alert"></span></div></form>`;
 }
-function pdcCsv(rows,mes,P){
-  const head=['ID PDA','Prioridad','Supervisor','Promotor','Codigo','Cliente','Domicilio','Localidad','Visita','Negocio a recuperar','Meses sin compra Cerveza','Meses sin compra NABs','HL/mes prom. Cerveza','HL/mes prom. NABs','EDF cerveza/UNG','Motivo BEES Force','Respuesta del promotor','Mes relevamiento','S Objetivo','M Meta','A Accion','R Relevancia','T Fecha limite','Resultado','HL facturados en el mes','Recuperado a la fecha','Prioridad calculada','Estado seguimiento','Meta acordada HL','Accion acordada','Observaciones','Editado por','Actualizado'];
+function p3Csv(rows,mes,un){
+  const head=['ID PDA','Mes','Negocio','Supervisor','Promotor','Codigo','Cliente','Domicilio','Localidad','Visita','Motivo','Meses sin compra','Accion del PDA','Estado en la hoja','Deadline','Responsable','Compro en el mes','HL del mes','Compro despues','Estado seguimiento','Accion acordada','Meta acordada HL','Fecha limite editada','Observaciones','Editado por','Actualizado'];
   const num=x=>x==null?'':String(Math.round(x*1000)/1000).replace('.',',');
-  const lines=[head].concat(rows.map(r=>{ const c=r.c,I=r.I,t=pdcTextos(r,mes);
-    return [pdcId(mes,c.cod),r.prioE,c.spv,c.pv,c.cod,c.rs,c.dom,c.loc,c.vis,r.us.map(k=>PDC_UNL[k]).join(' y '),
-      I.c?pdcEstUn(I.c):'',I.n?pdcEstUn(I.n):'',I.c?num(I.c.vol):'',I.n?num(I.n.vol):'',`${c.edfC||0}/${c.edfU||0}`,
-      r.mot?r.mot.motivo:'Sin relevar',r.mot?r.mot.resp:'',r.mot?r.mot.mes:'',t.S,t.M,t.A.join(' ').replace(/<[^>]+>/g,''),t.R,r.fechaE,
-      PDC_RES[r.res][1]+(r.res==='par'?' ('+r.comp.map(k=>PDC_UNL[k]).join('')+')':''),num(r.hl),P.enCurso?'':(r.luego||r.res!=='no'?'Sí':'No'),r.prio,(r.ed&&r.ed.estado)||'',(r.ed&&r.ed.meta)||'',(r.ed&&r.ed.accion)||'',(r.ed&&r.ed.obs)||'',(r.ed&&r.ed.usuario)||'',(r.ed&&r.ed.actualizado)||'']; }));
+  const lines=[head].concat(rows.map(r=>{ const c=r.c,e=r.ed||{}; return [pdcId(mes,c.cod),mes,P3_UN[un].lab,c.spv,c.pv,c.cod,c.rs,c.dom,c.loc,c.vis,r.motivo,r.nunca?r.ms+'+':r.ms,
+    r.plan?r.plan.accion:'',r.plan?r.plan.status:'',r.fecha,r.plan?r.plan.resp:'',r.compro?'Sí':(r.enCurso?'Aún no':'No'),num(r.hl),(!r.compro&&r.luego)?'Sí':'',
+    e.estado||'',e.accion||'',e.meta||'',e.fecha||'',e.obs||'',e.usuario||'',e.actualizado||'']; }));
   const csv='﻿'+lines.map(r=>r.map(x=>{const s=String(x==null?'':x); return /[;"\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}).join(';')).join('\n');
-  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'})); a.download=`PDA_por_cliente_${mes}.csv`; document.body.appendChild(a); a.click(); a.remove();
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'})); a.download=`PDA_ult3meses_${P3_UN[un].sec}_${mes}.csv`; document.body.appendChild(a); a.click(); a.remove();
 }
 
 function recuperadosPanel(p, regs, recs){
