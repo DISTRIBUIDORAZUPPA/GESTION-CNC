@@ -380,6 +380,44 @@ tr.det:hover td{background:var(--panel-2)}
 .pdc th,.pdc td{padding-left:8px;padding-right:8px}
 .mpf{margin:2px 0 10px}
 .mpf select{min-width:170px}
+
+/* calendario anual */
+.anio{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.mm{border:1px solid var(--rule);border-radius:10px;overflow:hidden;background:var(--panel)}
+.mm.on{box-shadow:0 0 0 2px var(--accent)}
+.mmh{display:flex;justify-content:space-between;align-items:center;width:100%;border:0;background:var(--accent);color:#fff;padding:7px 10px;font:inherit;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:12.5px;cursor:pointer}
+.mmh span{font-size:11px;font-weight:600;text-transform:none;opacity:.9}
+.mmg{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:6px}
+.mmg b{font-size:10.5px;text-align:center;color:var(--ink-3);padding:2px 0}
+.mmg i{display:block}
+.dd{border:0;background:var(--panel-2);border-radius:5px;height:26px;font:inherit;font-size:12px;cursor:pointer;color:var(--ink-2);position:relative;padding:0}
+.dd:hover{outline:2px solid var(--accent)}
+.dd.c1{background:color-mix(in srgb,var(--accent) 30%,var(--panel));color:var(--ink);font-weight:700}
+.dd.c2{background:color-mix(in srgb,var(--accent) 58%,var(--panel));color:#fff;font-weight:700}
+.dd.c3{background:var(--accent);color:#fff;font-weight:700}
+.dd.ot::after{content:'';position:absolute;left:50%;bottom:3px;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:var(--ink-3)}
+.dd.rec{box-shadow:inset 0 0 0 2px var(--good)}
+.dd.hoy{text-decoration:underline;text-underline-offset:2px}
+.dd.sel{outline:2px solid var(--ink)}
+.mmleg{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-2);flex-wrap:wrap}
+.mmleg i{display:inline-block;width:14px;height:14px;border-radius:4px;background:var(--panel-2)}
+.mmleg i.c1{background:color-mix(in srgb,var(--accent) 30%,var(--panel))}.mmleg i.c2{background:color-mix(in srgb,var(--accent) 58%,var(--panel))}.mmleg i.c3{background:var(--accent)}
+.mmleg i.ot{background:var(--panel-2);box-shadow:inset 0 -4px 0 -2px var(--ink-3)}.mmleg i.rec{box-shadow:inset 0 0 0 2px var(--good)}
+.vcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.vcard{border:1px solid var(--rule);border-radius:10px;padding:10px 12px;background:var(--panel)}
+.vcard.ok{border-color:var(--good);box-shadow:inset 3px 0 0 var(--good)}
+.vcard p{margin:4px 0;font-size:13px}
+.vcard .vt{font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-2)}
+.vh{display:flex;align-items:center;gap:6px}
+.vchips{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.sugs{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:6px}
+.sugc{text-align:left;border:1px solid var(--rule-2);background:var(--panel);border-radius:8px;padding:6px 8px;font:inherit;font-size:12.5px;cursor:pointer}
+.sugc:hover,.sugc.on{border-color:var(--good);background:var(--good-soft)}
+
+.chip.asg{background:color-mix(in srgb,var(--good) 12%,transparent);color:var(--good);border:1px dashed var(--good)}
+.vcard.asg{border-style:dashed;border-color:var(--good)}
+.dd.asg{box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--good) 55%,transparent);outline:1px dashed var(--good);outline-offset:-3px}
+.mmleg i.asg{outline:1px dashed var(--good);outline-offset:-3px}
 </style>
 
 <aside class="side">
@@ -703,7 +741,7 @@ function rAuditoria(){
     if(!x.accion) sinAcc.push({mes:p.mes,sec,...x});
     if(x.deadline && x.deadline.slice(0,7)<p.mes) deadMal.push({mes:p.mes,sec,base:'Por negocio',...x});
   })));
-  const vis=D.visitas.filter(x=>x.fecha.slice(0,7)===mesAct && x.estado==='Realizada');
+  const vis=visItems().filter(x=>x.esCnc && x.fecha.slice(0,7)===mesAct && x.estado==='Realizada');
   const spvs=S.spv?[S.spv]:['GUILLEN','SANS'];
   const visSpv=spvs.map(s=>({s,n:vis.filter(x=>x.spv===s).length}));
   const visOk=visSpv.every(x=>x.n>=obj);
@@ -814,7 +852,7 @@ function statsEquipo(){
   const rel={}, rec={};
   D.data.motivos.un.forEach(b=>b.regs.forEach(r=>{ if(S.un!=='TOTAL' && r.un!==S.un) return; const pv=r.pv||(CLI[r.cod]||{}).pv; if(!pv) return; rel[pv]=(rel[pv]||0)+1; if(recupero(r,b.mes).alDia) rec[pv]=(rec[pv]||0)+1; }));
   const mes=D.data.meta.mesActual;
-  const vis={}; D.visitas.forEach(x=>{ if(x.fecha.slice(0,7)===mes && x.estado==='Realizada') vis[x.spv]=(vis[x.spv]||0)+1; });
+  const vis={}; visItems().forEach(x=>{ if(x.esCnc && x.fecha.slice(0,7)===mes && x.estado==='Realizada') vis[x.spv]=(vis[x.spv]||0)+1; });
   return {rows,rel,rec,vis};
 }
 function equipoPanel(){
@@ -1022,7 +1060,7 @@ function fichaCliente(cod){
   const c=CLI[cod]; const d=$('#dlgCliente'); if(!c) return;
   const regs=[]; D.data.motivos.total.forEach(b=>b.regs.forEach(r=>{ if(r.cod===cod) regs.push({...r,mes:b.mes,src:'Total'}); })); D.data.motivos.un.forEach(b=>b.regs.forEach(r=>{ if(r.cod===cod) regs.push({...r,mes:b.mes,src:r.un==='NABS'?'NABs':'Cerveza'}); }));
   regs.sort((a,b)=>a.fecha<b.fecha?1:-1);
-  const vis=D.visitas.filter(x=>+x.cod===cod);
+  const vis=visItems().filter(x=>x.cod===cod).map(x=>({...x,nota:x.nota||[x.tarea,x.plan].filter(Boolean).join(' · ')}));
   const fl=u=>flags(c,u);
   d.innerHTML=`<form method="dialog"><div class="row"><h3 style="flex:1">${esc(c.rs)} <span class="hint mono">#${c.cod}</span></h3><button class="btn sm">Cerrar</button></div>
   <p class="hint" style="margin:0">${esc(c.dom)} · ${esc(c.loc)} · ${esc(c.canal)} / ${esc(c.sub)} · Promotor ${esc(c.pv)} (${esc(c.spv)}) · visita ${esc(c.vis)} · ${PER_LAB[c.per]||''}${c.alta?' · alta '+fDate(c.alta):''}${c.ult?' · última compra '+fDate(c.ult):''}</p>
@@ -1425,70 +1463,147 @@ function verImagen(src,cap){
 }
 
 /* ====================== VISITAS SPV ====================== */
-const VS={mes:null};
+const VS={anio:null, mes:null, dia:null, tipo:'cnc'};
+const SPV_NOM={GUILLEN:'Guillen',SANS:'Sans',CABALLERO:'Caballero (jefe de ventas)'};
+const UN_LAB={t:'Total',c:'Cerveza',n:'NABs'};
 function puedeCargar(){ return S.user && !S.user.lectura; }
+function cncUnidades(c,ym){ const m=M.indexOf(ym); if(m<3) return []; return ['c','n','t'].filter(u=>c[u]&&[1,2,3].every(i=>!(c[u][m-i]>0))); }
+function recCnc(c,ym,us){ const m=M.indexOf(ym); if(m<0) return null; for(let i=m;i<=MI;i++){ const b=us.filter(u=>(c[u]||[])[i]>0); if(b.length) return {mes:M[i],us:b}; } return null; }
+// agenda del formulario + visitas cargadas en el tablero; un registro del tablero con id AG-… completa la visita de la agenda
+function visItems(){
+  const reg={}; D.visitas.forEach(x=>{ if(String(x.id).startsWith('AG-')) reg[x.id]=x; });
+  const out=[];
+  (D.data.agenda||[]).forEach(a=>{
+    const r=reg[a.id]; const cod=(r&&r.cod)?+r.cod:a.cod;
+    out.push({id:a.id,fecha:a.f,spv:a.s,cod:cod||null,cliente:(r&&r.cliente)||a.rs||(cod&&CLI[cod]?CLI[cod].rs:''),pv:(r&&r.pv)||a.pv||(cod&&CLI[cod]?CLI[cod].pv:''),
+      tarea:a.t+(a.o?' · '+a.o:''),plan:(r&&r.plan)||a.p,nota:r?r.nota:'',causa:r?r.causa:'',resultado:r?r.resultado:'',estado:'Realizada',fuente:'agenda',registro:r||null,agenda:a});
+  });
+  D.visitas.forEach(x=>{ if(String(x.id).startsWith('AG-')) return; out.push({...x,cod:x.cod?+x.cod:null,tarea:'Visita a CNC (cargada en el tablero)',fuente:'tablero'}); });
+  out.forEach(it=>{
+    const c=it.cod?CLI[it.cod]:null; const ym=it.fecha.slice(0,7);
+    it.cnc=c?cncUnidades(c,ym):[]; it.rec=it.cnc.length?recCnc(c,ym,it.cnc):null;
+    it.esCnc=/NO COMPRADOR/i.test(it.tarea)||it.cnc.length>0||it.fuente==='tablero';
+  });
+  // control interno: a la visita CNC sin cliente se le asigna un CNC recuperado del equipo en ese mes (sin repetir cliente),
+  // marcado como "asignado por el tablero" hasta que el supervisor lo confirme
+  const usados={}, pool={};
+  out.forEach(it=>{ if(it.cod) (usados[it.spv+'|'+it.fecha.slice(0,7)]||(usados[it.spv+'|'+it.fecha.slice(0,7)]=new Set())).add(it.cod); });
+  out.filter(it=>it.esCnc&&!it.cod&&it.fuente==='agenda').sort((a,b)=>a.fecha<b.fecha?-1:1).forEach(it=>{
+    const k=it.spv+'|'+it.fecha.slice(0,7); const u=usados[k]||(usados[k]=new Set());
+    const lista=pool[k]||(pool[k]=sugeridosRecupero(it,200));
+    const s=lista.find(x=>!u.has(x.c.cod)); if(!s) return;
+    u.add(s.c.cod); it.asig=s;
+  });
+  return out;
+}
+function visFiltro(it){ return (!S.spv||it.spv===S.spv)&&(!S.pv||it.pv===S.pv)&&(VS.tipo==='todas'||it.esCnc); }
 function rVisitas(){
   const v=$('#v-visitas');
+  if(!VS.anio) VS.anio=+hoyISO().slice(0,4);
   if(!VS.mes) VS.mes=hoyISO().slice(0,7);
   const obj=D.data.meta.objetivoVisitasSpv;
-  const vis=D.visitas.filter(x=>(!S.spv||x.spv===S.spv)&&(!S.pv||x.pv===S.pv));
-  const delMes=vis.filter(x=>x.fecha.slice(0,7)===VS.mes);
+  const todos=visItems().filter(it=>(!S.spv||it.spv===S.spv)&&(!S.pv||it.pv===S.pv));
+  const items=todos.filter(visFiltro);
+  const delAnio=items.filter(it=>it.fecha.slice(0,4)===String(VS.anio));
+  const delMes=items.filter(it=>it.fecha.slice(0,7)===VS.mes).sort((a,b)=>a.fecha<b.fecha?-1:1);
   const spvs=S.spv?[S.spv]:['GUILLEN','SANS'];
-  const [y,m]=VS.mes.split('-').map(Number);
-  const first=new Date(Date.UTC(y,m-1,1)); const dow=(first.getUTCDay()+6)%7; const fin=new Date(Date.UTC(y,m,0)).getUTCDate();
-  const cells=[]; for(let i=0;i<dow;i++) cells.push(null); for(let d=1;d<=fin;d++) cells.push(d); while(cells.length%7) cells.push(null);
   const hoy=hoyISO();
-  // sugeridos: CNC U3M (CVZA o NABs) con motivo relevado, del equipo, sin visita en el mes, por volumen histórico
-  const visitadosMes=new Set(delMes.map(x=>+x.cod));
+  // efectividad: visitas a clientes que eran CNC (con cliente cargado) en meses cerrados
+  const conCli=todos.filter(it=>it.cnc.length&&it.estado==='Realizada'&&M.indexOf(it.fecha.slice(0,7))<MI);
+  const recs=todos.filter(it=>(it.rec||it.asig)&&it.estado==='Realizada').sort((a,b)=>a.fecha<b.fecha?1:-1);
+  const sinCli=delAnio.filter(it=>it.esCnc&&!it.cod&&it.estado==='Realizada');
+  // sugeridos: CNC U3M (CVZA o NABs) con motivo relevado, del equipo, sin visita en el mes
+  const visitadosMes=new Set(delMes.map(x=>x.cod).filter(Boolean));
   const sug=clientesFiltrados().map(c=>{ const fc=flags(c,'CVZA'), fn=flags(c,'NABS'); const m=ultimoMotivo(c.cod); if(!m) return null; if(!(fc&&fc.u3)&&!(fn&&fn.u3)) return null; if(visitadosMes.has(c.cod)) return null;
     return {c,m,un:(fc&&fc.u3)&&(fn&&fn.u3)?'Cerveza y NABs':(fc&&fc.u3)?'Cerveza':'NABs',vol:volPrevio(c.c||[])+volPrevio(c.n||[]),f:fc&&fc.u3?fc:fn}; }).filter(Boolean).sort((a,b)=>b.vol-a.vol).slice(0,25);
-  // efectividad: visitas realizadas y si el cliente compró después
-  const real=vis.filter(x=>x.estado==='Realizada');
-  const efect=real.map(x=>{ const c=CLI[+x.cod]; if(!c) return null; const i=M.indexOf(x.fecha.slice(0,7)); if(i<0||i>=MI) return null; let comp=false; for(let j=i+1;j<=MI;j++) if((c.t||[])[j]>0) comp=true; return comp; }).filter(z=>z!=null);
+  // calendario anual
+  const porDia={}; delAnio.forEach(it=>{ (porDia[it.fecha]||(porDia[it.fecha]=[])).push(it); });
+  const mini=mm=>{ const ym=VS.anio+'-'+String(mm).padStart(2,'0'); const first=new Date(Date.UTC(VS.anio,mm-1,1)); const dow=(first.getUTCDay()+6)%7; const fin=new Date(Date.UTC(VS.anio,mm,0)).getUTCDate();
+    const cells=[]; for(let i=0;i<dow;i++) cells.push(null); for(let d=1;d<=fin;d++) cells.push(d); while(cells.length%7) cells.push(null);
+    const nMes=delAnio.filter(it=>it.fecha.slice(0,7)===ym&&it.esCnc).length;
+    return `<div class="mm ${ym===VS.mes?'on':''}"><button type="button" class="mmh" data-mes="${ym}">${MES_LL[mm-1]}<span>${nMes?nMes+' CNC':''}</span></button>
+      <div class="mmg">${['L','M','M','J','V','S','D'].map(d=>`<b>${d}</b>`).join('')}
+      ${cells.map(d=>{ if(!d) return '<i></i>'; const iso=ym+'-'+String(d).padStart(2,'0'); const evs=porDia[iso]||[]; const cn=evs.filter(e=>e.esCnc).length, ot=evs.length-cn, rc=evs.some(e=>e.rec), as=!rc&&evs.some(e=>e.asig);
+        return `<button type="button" class="dd ${cn?'c'+Math.min(3,cn):''} ${ot&&!cn?'ot':''} ${rc?'rec':''} ${as?'asg':''} ${iso===hoy?'hoy':''} ${iso===VS.dia?'sel':''}" data-f="${iso}" aria-label="${d} de ${MES_LL[mm-1]}: ${evs.length} registros">${d}</button>`; }).join('')}</div></div>`; };
+  const dia=VS.dia?(porDia[VS.dia]||[]).concat(VS.dia.slice(0,4)===String(VS.anio)?[]:items.filter(it=>it.fecha===VS.dia)):[];
+  const unTxt=us=>us.map(u=>UN_LAB[u]).join(' y ');
+  const tarjeta=it=>{ const c=it.cod?CLI[it.cod]:null;
+    return `<div class="vcard ${it.rec?'ok':it.asig?'asg':''}"><div class="vh">${avatar(it.spv==='CABALLERO'?'CABALLERO':it.spv,it.spv)}<b>${esc(SPV_NOM[it.spv]||it.spv)}</b><span class="chip ${it.fuente==='agenda'?'':'info'}">${it.fuente==='agenda'?'agenda':'tablero'}</span>${it.estado!=='Realizada'?`<span class="chip ${it.estado==='Cancelada'?'bad':'info'}">${esc(it.estado.toLowerCase())}</span>`:''}</div>
+      <p class="vt">${esc(it.tarea||'')}</p>
+      ${it.cod?`<p><b>${esc(it.cliente||'')}</b> <span class="hint mono">#${it.cod}</span>${it.pv?` · ${esc(it.pv)}`:''}</p>`:it.asig?`<p><span class="chip asg">asignado por el tablero</span> <b>${esc(it.asig.c.rs)}</b> <span class="hint mono">#${it.asig.c.cod}</span> · ${esc(it.asig.c.pv)}<br><span class="hint">La agenda no dice a quién se visitó; el supervisor puede confirmarlo o cambiarlo.</span></p>`:it.esCnc?'<p class="hint">Sin cliente cargado en la agenda.</p>':''}
+      ${it.plan?`<p><span class="hint">Plan:</span> ${esc(it.plan)}</p>`:''}${it.nota?`<p><span class="hint">Registro:</span> ${esc(it.nota)}</p>`:''}
+      <div class="vchips">${it.asig?`<span class="chip asg">CNC de ${unTxt(it.asig.us)} · volvió a comprar en ${mesLab(it.asig.r.mes)}</span>`:''}${it.cnc.length?`<span class="chip warn">era CNC de ${unTxt(it.cnc)}</span>`:''}${it.rec?`<span class="chip ok">volvió a comprar ${unTxt(it.rec.us)} en ${mesLab(it.rec.mes)}</span>`:it.cnc.length?'<span class="chip bad">sigue sin comprar</span>':''}</div>
+      <div class="row" style="gap:6px;margin-top:6px">${puedeCargar()&&(S.user.scope==='all'||S.user.spv===it.spv)?`<button type="button" class="btn sm primary" data-reg="${esc(it.id)}">${it.registro||it.fuente==='tablero'?'Editar registro':it.asig?'Confirmar o cambiar cliente':it.esCnc&&!it.cod?'Elegir cliente y dejar registro':'Dejar registro'}</button>`:''}${c?`<button type="button" class="btn sm" data-ficha="${c.cod}">Ficha</button>`:''}</div></div>`; };
   v.innerHTML=`
-  <div class="sec-h"><h2>Visitas de supervisores a CNC con motivo</h2><p>Los supervisores destinan parte de sus horas en calle a visitar clientes con motivo de no compra para profundizar la causa y mejorar la experiencia. Objetivo: ${obj} visitas realizadas por supervisor por mes.</p></div>
-  ${!D.api?`<div class="note warn"><b>Todavía no está conectada la planilla.</b> Las visitas se guardan solo en este navegador hasta que se cargue la URL de la Web App en CNC_CFG y se actualice el tablero.</div>`:D.visitasError?`<div class="note warn"><b>No pude leer las visitas de la planilla.</b> Revisá la conexión y recargá.</div>`:''}
-  ${!puedeCargar()?`<div class="note">Para agendar o cargar visitas, <a href="#" id="vLogin">ingresá como supervisor</a>. Desde Ruta CCC entrás ya identificado.</div>`:''}
+  <div class="sec-h"><h2>Visitas de supervisores a CNC</h2><p>Las visitas de la agenda de los supervisores se pasan solas al calendario. Las que fueron a un cliente que era no comprador se cruzan con la facturación para ver si volvió a comprar. Objetivo: ${obj} visitas a CNC por supervisor por mes.</p></div>
+  ${!D.api?`<div class="note warn"><b>Todavía no está conectada la planilla.</b> Los registros se guardan solo en este navegador hasta que se cargue la URL de la Web App en CNC_CFG y se actualice el tablero.</div>`:D.visitasError?`<div class="note warn"><b>No pude leer las visitas de la planilla.</b> Revisá la conexión y recargá.</div>`:''}
+  ${!(D.data.agenda||[]).length?`<div class="note warn"><b>No llegó la agenda de supervisores.</b> Pegala en una pestaña AGENDA SUPERVISORES de la planilla de CNC o poné su link en CNC_CFG → agendaSpv, y actualizá el tablero.</div>`:''}
+  ${!puedeCargar()?`<div class="note">Para dejar registros, <a href="#" id="vLogin">ingresá como supervisor</a>. Desde Ruta CCC entrás ya identificado.</div>`:''}
   <div class="kpis">
-    ${spvs.map(s=>{const n=delMes.filter(x=>x.spv===s&&x.estado==='Realizada').length, pr=delMes.filter(x=>x.spv===s&&x.estado==='Programada').length; return `<div class="kpi"><span class="l">${esc(s)} · ${mesLL(VS.mes)}</span><span class="v">${n} / ${obj}</span><div class="prog" role="img" aria-label="${n} de ${obj} visitas"><i style="width:${Math.min(100,n/obj*100)}%"></i></div><span class="d">${pr} programadas</span></div>`;}).join('')}
-    <div class="kpi"><span class="l">Compraron en los meses siguientes</span><span class="v">${efect.length?pc(efect.filter(Boolean).length/efect.length):'–'}</span><span class="d">${efect.length?efect.filter(Boolean).length+' de '+efect.length+' visitas de meses cerrados':'se mide desde el mes siguiente a la visita'}</span></div>
+    ${spvs.map(s=>{ const n=delMes.filter(x=>x.spv===s&&x.esCnc&&x.estado==='Realizada').length, pr=delMes.filter(x=>x.spv===s&&x.estado==='Programada').length; return `<div class="kpi"><span class="tx"><span class="l">${esc(SPV_NOM[s]||s)} · ${mesLL(VS.mes)}</span><span class="v">${n} / ${obj}</span><div class="prog" role="img" aria-label="${n} de ${obj} visitas"><i style="width:${Math.min(100,n/obj*100)}%"></i></div><span class="d">${n>=obj?'objetivo cumplido':'faltan '+(obj-n)}${pr?' · '+pr+' programadas':''}</span></span></div>`;}).join('')}
+    <div class="kpi"><span class="tx"><span class="l">Volvieron a comprar</span><span class="v">${conCli.length?pc(conCli.filter(x=>x.rec).length/conCli.length):'–'}</span><span class="d">${conCli.filter(x=>x.rec).length} de ${conCli.length} visitas a clientes CNC (con cliente cargado)</span></span></div>
+    <div class="kpi"><span class="tx"><span class="l">Visitas sin cliente con CNC asignado · ${VS.anio}</span><span class="v">${sinCli.filter(x=>x.asig).length} <small>de ${sinCli.length}</small></span><span class="d">asignado por el tablero: CNC del equipo recuperado ese mes</span></span></div>
   </div>
   <div class="panel">
-    <div class="row" style="margin-bottom:10px"><button class="btn sm" id="vPrev" aria-label="Mes anterior">←</button><h3 style="min-width:150px;text-align:center">${mesLL(VS.mes)}</h3><button class="btn sm" id="vNext" aria-label="Mes siguiente">→</button><span class="sp"></span>
-      ${legend([['Programada','--accent'],['Realizada','--good'],['Cancelada','--bad']])}
+    <div class="row" style="margin-bottom:10px"><button class="btn sm" id="vPrev" aria-label="Año anterior">←</button><h3 style="min-width:80px;text-align:center">${VS.anio}</h3><button class="btn sm" id="vNext" aria-label="Año siguiente">→</button>
+      <div class="seg" id="vTipo" style="margin-left:8px"><button type="button" data-v="cnc" aria-pressed="${VS.tipo==='cnc'}">Visitas a CNC</button><button type="button" data-v="todas" aria-pressed="${VS.tipo==='todas'}">Toda la agenda</button></div>
+      <span class="sp"></span><span class="mmleg"><i class="c1"></i>1 <i class="c2"></i>2 <i class="c3"></i>3+ visitas CNC <i class="ot"></i>otras tareas <i class="rec"></i>volvió a comprar <i class="asg"></i>asignado por el tablero</span>
       ${puedeCargar()?'<button class="btn primary" id="vNueva">+ Nueva visita</button>':''}</div>
-    <div class="cal">${['lun','mar','mié','jue','vie','sáb','dom'].map(d=>`<div class="dh">${d}</div>`).join('')}
-    ${cells.map(d=>{ if(!d) return '<div></div>'; const iso=VS.mes+'-'+String(d).padStart(2,'0'); const evs=delMes.filter(x=>x.fecha===iso);
-      return `<div class="d ${iso===hoy?'hoy':''}" data-f="${iso}"><span class="dn">${d}</span>${evs.map(x=>`<span class="ev ${x.estado==='Realizada'?'real':x.estado==='Cancelada'?'canc':'prog'}" data-id="${esc(x.id)}" title="${esc(x.spv+' · '+x.cliente)}">${esc((x.spv||'').slice(0,1))} · ${esc(x.cliente)}</span>`).join('')}</div>`;}).join('')}
-    </div>
+    <div class="anio">${Array.from({length:12},(_,i)=>mini(i+1)).join('')}</div>
   </div>
-  <div class="panel"><div class="ph"><h3>Visitas de ${mesLL(VS.mes)}</h3><span class="chip info">${delMes.length}</span></div>
-    ${delMes.length?`<div class="tw"><table><thead><tr><th>Fecha</th><th>SPV</th><th>Estado</th><th>Cliente</th><th>Promotor</th><th>Motivo BEES</th><th>Causa observada</th><th>Qué notó</th><th>Plan de acción</th><th>Compromiso</th><th>Resultado</th></tr></thead><tbody>
-    ${delMes.sort((a,b)=>a.fecha<b.fecha?-1:1).map(x=>`<tr class="click" data-id="${esc(x.id)}"><td>${fDate(x.fecha)}</td><td>${esc(x.spv)}</td><td>${x.estado==='Realizada'?'<span class="chip ok">realizada</span>':x.estado==='Cancelada'?'<span class="chip bad">cancelada</span>':'<span class="chip info">programada</span>'}</td><td>${esc(x.cliente)} <span class="hint mono">#${esc(x.cod)}</span></td><td>${esc(x.pv)}</td><td>${esc((x.motivo||'').toLowerCase())}</td><td>${esc(x.causa)}</td><td class="txt">${esc(x.nota)}</td><td class="txt">${esc(x.plan)}</td><td>${fDate(x.compromiso)}</td><td>${esc(x.resultado)}</td></tr>`).join('')}
-    </tbody></table></div>`:'<p class="hint" style="margin:0">Sin visitas en este mes.</p>'}
+  <div class="panel" id="vDia">${VS.dia?`<div class="ph"><h3>Registros del ${fDate(VS.dia)}</h3><span class="row" style="gap:6px">${puedeCargar()?`<button class="btn sm primary" id="vNuevaDia">+ Registro en este día</button>`:''}<button class="btn sm" id="vDiaX">Cerrar</button></span></div>
+    ${dia.length?`<div class="vcards">${dia.map(tarjeta).join('')}</div>`:'<p class="hint" style="margin:0">No hay registros este día.</p>'}`
+    :'<p class="hint" style="margin:0">Tocá un día del calendario para ver lo que se hizo y dejar un registro. Tocá el nombre de un mes para ver su detalle abajo.</p>'}</div>
+  <div class="panel"><div class="ph"><h3>Visitas a CNC que terminaron en recupero</h3><span class="chip ok">${recs.filter(x=>x.rec).length} registrados</span><span class="chip asg" style="margin-left:4px">${recs.filter(x=>!x.rec&&x.asig).length} asignados</span></div>
+    <p class="hint" style="margin:0 0 8px">Visitas a clientes que eran no compradores en el mes de la visita y que después volvieron a comprar. "Registrado" es el cliente que cargó el supervisor; "asignado por el tablero" es un CNC recuperado de su equipo puesto en una visita que no tenía cliente (control interno).</p>
+    ${recs.length?`<div class="tw" style="max-height:380px"><table><thead><tr><th>Fecha</th><th>Supervisor</th><th>Cliente</th><th>Origen del cliente</th><th>Promotor</th><th>Era CNC de</th><th>Volvió a comprar</th><th>Tarea / plan</th></tr></thead><tbody>
+    ${recs.map(it=>{ const a=!it.rec&&it.asig; const c=a?it.asig.c:null; return `<tr class="click" data-dia="${it.fecha}"><td>${fDate(it.fecha)}</td><td>${esc(SPV_NOM[it.spv]||it.spv)}</td><td>${esc(a?c.rs:it.cliente)} <span class="hint mono">#${a?c.cod:it.cod}</span></td><td>${a?'<span class="chip asg">asignado por el tablero</span>':'registrado'}</td><td>${esc(a?c.pv:it.pv)}</td><td>${unTxt(a?it.asig.us:it.cnc)}</td><td><span class="chip ok">${unTxt(a?it.asig.r.us:it.rec.us)} · ${mesLab(a?it.asig.r.mes:it.rec.mes)}</span></td><td class="txt">${esc(it.tarea)}${it.plan?' · '+esc(it.plan):''}</td></tr>`; }).join('')}
+    </tbody></table></div>`:'<p class="hint" style="margin:0">Todavía no hay visitas con cliente cargado que terminaran en recupero.</p>'}</div>
+  <div class="panel"><div class="ph"><h3>${VS.tipo==='cnc'?'Visitas a CNC':'Agenda'} de ${mesLL(VS.mes)}</h3><span class="chip info">${delMes.length}</span></div>
+    ${delMes.length?`<div class="tw" style="max-height:420px"><table><thead><tr><th>Fecha</th><th>Supervisor</th><th>Origen</th><th>Tarea</th><th>Cliente</th><th>Promotor</th><th>Plan / registro</th><th>Resultado</th></tr></thead><tbody>
+    ${delMes.map(it=>`<tr class="click" data-dia="${it.fecha}"><td>${fDate(it.fecha)}</td><td>${esc(SPV_NOM[it.spv]||it.spv)}</td><td>${it.fuente==='agenda'?(it.registro?'agenda + registro':'agenda'):'tablero'}</td><td>${esc(it.tarea)}</td><td>${it.cod?`${esc(it.cliente)} <span class="hint mono">#${it.cod}</span>`:it.asig?`<i>${esc(it.asig.c.rs)}</i> <span class="hint mono">#${it.asig.c.cod}</span> <span class="chip asg">asignado</span>`:'<span class="hint">sin cliente</span>'}</td><td>${esc(it.pv||'')}</td><td class="txt">${esc(it.nota||it.plan||'')}</td><td>${it.rec?`<span class="chip ok">compró ${mesLab(it.rec.mes)}</span>`:it.asig?`<span class="chip asg">compró ${mesLab(it.asig.r.mes)}</span>`:it.cnc.length?'<span class="chip bad">sin compra</span>':''}</td></tr>`).join('')}
+    </tbody></table></div>`:'<p class="hint" style="margin:0">Sin registros en este mes.</p>'}
   </div>
   <div class="panel"><div class="ph"><h3>Clientes sugeridos para visitar</h3><span class="hint">CNC U3M con motivo relevado, sin visita este mes, ordenados por volumen que compraban</span></div>
     <div class="tw" style="max-height:420px"><table><thead><tr><th class="n">Código</th><th>Cliente</th><th>Promotor</th><th>Visita</th><th>Negocio sin compra</th><th class="n">Meses</th><th>Motivo</th><th>Respuesta</th><th class="n">HL/mes prom.</th><th>Maps</th>${puedeCargar()?'<th></th>':''}</tr></thead><tbody>
     ${sug.map(x=>`<tr><td class="n">${x.c.cod}</td><td>${esc(x.c.rs)}</td><td>${esc(x.c.pv)}</td><td>${esc(x.c.vis)}</td><td>${x.un}</td><td class="n">${x.f.nunca?'nunca compró':x.f.meses}</td><td>${esc(x.m.motivo.toLowerCase())}</td><td class="txt">${esc(x.m.resp)}</td><td class="n">${n2(x.vol)}</td><td><a class="btn sm" style="display:inline-flex;align-items:center;text-decoration:none;color:var(--ink)" href="${urlIr(x.c)}" target="_blank" rel="noopener">🧭 Ir</a></td>${puedeCargar()?`<td><button class="btn sm" data-ag="${x.c.cod}">Agendar</button></td>`:''}</tr>`).join('')||'<tr><td colspan="9" class="hint">No hay sugeridos con este filtro.</td></tr>'}
     </tbody></table></div></div>`;
-  $('#vPrev').onclick=()=>{VS.mes=sumaMes(VS.mes,-1); rVisitas();}; $('#vNext').onclick=()=>{VS.mes=sumaMes(VS.mes,1); rVisitas();};
+  const re=()=>{ rVisitas(); };
+  $('#vPrev').onclick=()=>{VS.anio--; VS.dia=null; re();}; $('#vNext').onclick=()=>{VS.anio++; VS.dia=null; re();};
+  v.querySelectorAll('#vTipo button').forEach(b=>b.onclick=()=>{VS.tipo=b.dataset.v; re();});
   const vl=$('#vLogin'); if(vl) vl.onclick=e=>{e.preventDefault(); abrirLogin();};
-  const nv=$('#vNueva'); if(nv) nv.onclick=()=>abrirVisita({fecha:hoyISO(),estado:'Programada'});
+  const nv=$('#vNueva'); if(nv) nv.onclick=()=>abrirVisita({fecha:VS.dia||hoyISO(),estado:'Programada'});
+  const nd=$('#vNuevaDia'); if(nd) nd.onclick=()=>abrirVisita({fecha:VS.dia,estado:VS.dia<=hoy?'Realizada':'Programada'});
+  const dx=$('#vDiaX'); if(dx) dx.onclick=()=>{VS.dia=null; re();};
+  v.querySelectorAll('.mmh').forEach(b=>b.onclick=()=>{VS.mes=b.dataset.mes; re();});
+  v.querySelectorAll('.dd').forEach(b=>b.onclick=()=>{ VS.dia=VS.dia===b.dataset.f?null:b.dataset.f; VS.mes=b.dataset.f.slice(0,7); re(); if(VS.dia) setTimeout(()=>{ const p=$('#vDia'); if(p) p.scrollIntoView({behavior:'smooth',block:'nearest'}); },30); });
+  v.querySelectorAll('tr[data-dia]').forEach(tr=>tr.onclick=()=>{ VS.dia=tr.dataset.dia; VS.anio=+VS.dia.slice(0,4); VS.mes=VS.dia.slice(0,7); re(); setTimeout(()=>{ const p=$('#vDia'); if(p) p.scrollIntoView({behavior:'smooth',block:'start'}); },30); });
+  v.querySelectorAll('[data-ficha]').forEach(b=>b.onclick=()=>fichaCliente(+b.dataset.ficha));
   v.querySelectorAll('[data-ag]').forEach(b=>b.onclick=()=>abrirVisita({cod:+b.dataset.ag,fecha:hoyISO(),estado:'Programada'}));
-  v.querySelectorAll('.cal .d').forEach(d=>d.onclick=e=>{ const ev=e.target.closest('.ev'); if(ev){ abrirVisita(D.visitas.find(x=>x.id===ev.dataset.id)); return; } if(puedeCargar()) abrirVisita({fecha:d.dataset.f,estado:'Programada'}); });
-  v.querySelectorAll('tr[data-id]').forEach(tr=>tr.onclick=()=>abrirVisita(D.visitas.find(x=>x.id===tr.dataset.id)));
+  v.querySelectorAll('[data-reg]').forEach(b=>b.onclick=()=>{ const it=dia.find(x=>x.id===b.dataset.reg); if(!it) return;
+    if(it.fuente==='tablero'){ abrirVisita(D.visitas.find(x=>x.id===it.id)); return; }
+    const r=it.registro||{};
+    abrirVisita({...r,id:it.id,fecha:it.fecha,spv:it.spv,cod:it.cod||'',estado:'Realizada',plan:r.plan||it.plan||'',nota:r.nota||'',agenda:it,cod:it.cod||(it.asig?it.asig.c.cod:''),sug:it.esCnc&&!it.cod?(it.asig?[it.asig]:[]).concat(sugeridosRecupero(it).filter(x=>!it.asig||x.c.cod!==it.asig.c.cod)).slice(0,8):null}); });
   enviarAlto();
+}
+// clientes del equipo del supervisor que eran CNC en el mes de la visita y volvieron a comprar (candidatos para que el supervisor confirme a quién visitó)
+function sugeridosRecupero(it,lim){
+  const ym=it.fecha.slice(0,7);
+  return D.data.clientes.filter(c=>it.spv==='CABALLERO'||c.spv===it.spv).map(c=>{ const us=cncUnidades(c,ym).filter(u=>u!=='t'); if(!us.length) return null; const r=recCnc(c,ym,us); if(!r) return null; return {c,us,r}; })
+    .filter(Boolean).sort((a,b)=>a.r.mes<b.r.mes?-1:a.r.mes>b.r.mes?1:(volPrevio(b.c.t||[])-volPrevio(a.c.t||[]))).slice(0,lim||8);
 }
 const CAUSAS=['Precio / condiciones comerciales','Compra en mayorista / feria','Problema de servicio o entrega','Falta de EDF o EDF en mal estado','Deuda / cuenta corriente','Baja rotación del producto','Cambio de dueño o de rubro','Local cerrado temporalmente','Cerró definitivamente','Otro'];
 function abrirVisita(x){
-  if(!x) return; const d=$('#dlgVisita'); const edit=!!x.id; const ro=!puedeCargar() || (S.user.scope==='own' && edit && x.spv!==S.user.spv);
+  if(!x) return; const d=$('#dlgVisita'); const edit=!!x.id && D.visitas.some(v=>v.id===x.id); const ro=!puedeCargar() || (S.user.scope==='own' && x.spv && x.spv!==S.user.spv);
   const c=x.cod?CLI[+x.cod]:null; const m=c?ultimoMotivo(c.cod):null;
   const spvDef = x.spv || (S.user&&S.user.spv) || (c?c.spv:'');
-  d.innerHTML=`<form id="fVis"><div class="row"><h3 style="flex:1">${edit?'Visita a '+esc(x.cliente):'Nueva visita a CNC'}</h3><button type="button" class="btn sm" id="vxClose">Cerrar</button></div>
+  d.innerHTML=`<form id="fVis"><div class="row"><h3 style="flex:1">${x.agenda?'Registro de la agenda · '+fDate(x.fecha):edit?'Visita a '+esc(x.cliente):'Nueva visita a CNC'}</h3><button type="button" class="btn sm" id="vxClose">Cerrar</button></div>
   <div class="fgrid">
     <div class="f full"><label for="vCli">Cliente (código o nombre)</label><input id="vCli" list="vCliList" value="${c?esc(c.cod+' · '+c.rs):''}" ${ro?'disabled':''} required><datalist id="vCliList"></datalist></div>
     <div class="f full hint" id="vCliInfo">${c?infoCli(c,m):'Escribí al menos 3 letras o el código.'}</div>
-    <div class="f"><label for="vSpv">Supervisor</label><select id="vSpv" ${ro||(S.user&&S.user.scope==='own')?'disabled':''}>${['GUILLEN','SANS'].map(s=>`<option ${s===spvDef?'selected':''}>${s}</option>`).join('')}</select></div>
+    ${x.agenda?`<div class="f full note" style="margin:0"><b>En la agenda:</b> ${esc(x.agenda.tarea)}${x.agenda.plan?' · '+esc(x.agenda.plan):''}</div>`:''}
+    ${x.sug&&x.sug.length&&!ro?`<div class="f full"><label>Clientes CNC del equipo que volvieron a comprar después de esta fecha</label><div class="sugs">${x.sug.map(s=>`<button type="button" class="sugc" data-sc="${s.c.cod}"><b>${esc(s.c.rs)}</b> <span class="mono">#${s.c.cod}</span><br><span class="hint">${esc(s.c.pv)} · compró ${s.r.us.map(u=>UN_LAB[u]).join(' y ')} en ${mesLab(s.r.mes)}</span></button>`).join('')}</div><span class="hint">Si visitaste a alguno de estos clientes, tocalo. Si fue otro, buscalo arriba.</span></div>`:''}
+    <div class="f"><label for="vSpv">Supervisor</label><select id="vSpv" ${ro||(S.user&&S.user.scope==='own')?'disabled':''}>${['GUILLEN','SANS'].concat(spvDef==='CABALLERO'?['CABALLERO']:[]).map(s=>`<option ${s===spvDef?'selected':''}>${s}</option>`).join('')}</select></div>
     <div class="f"><label for="vFecha">Fecha</label><input id="vFecha" type="date" value="${esc(x.fecha||hoyISO())}" ${ro?'disabled':''} required></div>
     <div class="f"><label for="vEstado">Estado</label><select id="vEstado" ${ro?'disabled':''}>${['Programada','Realizada','Cancelada'].map(s=>`<option ${s===x.estado?'selected':''}>${s}</option>`).join('')}</select></div>
     <div class="f"><label for="vCausa">Causa que observó</label><select id="vCausa" ${ro?'disabled':''}><option value="">Elegí…</option>${CAUSAS.map(s=>`<option ${s===x.causa?'selected':''}>${s}</option>`).join('')}</select></div>
@@ -1514,6 +1629,7 @@ function abrirVisita(x){
     if(!sel && mm && CLI[+mm[1]] && String(CLI[+mm[1]].cod)===q) sel=CLI[+mm[1]];
     $('#vCliInfo').innerHTML = sel? infoCli(sel, ultimoMotivo(sel.cod)) : 'Elegí un cliente de la lista.';
   });
+  d.querySelectorAll('[data-sc]').forEach(b=>b.onclick=()=>{ const k=CLI[+b.dataset.sc]; inp.value=k.cod+' · '+k.rs; inp.dispatchEvent(new Event('input')); d.querySelectorAll('[data-sc]').forEach(o=>o.classList.toggle('on',o===b)); });
   const del=$('#vDel'); if(del){ let arm=false; del.onclick=async()=>{ if(!arm){ arm=true; del.textContent='Confirmar borrado'; $('#vDelConf').textContent='Tocá de nuevo para borrar.'; return; } await borrarVisita(x.id); d.close(); rVisitas(); }; }
   $('#fVis').onsubmit=async e=>{ e.preventDefault(); if(ro) return;
     if(!sel){ $('#vErr').textContent='Elegí un cliente de la lista (código · nombre).'; return; }
@@ -1522,7 +1638,7 @@ function abrirVisita(x){
       un: [(f&&f.u3)?'CVZA':'', (fn&&fn.u3)?'NABS':''].filter(Boolean).join(' + ') || 'Total', horizonte: horizonteLab(flags(sel,'TOTAL')), motivo: mm?mm.motivo:'',
       causa:$('#vCausa').value, nota:$('#vNota').value.trim(), experiencia:$('#vExp').value, competencia:$('#vComp').value.trim(), plan:$('#vPlan').value.trim(),
       responsable:$('#vResp').value.trim(), compromiso:$('#vCompr').value, resultado:$('#vRes').value, proximo:$('#vProx').value, creado:x.creado||'' };
-    if(vi.estado==='Realizada' && !vi.nota){ $('#vErr').textContent='Para marcarla como realizada contá qué notaste en la visita.'; return; }
+    if(vi.estado==='Realizada' && !vi.nota && !vi.plan){ $('#vErr').textContent='Para marcarla como realizada contá qué notaste en la visita o el plan de acción.'; return; }
     $('#vSave').disabled=true; $('#vSave').textContent='Guardando…';
     try{ await guardarVisita(vi); d.close(); toast('Visita guardada'); rVisitas(); }
     catch(err){ $('#vErr').textContent='No se pudo guardar: '+err.message; $('#vSave').disabled=false; $('#vSave').textContent='Guardar visita'; }
