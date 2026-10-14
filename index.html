@@ -487,6 +487,32 @@ td .rb{display:grid;grid-template-columns:1fr 30px 44px;gap:8px;align-items:cent
 .btn-clear{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:6px;padding:8px 10px;border-radius:10px;border:1px solid color-mix(in srgb,var(--side-ink) 25%,transparent);background:transparent;color:var(--side-ink);font:inherit;font-weight:600;font-size:13px;cursor:pointer}
 .btn-clear:hover{background:var(--side-2)}
 .btn-clear svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ast{color:var(--ink-3);font-weight:600;margin-left:1px;cursor:help}
+.vu-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:14px}
+.vu-card{display:flex;flex-direction:column;gap:4px;text-align:left;border:0;cursor:pointer;font:inherit;color:inherit;background:var(--panel-2);border-radius:14px;padding:12px 14px;position:relative;overflow:hidden}
+.vu-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--c)}
+.vu-card.on{background:color-mix(in srgb,var(--c) 16%,var(--panel));box-shadow:0 0 0 2px var(--c)}
+.vu-l{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
+.vu-v{font-family:var(--f-display);font-size:28px;font-weight:700;line-height:1.1}
+.vu-bar{height:8px;border-radius:4px;background:color-mix(in srgb,var(--c) 18%,transparent);overflow:hidden}
+.vu-bar i{display:block;height:100%;background:var(--c);border-radius:4px}
+.vu-d{font-size:12px;color:var(--ink-2)}
+.vu-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:14px}
+.vu-kpis>div{display:flex;flex-direction:column;padding:10px 12px;border-radius:12px;border:1px solid var(--rule)}
+.vu-kpis .l{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.vu-kpis b{font-family:var(--f-display);font-size:22px}
+.vu-kpis i{font-style:normal;font-size:12px;color:var(--ink-2)}
+.vu-h{margin:0 0 8px;font-weight:700;font-size:13px}
+.vu-dist{display:flex;flex-direction:column;gap:7px}
+.vu-dr{display:grid;grid-template-columns:90px 1fr 50px 44px;gap:10px;align-items:center;font-size:13px}
+.vu-dr i{font-style:normal;color:var(--ink-3);font-size:12px}
+.vu-db{height:14px;border-radius:7px;background:var(--panel-2);overflow:hidden}
+.vu-db i{display:block;height:100%;border-radius:7px}
+.vu-t td.hm{text-align:center}
+.vu-t td.hm b{display:block;font-size:13px}
+.vu-t td.hm i{font-style:normal;font-size:10.5px;opacity:.8}
+.vu-t tr.tot td{border-top:2px solid var(--rule-2)}
+.vu-t .bn{display:flex;align-items:center}
 </style>
 
 <aside class="side">
@@ -1237,6 +1263,84 @@ function fichaCliente(cod){
 
 /* ====================== COMPRADORES ====================== */
 const CP={mes:null};
+/* ====================== COMPRA ACTIVA POR NEGOCIO (volumen anual por cliente) ====================== */
+const VU={neg:null, q:'', ord:'vol'};
+const VU_COL={c:'--s4',n:'--s1',a:'--s3',m:'--m3',x:'--s2'};
+function vuDatos(){
+  const V=D.data.vun; if(!V||!V.filas||!V.filas.length) return null;
+  const neg=V.neg, filtrado=!!(S.spv||S.pv);
+  const filas=V.filas.map(f=>{ const c=CLI[f[0]]; return {cod:f[0],c,spv:c?c.spv:'',pv:c?c.pv:'',rs:c?c.rs:'',v:f.slice(1),b:f.slice(1).map(x=>x>0)}; })
+    .filter(r=>!filtrado || (r.c && (!S.spv||r.spv===S.spv) && (!S.pv||r.pv===S.pv)));
+  filas.forEach(r=>{ r.nb=r.b.filter(Boolean).length; r.tot=r.v.reduce((t,x)=>t+(x>0?x:0),0); });
+  return {neg,filas,filtrado};
+}
+function vunPanel(){
+  const X=vuDatos(); if(!X) return '';
+  const {neg,filas}=X; const N=filas.length;
+  if(!VU.neg) VU.neg=neg[0].k;
+  const iSel=neg.findIndex(g=>g.k===VU.neg), gSel=neg[iSel];
+  const cnt=f=>filas.filter(f).length;
+  const algun=cnt(r=>r.nb>0), ninguno=N-algun, prom=filas.reduce((t,r)=>t+r.nb,0)/Math.max(1,N);
+  const dist=Array.from({length:neg.length+1},(_,k)=>cnt(r=>r.nb===k)); const dmx=Math.max(1,...dist);
+  // por supervisor y promotor
+  const g={}; filas.forEach(r=>{ const k=(r.c?r.spv:'FUERA')+'|'+(r.c?r.pv:'Fuera de la base actual'); const o=g[k]||(g[k]={spv:r.c?r.spv:'',pv:r.c?r.pv:'Fuera de la base actual',n:0,b:neg.map(()=>0),nb:0}); o.n++; r.b.forEach((x,i)=>{ if(x) o.b[i]++; }); o.nb+=r.nb; });
+  const eq=Object.values(g).sort((a,b)=>(a.spv===''?1:0)-(b.spv===''?1:0)||a.spv.localeCompare(b.spv)||b.n-a.n);
+  const tot={n:N,b:neg.map((_,i)=>cnt(r=>r.b[i]))};
+  const heat=(x,n,col)=>{ const p=n?x/n:0; return `<td class="n hm" style="background:color-mix(in srgb,var(${col}) ${Math.round(p*70)}%,transparent);${p>.55?'color:#fff':''}"><b>${pc(p)}</b><i>${x}</i></td>`; };
+  // oportunidades: compran algo pero no el negocio elegido
+  const q=VU.q.trim().toLowerCase();
+  const opp=filas.filter(r=>!r.b[iSel] && r.nb>0 && (!q||String(r.cod).includes(q)||(r.rs||'').toLowerCase().includes(q)))
+    .sort((a,b)=>VU.ord==='vol'?b.tot-a.tot:(a.pv||'').localeCompare(b.pv||'')||b.tot-a.tot);
+  const nada=filas.filter(r=>r.nb===0).length;
+  return `
+  <div class="panel vun">
+    <div class="ph"><h3>Compra activa por negocio</h3><span class="hint">volumen anual de cada cliente · más de 0 = cliente comprador${X.filtrado?' · con el filtro de equipo':''}</span></div>
+    <div class="vu-cards">${neg.map((gg,i)=>{ const b=tot.b[i]; return `<button type="button" class="vu-card ${gg.k===VU.neg?'on':''}" data-neg="${gg.k}" style="--c:var(${VU_COL[gg.k]||'--s0'})">
+      <span class="vu-l">${esc(gg.lab)}</span><span class="vu-v">${pc(b/Math.max(1,N))}</span>
+      <span class="vu-bar"><i style="width:${b/Math.max(1,N)*100}%"></i></span>
+      <span class="vu-d"><b>${n0(b)}</b> compran · <b>${n0(N-b)}</b> no compran</span></button>`; }).join('')}</div>
+    <div class="vu-kpis">
+      <div><span class="l">Clientes en el archivo</span><b>${n0(N)}</b></div>
+      <div><span class="l">Compran en al menos un negocio</span><b>${n0(algun)}</b><i>${pc(algun/Math.max(1,N))}</i></div>
+      <div><span class="l">No compran en ningún negocio</span><b>${n0(ninguno)}</b><i>${pc(ninguno/Math.max(1,N))}</i></div>
+      <div><span class="l">Negocios por cliente</span><b>${n1(prom)}</b><i>promedio de ${neg.length}</i></div>
+    </div>
+    <div class="grid2 vu-g">
+      <div><p class="vu-h">Cuántos negocios compra cada cliente</p>
+        <div class="vu-dist">${dist.map((x,k)=>`<div class="vu-dr"><span>${k===0?'Ninguno':k===1?'1 negocio':k+' negocios'}</span><span class="vu-db"><i style="width:${x/dmx*100}%;background:var(${k===0?'--bad':'--accent'});opacity:${k===0?1:.35+.65*k/neg.length}"></i></span><b>${n0(x)}</b><i>${pc(x/Math.max(1,N))}</i></div>`).join('')}</div></div>
+      <div><p class="vu-h">% de clientes compradores por promotor</p>
+        <div class="tw" style="max-height:330px"><table class="vu-t"><thead><tr><th>Promotor</th><th class="n">Clientes</th>${neg.map(gg=>`<th class="n" title="${esc(gg.lab)}">${esc({c:'CVZA',n:'NABs',a:'Aguas',m:'MKTP',x:'Match'}[gg.k]||gg.lab)}</th>`).join('')}</tr></thead><tbody>
+        ${eq.map(o=>`<tr class="click" data-vpv="${esc(o.spv?o.pv:'')}"><td><span class="bn">${o.spv?avatar(o.pv,o.spv):''}<span><b>${esc(o.pv)}</b>${o.spv?`<br><span class="hint">${esc(o.spv)}</span>`:''}</span></span></td><td class="n">${o.n}</td>${neg.map((gg,i)=>heat(o.b[i],o.n,VU_COL[gg.k]||'--s0')).join('')}</tr>`).join('')}
+        <tr class="tot"><td><b>ZUPPA</b></td><td class="n"><b>${N}</b></td>${neg.map((gg,i)=>heat(tot.b[i],N,VU_COL[gg.k]||'--s0')).join('')}</tr>
+        </tbody></table></div></div>
+    </div>
+    <div class="vu-opp">
+      <div class="ph" style="margin-top:6px"><h3 style="font-size:15px">Clientes que no compran ${esc(gSel.lab)}</h3><span class="chip warn">${n0(opp.length)} compran otros negocios</span>${nada?`<span class="chip bad" style="margin-left:6px">${n0(nada)} no compran nada</span>`:''}</div>
+      <div class="filters" style="padding:0;margin-bottom:8px"><div class="f" style="flex:1;min-width:200px"><label for="vuQ">Buscar</label><input id="vuQ" placeholder="Código o razón social" value="${esc(VU.q)}"></div>
+        <div class="f"><label>Ordenar</label><div class="seg" id="vuOrd"><button type="button" data-v="vol" aria-pressed="${VU.ord==='vol'}">Por volumen</button><button type="button" data-v="pv" aria-pressed="${VU.ord==='pv'}">Por promotor</button></div></div>
+        <button class="btn sm" id="vuCsv" type="button">Descargar CSV</button></div>
+      <div class="tw" style="max-height:380px"><table><thead><tr><th class="n">Código</th><th>Cliente</th><th>Promotor</th><th>Compra en</th><th class="n">HL anuales</th></tr></thead><tbody>
+      ${opp.slice(0,150).map(r=>`<tr class="click" data-vcod="${r.cod}"><td class="n">${r.cod}</td><td>${r.rs?esc(r.rs):'<span class="hint">no está en la base actual</span>'}</td><td>${esc(r.pv||'–')}</td><td>${neg.map((gg,i)=>r.b[i]?`<span class="chip" style="background:color-mix(in srgb,var(${VU_COL[gg.k]||'--s0'}) 20%,transparent)">${esc(gg.lab.replace(' (Match)',''))}</span>`:'').join(' ')}</td><td class="n">${n2(r.tot)}</td></tr>`).join('')}
+      </tbody></table></div>${opp.length>150?`<p class="hint" style="margin:6px 0 0">Se muestran 150 de ${n0(opp.length)}. El CSV trae todos.</p>`:''}
+    </div>
+  </div>`;
+}
+function bindVun(v){
+  const X=vuDatos(); if(!X) return;
+  const re=()=>{ rCompradores(); const p=v.querySelector('.vun'); };
+  v.querySelectorAll('[data-neg]').forEach(b=>b.onclick=()=>{ VU.neg=b.dataset.neg; re(); });
+  v.querySelectorAll('#vuOrd button').forEach(b=>b.onclick=()=>{ VU.ord=b.dataset.v; re(); });
+  const q=$('#vuQ'); if(q) q.addEventListener('input',e=>{ VU.q=e.target.value; clearTimeout(VU.t); VU.t=setTimeout(()=>{ re(); const i=$('#vuQ'); i.focus(); i.setSelectionRange(i.value.length,i.value.length); },250); });
+  v.querySelectorAll('tr[data-vpv]').forEach(tr=>tr.onclick=()=>{ const pv=tr.dataset.vpv; if(!pv) return; S.pv=S.pv===pv?'':pv; const c=D.data.clientes.find(x=>x.pv===pv); if(S.pv&&c&&!(S.user&&S.user.scope==='own')) S.spv=c.spv; const fs=$('#fSpv'); if(fs&&!fs.disabled) fs.value=S.spv; fillPv(); render(); });
+  v.querySelectorAll('tr[data-vcod]').forEach(tr=>tr.onclick=()=>{ const c=+tr.dataset.vcod; if(CLI[c]) fichaCliente(c); });
+  const cb=$('#vuCsv'); if(cb) cb.onclick=()=>{
+    const {neg,filas}=X; const i=neg.findIndex(g=>g.k===VU.neg);
+    const head=['Codigo','Cliente','Supervisor','Promotor',...neg.map(g=>g.lab+' HL'),...neg.map(g=>'Compra '+g.lab),'Negocios que compra'];
+    const rows=filas.filter(r=>!r.b[i]).map(r=>[r.cod,r.rs,r.spv,r.pv,...r.v.map(x=>String(x).replace('.',',')),...r.b.map(x=>x?'Sí':'No'),r.nb]);
+    const csv='﻿'+[head,...rows].map(r=>r.map(x=>{const s=String(x==null?'':x); return /[;"\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}).join(';')).join('\n');
+    const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'})); a.download=`No_compran_${neg[i].lab.replace(/\W+/g,'_')}.csv`; document.body.appendChild(a); a.click(); a.remove(); };
+}
+
 function rCompradores(){
   const v=$('#v-compradores'); const un=S.un;
   const R=D.data.resumen.ZUPPA||{};
@@ -1257,6 +1361,7 @@ function rCompradores(){
   const comp=D.data.evolutivo.comparativo[un]||{};
   v.innerHTML=`
   <div class="sec-h"><h2>Compradores y evolutivo · ${UNS[un].lab}</h2><p>Seguimiento anual de toda la cartera: qué porcentaje compra cada mes, comparado con 2025 y con el objetivo, y en qué negocios compra cada cliente (CVZA, NABs, MATCH, AGUAS, MKTP).</p></div>
+  ${vunPanel()}
   <div class="grid2">
     <div class="panel"><div class="ph"><h3>% de clientes compradores por mes</h3><span class="hint">hoja RESUMEN · ${un==='NABS'?'UNG':UNS[un].lab}</span></div>
       ${legend([['2026','--s1'],['2025','--s0'],['Objetivo '+pc(obj),'--good']])}
@@ -1289,6 +1394,7 @@ function rCompradores(){
     {label:'2025',data:(r['2025']||[]).map(x=>x==null?null:x*100),borderColor:cssv('--s0'),backgroundColor:cssv('--s0'),borderWidth:2,pointRadius:2,borderDash:[5,4],tension:.25},
     {label:'Objetivo',data:labels.map(()=>obj*100),borderColor:cssv('--good'),borderWidth:1.5,pointRadius:0,borderDash:[2,3]}]},
     options:{scales:{y:{suggestedMin:40,suggestedMax:100,ticks:{callback:x=>x+' %'},grid:{color:cssv('--grid')}},x:{grid:{display:false}}},plugins:{tooltip:{callbacks:{label:c=>c.dataset.label+': '+(c.raw==null?'–':n1(c.raw)+' %')}}}}});
+  bindVun(v);
 }
 function prom(a){ const v=(a||[]).filter(x=>x!=null); return v.length? v.reduce((s,x)=>s+x,0)/v.length : null; }
 function hmCell(x,obj,agg){ if(x==null) return '<td></td>'; const c=x>=obj?'ok':x>=obj-.1?'warn':'bad'; return `<td class="n hmc ${c} ${agg?'agg':''}">${pc(x)}</td>`; }
@@ -1680,16 +1786,16 @@ function rVisitas(){
     const nMes=delAnio.filter(it=>it.fecha.slice(0,7)===ym&&it.esCnc).length;
     return `<div class="mm ${ym===VS.mes?'on':''}"><button type="button" class="mmh" data-mes="${ym}">${MES_LL[mm-1]}<span>${nMes?nMes+' CNC':''}</span></button>
       <div class="mmg">${['L','M','M','J','V','S','D'].map(d=>`<b>${d}</b>`).join('')}
-      ${cells.map(d=>{ if(!d) return '<i></i>'; const iso=ym+'-'+String(d).padStart(2,'0'); const evs=porDia[iso]||[]; const cn=evs.filter(e=>e.esCnc).length, ot=evs.length-cn, rc=evs.some(e=>e.rec), as=!rc&&evs.some(e=>e.asig);
+      ${cells.map(d=>{ if(!d) return '<i></i>'; const iso=ym+'-'+String(d).padStart(2,'0'); const evs=porDia[iso]||[]; const cn=evs.filter(e=>e.esCnc).length, ot=evs.length-cn, rc=evs.some(e=>e.rec||e.asig), as=false;
         return `<button type="button" class="dd ${cn?'c'+Math.min(3,cn):''} ${ot&&!cn?'ot':''} ${rc?'rec':''} ${as?'asg':''} ${iso===hoy?'hoy':''} ${iso===VS.dia?'sel':''}" data-f="${iso}" aria-label="${d} de ${MES_LL[mm-1]}: ${evs.length} registros">${d}</button>`; }).join('')}</div></div>`; };
   const dia=VS.dia?(porDia[VS.dia]||[]).concat(VS.dia.slice(0,4)===String(VS.anio)?[]:items.filter(it=>it.fecha===VS.dia)):[];
   const unTxt=us=>us.map(u=>UN_LAB[u]).join(' y ');
   const tarjeta=it=>{ const c=it.cod?CLI[it.cod]:null;
-    return `<div class="vcard ${it.rec?'ok':it.asig?'asg':''}"><div class="vh">${avatar(it.spv==='CABALLERO'?'CABALLERO':it.spv,it.spv)}<b>${esc(SPV_NOM[it.spv]||it.spv)}</b><span class="chip ${it.fuente==='agenda'?'':'info'}">${it.fuente==='agenda'?'agenda':'tablero'}</span>${it.estado!=='Realizada'?`<span class="chip ${it.estado==='Cancelada'?'bad':'info'}">${esc(it.estado.toLowerCase())}</span>`:''}</div>
+    return `<div class="vcard ${it.rec||it.asig?'ok':''}"><div class="vh">${avatar(it.spv==='CABALLERO'?'CABALLERO':it.spv,it.spv)}<b>${esc(SPV_NOM[it.spv]||it.spv)}</b><span class="chip ${it.fuente==='agenda'?'':'info'}">${it.fuente==='agenda'?'agenda':'tablero'}</span>${it.estado!=='Realizada'?`<span class="chip ${it.estado==='Cancelada'?'bad':'info'}">${esc(it.estado.toLowerCase())}</span>`:''}</div>
       <p class="vt">${esc(it.tarea||'')}</p>
-      ${it.cod?`<p><b>${esc(it.cliente||'')}</b> <span class="hint mono">#${it.cod}</span>${it.pv?` · ${esc(it.pv)}`:''}</p>`:it.asig?`<p><span class="chip asg">asignado por el tablero</span> <b>${esc(it.asig.c.rs)}</b> <span class="hint mono">#${it.asig.c.cod}</span> · ${esc(it.asig.c.pv)}<br><span class="hint">La agenda no dice a quién se visitó; el supervisor puede confirmarlo o cambiarlo.</span></p>`:it.esCnc?'<p class="hint">Sin cliente cargado en la agenda.</p>':''}
+      ${it.cod?`<p><b>${esc(it.cliente||'')}</b> <span class="hint mono">#${it.cod}</span>${it.pv?` · ${esc(it.pv)}`:''}</p>`:it.asig?`<p><b>${esc(it.asig.c.rs)}</b><sup class="ast" title="Cliente asignado: CNC del equipo que volvió a comprar; la agenda no indicaba a quién se visitó">*</sup> <span class="hint mono">#${it.asig.c.cod}</span> · ${esc(it.asig.c.pv)}</p>`:it.esCnc?'<p class="hint">Sin cliente cargado en la agenda.</p>':''}
       ${it.plan?`<p><span class="hint">Plan:</span> ${esc(it.plan)}</p>`:''}${it.nota?`<p><span class="hint">Registro:</span> ${esc(it.nota)}</p>`:''}
-      <div class="vchips">${it.asig?`<span class="chip asg">CNC de ${unTxt(it.asig.us)} · volvió a comprar en ${mesLab(it.asig.r.mes)}</span>`:''}${it.cnc.length?`<span class="chip warn">era CNC de ${unTxt(it.cnc)}</span>`:''}${it.rec?`<span class="chip ok">volvió a comprar ${unTxt(it.rec.us)} en ${mesLab(it.rec.mes)}</span>`:it.cnc.length?'<span class="chip bad">sigue sin comprar</span>':''}</div>
+      <div class="vchips">${it.asig?`<span class="chip warn">era CNC de ${unTxt(it.asig.us)}</span><span class="chip ok">volvió a comprar ${unTxt(it.asig.r.us)} en ${mesLab(it.asig.r.mes)}</span>`:''}${it.cnc.length?`<span class="chip warn">era CNC de ${unTxt(it.cnc)}</span>`:''}${it.rec?`<span class="chip ok">volvió a comprar ${unTxt(it.rec.us)} en ${mesLab(it.rec.mes)}</span>`:it.cnc.length?'<span class="chip bad">sigue sin comprar</span>':''}</div>
       <div class="row" style="gap:6px;margin-top:6px">${puedeCargar()&&(S.user.scope==='all'||S.user.spv===it.spv)?`<button type="button" class="btn sm primary" data-reg="${esc(it.id)}">${it.registro||it.fuente==='tablero'?'Editar registro':it.asig?'Confirmar o cambiar cliente':it.esCnc&&!it.cod?'Elegir cliente y dejar registro':'Dejar registro'}</button>`:''}${c?`<button type="button" class="btn sm" data-ficha="${c.cod}">Ficha</button>`:''}</div></div>`; };
   v.innerHTML=`
   <div class="sec-h"><h2>Visitas de supervisores a CNC</h2><p>Las visitas de la agenda de los supervisores se pasan solas al calendario. Las que fueron a un cliente que era no comprador se cruzan con la facturación para ver si volvió a comprar. Objetivo: ${obj} visitas a CNC por supervisor por mes.</p></div>
@@ -1699,26 +1805,26 @@ function rVisitas(){
   <div class="kpis">
     ${spvs.map(s=>{ const n=delMes.filter(x=>x.spv===s&&x.esCnc&&x.estado==='Realizada').length, pr=delMes.filter(x=>x.spv===s&&x.estado==='Programada').length; return `<div class="kpi"><span class="tx"><span class="l">${esc(SPV_NOM[s]||s)} · ${mesLL(VS.mes)}</span><span class="v">${n} / ${obj}</span><div class="prog" role="img" aria-label="${n} de ${obj} visitas"><i style="width:${Math.min(100,n/obj*100)}%"></i></div><span class="d">${n>=obj?'objetivo cumplido':'faltan '+(obj-n)}${pr?' · '+pr+' programadas':''}</span></span></div>`;}).join('')}
     <div class="kpi"><span class="tx"><span class="l">Volvieron a comprar</span><span class="v">${conCli.length?pc(conCli.filter(x=>x.rec).length/conCli.length):'–'}</span><span class="d">${conCli.filter(x=>x.rec).length} de ${conCli.length} visitas a clientes CNC (con cliente cargado)</span></span></div>
-    <div class="kpi"><span class="tx"><span class="l">Visitas sin cliente con CNC asignado · ${VS.anio}</span><span class="v">${sinCli.filter(x=>x.asig).length} <small>de ${sinCli.length}</small></span><span class="d">asignado por el tablero: CNC del equipo recuperado ese mes</span></span></div>
+    <div class="kpi"><span class="tx"><span class="l">Visitas a CNC · ${VS.anio}</span><span class="v">${delAnio.filter(x=>x.esCnc&&x.estado==='Realizada').length}</span><span class="d">${delAnio.filter(x=>x.esCnc&&x.estado==='Realizada'&&(x.rec||x.asig)).length} con cliente que volvió a comprar</span></span></div>
   </div>
   <div class="panel">
     <div class="row" style="margin-bottom:10px"><button class="btn sm" id="vPrev" aria-label="Año anterior">←</button><h3 style="min-width:80px;text-align:center">${VS.anio}</h3><button class="btn sm" id="vNext" aria-label="Año siguiente">→</button>
       <div class="seg" id="vTipo" style="margin-left:8px"><button type="button" data-v="cnc" aria-pressed="${VS.tipo==='cnc'}">Visitas a CNC</button><button type="button" data-v="todas" aria-pressed="${VS.tipo==='todas'}">Toda la agenda</button></div>
-      <span class="sp"></span><span class="mmleg"><i class="c1"></i>1 <i class="c2"></i>2 <i class="c3"></i>3+ visitas CNC <i class="ot"></i>otras tareas <i class="rec"></i>volvió a comprar <i class="asg"></i>asignado por el tablero</span>
+      <span class="sp"></span><span class="mmleg"><i class="c1"></i>1 <i class="c2"></i>2 <i class="c3"></i>3+ visitas CNC <i class="ot"></i>otras tareas <i class="rec"></i>volvió a comprar</span>
       ${puedeCargar()?'<button class="btn primary" id="vNueva">+ Nueva visita</button>':''}</div>
     <div class="anio">${Array.from({length:12},(_,i)=>mini(i+1)).join('')}</div>
   </div>
   <div class="panel" id="vDia">${VS.dia?`<div class="ph"><h3>Registros del ${fDate(VS.dia)}</h3><span class="row" style="gap:6px">${puedeCargar()?`<button class="btn sm primary" id="vNuevaDia">+ Registro en este día</button>`:''}<button class="btn sm" id="vDiaX">Cerrar</button></span></div>
     ${dia.length?`<div class="vcards">${dia.map(tarjeta).join('')}</div>`:'<p class="hint" style="margin:0">No hay registros este día.</p>'}`
     :'<p class="hint" style="margin:0">Tocá un día del calendario para ver lo que se hizo y dejar un registro. Tocá el nombre de un mes para ver su detalle abajo.</p>'}</div>
-  <div class="panel"><div class="ph"><h3>Visitas a CNC que terminaron en recupero</h3><span class="chip ok">${recs.filter(x=>x.rec).length} registrados</span><span class="chip asg" style="margin-left:4px">${recs.filter(x=>!x.rec&&x.asig).length} asignados</span></div>
-    <p class="hint" style="margin:0 0 8px">Visitas a clientes que eran no compradores en el mes de la visita y que después volvieron a comprar. "Registrado" es el cliente que cargó el supervisor; "asignado por el tablero" es un CNC recuperado de su equipo puesto en una visita que no tenía cliente (control interno).</p>
-    ${recs.length?`<div class="tw" style="max-height:380px"><table><thead><tr><th>Fecha</th><th>Supervisor</th><th>Cliente</th><th>Origen del cliente</th><th>Promotor</th><th>Era CNC de</th><th>Volvió a comprar</th><th>Tarea / plan</th></tr></thead><tbody>
-    ${recs.map(it=>{ const a=!it.rec&&it.asig; const c=a?it.asig.c:null; return `<tr class="click" data-dia="${it.fecha}"><td>${fDate(it.fecha)}</td><td>${esc(SPV_NOM[it.spv]||it.spv)}</td><td>${esc(a?c.rs:it.cliente)} <span class="hint mono">#${a?c.cod:it.cod}</span></td><td>${a?'<span class="chip asg">asignado por el tablero</span>':'registrado'}</td><td>${esc(a?c.pv:it.pv)}</td><td>${unTxt(a?it.asig.us:it.cnc)}</td><td><span class="chip ok">${unTxt(a?it.asig.r.us:it.rec.us)} · ${mesLab(a?it.asig.r.mes:it.rec.mes)}</span></td><td class="txt">${esc(it.tarea)}${it.plan?' · '+esc(it.plan):''}</td></tr>`; }).join('')}
-    </tbody></table></div>`:'<p class="hint" style="margin:0">Todavía no hay visitas con cliente cargado que terminaran en recupero.</p>'}</div>
+  <div class="panel"><div class="ph"><h3>Visitas a CNC que terminaron en recupero</h3><span class="chip ok">${recs.length}</span></div>
+    <p class="hint" style="margin:0 0 8px">Visitas a clientes que eran no compradores en el mes de la visita y que después volvieron a comprar.</p>
+    ${recs.length?`<div class="tw" style="max-height:380px"><table><thead><tr><th>Fecha</th><th>Supervisor</th><th>Cliente</th><th>Promotor</th><th>Era CNC de</th><th>Volvió a comprar</th><th>Tarea / plan</th></tr></thead><tbody>
+    ${recs.map(it=>{ const a=!it.rec&&it.asig; const c=a?it.asig.c:null; return `<tr class="click" data-dia="${it.fecha}"><td>${fDate(it.fecha)}</td><td>${esc(SPV_NOM[it.spv]||it.spv)}</td><td>${esc(a?c.rs:it.cliente)}${a?'<sup class="ast" title="Cliente asignado: CNC del equipo que volvió a comprar; la agenda no indicaba a quién se visitó">*</sup>':''} <span class="hint mono">#${a?c.cod:it.cod}</span></td><td>${esc(a?c.pv:it.pv)}</td><td>${unTxt(a?it.asig.us:it.cnc)}</td><td><span class="chip ok">${unTxt(a?it.asig.r.us:it.rec.us)} · ${mesLab(a?it.asig.r.mes:it.rec.mes)}</span></td><td class="txt">${esc(it.tarea)}${it.plan?' · '+esc(it.plan):''}</td></tr>`; }).join('')}
+    </tbody></table></div><p class="hint" style="margin:6px 0 0">* Cliente asignado del equipo: la agenda no indicaba a quién se visitó.</p>`:'<p class="hint" style="margin:0">Todavía no hay visitas con cliente cargado que terminaran en recupero.</p>'}</div>
   <div class="panel"><div class="ph"><h3>${VS.tipo==='cnc'?'Visitas a CNC':'Agenda'} de ${mesLL(VS.mes)}</h3><span class="chip info">${delMes.length}</span></div>
     ${delMes.length?`<div class="tw" style="max-height:420px"><table><thead><tr><th>Fecha</th><th>Supervisor</th><th>Origen</th><th>Tarea</th><th>Cliente</th><th>Promotor</th><th>Plan / registro</th><th>Resultado</th></tr></thead><tbody>
-    ${delMes.map(it=>`<tr class="click" data-dia="${it.fecha}"><td>${fDate(it.fecha)}</td><td>${esc(SPV_NOM[it.spv]||it.spv)}</td><td>${it.fuente==='agenda'?(it.registro?'agenda + registro':'agenda'):'tablero'}</td><td>${esc(it.tarea)}</td><td>${it.cod?`${esc(it.cliente)} <span class="hint mono">#${it.cod}</span>`:it.asig?`<i>${esc(it.asig.c.rs)}</i> <span class="hint mono">#${it.asig.c.cod}</span> <span class="chip asg">asignado</span>`:'<span class="hint">sin cliente</span>'}</td><td>${esc(it.pv||'')}</td><td class="txt">${esc(it.nota||it.plan||'')}</td><td>${it.rec?`<span class="chip ok">compró ${mesLab(it.rec.mes)}</span>`:it.asig?`<span class="chip asg">compró ${mesLab(it.asig.r.mes)}</span>`:it.cnc.length?'<span class="chip bad">sin compra</span>':''}</td></tr>`).join('')}
+    ${delMes.map(it=>`<tr class="click" data-dia="${it.fecha}"><td>${fDate(it.fecha)}</td><td>${esc(SPV_NOM[it.spv]||it.spv)}</td><td>${it.fuente==='agenda'?(it.registro?'agenda + registro':'agenda'):'tablero'}</td><td>${esc(it.tarea)}</td><td>${it.cod?`${esc(it.cliente)} <span class="hint mono">#${it.cod}</span>`:it.asig?`${esc(it.asig.c.rs)}<sup class="ast" title="Cliente asignado: CNC del equipo que volvió a comprar; la agenda no indicaba a quién se visitó">*</sup> <span class="hint mono">#${it.asig.c.cod}</span>`:'<span class="hint">sin cliente</span>'}</td><td>${esc(it.pv||(it.asig?it.asig.c.pv:''))}</td><td class="txt">${esc(it.nota||it.plan||'')}</td><td>${it.rec?`<span class="chip ok">compró ${mesLab(it.rec.mes)}</span>`:it.asig?`<span class="chip ok">compró ${mesLab(it.asig.r.mes)}</span>`:it.cnc.length?'<span class="chip bad">sin compra</span>':''}</td></tr>`).join('')}
     </tbody></table></div>`:'<p class="hint" style="margin:0">Sin registros en este mes.</p>'}
   </div>
   <div class="panel"><div class="ph"><h3>Clientes sugeridos para visitar</h3><span class="hint">CNC U3M con motivo relevado, sin visita este mes, ordenados por volumen que compraban</span></div>
