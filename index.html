@@ -484,6 +484,9 @@ td .rb{display:grid;grid-template-columns:1fr 30px 44px;gap:8px;align-items:cent
 .lg-zuppa{height:62px;width:auto;display:block}
 .lg-card{display:inline-grid;place-items:center;height:62px;padding:6px 10px;border-radius:12px;background:#FFFDF8;box-shadow:0 2px 8px rgba(0,0,0,.18)}
 .lg-card img{height:50px;width:auto;display:block}
+.btn-clear{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:6px;padding:8px 10px;border-radius:10px;border:1px solid color-mix(in srgb,var(--side-ink) 25%,transparent);background:transparent;color:var(--side-ink);font:inherit;font-weight:600;font-size:13px;cursor:pointer}
+.btn-clear:hover{background:var(--side-2)}
+.btn-clear svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 </style>
 
 <aside class="side">
@@ -520,6 +523,7 @@ td .rb{display:grid;grid-template-columns:1fr 30px 44px;gap:8px;align-items:cent
         <option value="excel">Igual al Excel</option>
       </select>
     </div>
+    <button type="button" class="btn-clear" id="fClear"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16l-6 7v6l-4 2v-8z"/><path d="M16 16l5 5M21 16l-5 5"/></svg>Limpiar filtros</button>
   </div>
   <div class="user" id="userTag"></div>
 </aside>
@@ -673,9 +677,19 @@ function initFiltros(){
   fillPv();
   fs.onchange=()=>{ S.spv=fs.value; S.pv=''; fillPv(); render(); };
   $('#fPv').onchange=()=>{ S.pv=$('#fPv').value; render(); };
+  $('#fClear').onclick=limpiarFiltros;
   $('#fCrit').value=S.crit; $('#fCrit').onchange=()=>{ S.crit=$('#fCrit').value; render(); };
   document.querySelectorAll('#fUn button').forEach(b=>b.onclick=()=>{ S.un=b.dataset.v; document.querySelectorAll('#fUn button').forEach(x=>x.setAttribute('aria-pressed', x===b)); render(); });
   document.querySelectorAll('#tabs .tab').forEach(t=>t.onclick=()=>irTab(t.dataset.t));
+}
+function limpiarFiltros(){
+  S.un='TOTAL'; if(!(S.user&&S.user.scope==='own')) S.spv=''; S.pv=''; S.crit='aud';
+  Object.assign(CL,{hz:'cnc',acum:false,q:'',loc:'',mot:'',pag:0,orden:'meses'});
+  if(typeof MP!=='undefined') Object.assign(MP,{hz:'cnc',acum:false});
+  Object.assign(PD,{mot:'',res:'',seg:'',q:'',pv:'',pag:0,abierto:null});
+  Object.assign(MO,{mes:''}); HZ2.k='u3'; VS.tipo='cnc'; VS.dia=null;
+  document.querySelectorAll('#fUn button').forEach(x=>x.setAttribute('aria-pressed', x.dataset.v==='TOTAL'));
+  initFiltros(); render(); toast('Filtros limpios');
 }
 function fillPv(){
   const pvs=[...new Set(D.data.clientes.filter(c=>!S.spv||c.spv===S.spv).map(c=>c.pv))].sort();
