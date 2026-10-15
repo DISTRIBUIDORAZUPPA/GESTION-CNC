@@ -1263,6 +1263,8 @@ function fichaCliente(cod){
 
 /* ====================== COMPRADORES ====================== */
 const CP={mes:null};
+/* Aclaraciones del tablero en Motivos y PDA (completado por el tablero, posibles bajas…): ocultas por pedido de Anahí. Los avisos siguen en Control auditoría. */
+const NOTAS_OCULTAS=true;
 /* ====================== COMPRA ACTIVA POR NEGOCIO (volumen anual por cliente) ====================== */
 const VU={neg:null, q:'', ord:'vol'};
 const VU_COL={c:'--s4',n:'--s1',a:'--s3',m:'--m3',x:'--s2'};
@@ -1451,8 +1453,8 @@ function rMotivos(){
     <div class="f"><label>Base</label><div class="seg" id="moBase"><button type="button" data-v="UN" aria-pressed="${MO.base==='UN'}">Por negocio</button><button type="button" data-v="TOTAL" aria-pressed="${MO.base==='TOTAL'}">Total</button></div></div>
     <div class="f"><label for="moMes">Mes del listado</label><select id="moMes"><option value="">Todos</option>${mesesB.map(m=>`<option value="${m}" ${m===selMes?'selected':''}>${mesLL(m)}</option>`).join('')}</select></div>
   </div>
-  ${(()=>{const fuera=allRegs.filter(r=>!CLI[r.cod]).length; return fuera?`<div class="note">${fuera} clientes relevados ya no están en la base de clientes actual (posibles bajas). Para ellos el recupero se toma de la venta del mes siguiente que trae la hoja de BEES Force.</div>`:'';})()}
-  ${pend.length?`<div class="note warn"><b>Pendiente de dato:</b> ${pend.map(b=>esc(b.aviso)).join(' ')}</div>`:''}
+  ${(()=>{const fuera=allRegs.filter(r=>!CLI[r.cod]).length; return fuera&&!NOTAS_OCULTAS?`<div class="note">${fuera} clientes relevados ya no están en la base de clientes actual (posibles bajas). Para ellos el recupero se toma de la venta del mes siguiente que trae la hoja de BEES Force.</div>`:'';})()}
+  ${pend.length&&!NOTAS_OCULTAS?`<div class="note warn"><b>Pendiente de dato:</b> ${pend.map(b=>esc(b.aviso)).join(' ')}</div>`:''}
   <div class="kpis">
     <div class="kpi"><span class="l">Relevamientos</span><span class="v">${n0(allRegs.length)}</span><span class="d">${mesesB.length} meses · ${mesesB.map(mesLab).join(', ')}</span></div>
     <div class="kpi"><span class="l">Volvieron a comprar el mes siguiente</span><span class="v">${pc(allRegs.filter(r=>r.rec.sig).length/Math.max(1,allRegs.filter(r=>r.rec.sig!=null).length))}</span><span class="d">${n0(allRegs.filter(r=>r.rec.sig).length)} clientes</span></div>
@@ -1592,19 +1594,19 @@ function rPdaCliente(){
   <div class="sec-h"><h2>PDA últimos 3 meses · por cliente</h2><p>Un plan por motivo para todos los CNC U3M del mes (hoja PDA ULT 3 MESES ZUPPA). Cada cliente queda marcado con su motivo y la acción que le corresponde; el resultado sale de la facturación.</p></div>
   <div class="filters" style="padding:0">${segVista()}
     <div class="f"><label>Negocio</label><div class="seg" id="p3Un">${['c','n','t'].map(k=>`<button type="button" data-v="${k}" aria-pressed="${un===k}">${P3_UN[k].lab}</button>`).join('')}</div></div>
-    <div class="f"><label for="p3Mes">Mes del plan</label><select id="p3Mes">${bl.slice().reverse().map(x=>`<option value="${x.mes}" ${x.mes===PD.mes?'selected':''}>${mesLL(x.mes)}${x.calculado?' · completado por el tablero':x.copia?' · copia de '+mesLab(x.copia):''}${x.mes===M[MI]?' · en curso':''}</option>`).join('')}</select></div>
+    <div class="f"><label for="p3Mes">Mes del plan</label><select id="p3Mes">${bl.slice().reverse().map(x=>`<option value="${x.mes}" ${x.mes===PD.mes?'selected':''}>${mesLL(x.mes)}${NOTAS_OCULTAS?'':x.calculado?' · completado por el tablero':x.copia?' · copia de '+mesLab(x.copia):''}${x.mes===M[MI]?' · en curso':''}</option>`).join('')}</select></div>
     <div class="f"><label for="p3Mot">Motivo</label><select id="p3Mot"><option value="">Todos</option>${motivos.map(mo=>`<option ${PD.mot===mo?'selected':''}>${esc(mo)}</option>`).join('')}</select></div>
     <div class="f"><label for="p3Res">Facturación</label><select id="p3Res"><option value="">Todos</option><option value="si" ${PD.res==='si'?'selected':''}>Compró en el mes</option><option value="luego" ${PD.res==='luego'?'selected':''}>Compró después</option><option value="no" ${PD.res==='no'?'selected':''}>Sigue sin comprar</option></select></div>
     <div class="f"><label for="pdcSeg">Seguimiento</label><select id="pdcSeg"><option value="">Todos</option><option value="-" ${PD.seg==='-'?'selected':''}>Sin cargar</option>${PDC_EST.map(e=>`<option ${PD.seg===e?'selected':''}>${e}</option>`).join('')}</select></div>
     <div class="f" style="flex:1;min-width:170px"><label for="pdcQ">Buscar</label><input id="pdcQ" placeholder="Código, razón social o domicilio" value="${esc(PD.q)}"></div>
     <button class="btn sm" id="pdcCsv" type="button">Descargar CSV</button>
   </div>
-  ${avisos.map(a=>`<div class="note warn">${a}</div>`).join('')}
+  ${NOTAS_OCULTAS?'':avisos.map(a=>`<div class="note warn">${a}</div>`).join('')}
   ${!D.api?`<div class="note warn"><b>Todavía no está conectada la planilla.</b> El seguimiento se guarda solo en este navegador hasta que se cargue la URL de la Web App en CNC_CFG.</div>`:D.planesError?`<div class="note warn"><b>No pude leer el seguimiento de la planilla.</b> Revisá que la Web App tenga la versión nueva y recargá.</div>`:''}
   <div class="kpis">
     <div class="kpi"><span class="tx"><span class="l">CNC ${P3_UN[un].lab} con plan</span><span class="v">${n0(base.length)}</span><span class="d">sin compra en ${mesLab(M[m-3])}, ${mesLab(M[m-2])} y ${mesLab(M[m-1])}${filtrado?'':` · hoja: ${n0(cliHoja)}`}</span></span></div>
     <div class="kpi"><span class="tx"><span class="l">Compraron en ${mesLab(PD.mes)}</span><span class="v">${base.length?n0(cnt(base,r=>r.compro)):'–'} <small>${base.length?pc(cnt(base,r=>r.compro)/base.length):''}</small></span><span class="d">${enCurso?'mes en curso, se completa a fin de mes':'según la facturación'}</span></span></div>
-    <div class="kpi"><span class="tx"><span class="l">${b&&b.calculado?'Real calculado':'Real informado en la hoja'}</span><span class="v">${b?n0(realHoja):'–'} <small>${b&&cliHoja?pc(realHoja/cliHoja):''}</small></span><span class="d">${b&&b.calculado?'el bloque de la hoja es copia del mes anterior':filtrado?'total Zuppa (la hoja no abre por equipo)':'suma de la columna REAL'}</span></span></div>
+    <div class="kpi"><span class="tx"><span class="l">${b&&b.calculado&&!NOTAS_OCULTAS?'Real calculado':'Real informado en la hoja'}</span><span class="v">${b?n0(realHoja):'–'} <small>${b&&cliHoja?pc(realHoja/cliHoja):''}</small></span><span class="d">${b&&b.calculado&&!NOTAS_OCULTAS?'el bloque de la hoja es copia del mes anterior':filtrado?'total Zuppa (la hoja no abre por equipo)':'suma de la columna REAL'}</span></span></div>
     <div class="kpi"><span class="tx"><span class="l">Recuperados a la fecha</span><span class="v">${enCurso||!base.length?'–':pc(cnt(base,r=>r.compro||r.luego)/base.length)}</span><span class="d">${enCurso?'se mide desde el mes siguiente':!base.length?'sin clientes marcados':n0(cnt(base,r=>r.compro||r.luego))+' compraron en el mes o después'}</span></span></div>
     <div class="kpi"><span class="tx"><span class="l">Con seguimiento cargado</span><span class="v">${n0(cnt(base,r=>r.ed&&r.ed.estado))}</span><span class="d">supervisores y jefe de ventas</span></span></div>
   </div>
